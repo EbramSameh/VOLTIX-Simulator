@@ -546,7 +546,7 @@ $('#code').addEventListener('input',lnu);$('#code').addEventListener('scroll',()
 $('#code').addEventListener('keydown',e=>{const t=e.target,s=t.selectionStart;if(e.key=='Tab'){e.preventDefault();document.execCommand('insertText',false,'  ')}
  else if(e.key=='Enter'){e.preventDefault();const ln=t.value.slice(0,s).split('\n').pop(),ind=ln.match(/^\s*/)[0]+(/\{\s*$/.test(ln)?'  ':'');document.execCommand('insertText',false,'\n'+ind)}});
 $('#prob').addEventListener('click',e=>{const id=(e.target.dataset||{}).fix;if(!id)return;const B=BD[S.bt],v=B[1]==5&&B[7].includes('5V')?'5V':'3V3';connect('b:'+v,id+':VCC');connect('b:GND',id+':GND');toast('Power connected.')});
-function save(){snap();try{localStorage.setItem('wes1',JSON.stringify({bt:S.bt,parts:S.parts,wires:S.wires,bx:S.bx,by:S.by,n:S.n,code:$('#code').value}))}catch{}}
+function save(){snap()}
 function solve(){const B=BD[S.bt],vcc=B[1],par={};
  const f=x=>par[x]===undefined?(par[x]=x):par[x]===x?x:(par[x]=f(par[x])),u=(a,b)=>{par[f(a)]=f(b)};
  S.wires.forEach(w=>u(w.a,w.b));
@@ -847,8 +847,7 @@ const cats=[...new Set(Object.values(PT).map(d=>d[1]))];
 $('#pal').insertAdjacentHTML('beforeend',cats.map(c=>`<h4>${c}</h4><div class="gr">`+Object.entries(PT).filter(([k,d])=>d[1]==c&&!/^led[rgbywopk]$/.test(k)).map(([k,d])=>`<button data-add="${k}"><svg viewBox="52 22 72 62" width="32" height="28">${shape(k,d[4],null,d)}</svg>${d[0]}</button>`).join('')+'</div>').join(''));
 $('#pal').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b){addPart(b.dataset.add);draw()}});
 $('#q').oninput=e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('[data-add]').forEach(b=>b.hidden=!b.textContent.toLowerCase().includes(q))};
-let ok=0;try{const j=JSON.parse(localStorage.getItem('wes1'));if(j&&j.parts&&BD[j.bt]){j.parts.forEach(p=>{const m={res100:100,res220:220,res330:330,res470:470,res1k:1000,res2k2:2200,res4k7:4700,res10k:10000,res100k:100000}[p.t];if(m){p.t='res';p.st.ohm=m}const lc={ledr:'red',ledg:'green',ledb:'blue',ledy:'yellow',ledw:'white',ledo:'orange',ledp:'purple',ledk:'pink'}[p.t];if(lc){p.t='led';p.st.color=lc}});Object.assign(S,{bt:j.bt,parts:j.parts,wires:j.wires,bx:j.bx,by:j.by,n:j.n});$('#code').value=j.code;ok=1}}catch{}
-layout();if(ok){$('#bd').value=S.bt;draw()}else loadEx('blink');lnu();fit();
+layout();loadEx('blink');lnu();fit();
 (function frame(t){tick(t);requestAnimationFrame(frame)})(performance.now());
 </script>
 <script src="assets/js/02-app-router-and-catalogs.js"></script>

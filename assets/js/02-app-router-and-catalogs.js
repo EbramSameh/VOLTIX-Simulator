@@ -111,4 +111,4 @@ function cvAnalyse(){const W=160,H=120;WX.drawImage(AV,0,0,W,H);const d=WX.getIm
  return(mode=='motion'?'Motion detection':'Colour tracker')+` | ${found?`${pct.toFixed(1)} % of the frame, box ${x0},${y0} to ${x1},${y1}`:'nothing found'}`}
 $('#acstart').onclick=camStart;$('#acstop').onclick=camStop;$('#acdev').onchange=()=>{if(cst){camStop();camStart()}};
 $('#acsnap').onclick=()=>{if(!cst)return toast('Start the camera first.',1);const c=document.createElement('canvas');c.width=AV.videoWidth;c.height=AV.videoHeight;c.getContext('2d').drawImage(AV,0,0);$('#asnap').src=c.toDataURL('image/png');toast('Snapshot taken. It stays on this page only.')};
-go(location.hash.slice(1)||'home');
+go('home');\ntry{history.replaceState(null,'',location.pathname+location.search)}catch{}

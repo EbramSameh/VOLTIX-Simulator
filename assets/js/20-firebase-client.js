@@ -121,11 +121,35 @@ function ensureCompetitionButton() {
   leaderboardBtn.addEventListener('click', openLeaderboard);
   signInBtn.parentElement.insertBefore(leaderboardBtn, signInBtn);
 }
-async function updateCompetitionProfile(user, projectCount) {
-  const profileRef=doc(db,'leaderboard',user.uid),old=await getDoc(profileRef),previous=old.exists()?old.data():{};
-  await setDoc(profileRef,{uid:user.uid,displayName:user.displayName||previous.displayName||'VOLTIX Builder',photoURL:user.photoURL||previous.photoURL||'',bio:String(previous.bio||'').slice(0,180),projectCount:Math.max(0,Number(projectCount)||0),updatedAt:serverTimestamp()},{merge:true});
+const ACHIEVEMENTS=[
+{id:'firstCircuit',name:'First Circuit',desc:'Save your first cloud project.',goal:1,metric:'projects',field:'projectCount'},
+{id:'wireStarter',name:'Wire Starter',desc:'Make 5 wire connections across your saved projects.',goal:5,metric:'wires',field:'wires'},
+{id:'wireArchitect',name:'Wire Architect',desc:'Reach 25 saved wire connections.',goal:25,metric:'wires',field:'wires'},
+{id:'codeAuthor',name:'Code Author',desc:'Write 50 lines of code across saved projects.',goal:50,metric:'codeLines',field:'codeLines'},
+{id:'codeEngineer',name:'Code Engineer',desc:'Reach 250 lines of saved code.',goal:250,metric:'codeLines',field:'codeLines'},
+{id:'componentCollector',name:'Component Collector',desc:'Use 20 components across your saved projects.',goal:20,metric:'components',field:'components'},
+{id:'sensorExplorer',name:'Sensor Explorer',desc:'Build with 5 sensor modules.',goal:5,metric:'sensors',field:'sensors'},
+{id:'boardHopper',name:'Board Hopper',desc:'Experiment with 2 different board types.',goal:2,metric:'boards',field:'boards'},
+{id:'prototypeMaker',name:'Prototype Maker',desc:'Save 3 projects with at least 5 components each.',goal:3,metric:'complexProjects',field:'complexProjects'},
+{id:'circuitArchitect',name:'Circuit Architect',desc:'Save 5 projects with at least 10 components each.',goal:5,metric:'advancedProjects',field:'advancedProjects'},
+{id:'masterBuilder',name:'Master Builder',desc:'Save 10 cloud projects.',goal:10,metric:'projects',field:'projectCount'},
+{id:'achievementHunter',name:'Achievement Hunter',desc:'Unlock 8 achievements.',goal:8,metric:'achievementPoints',field:'achievementPoints'}
+];
+function calculateBuilderStats(projectDocs){
+ const projects=projectDocs.map(d=>d.data().payload||{}),allParts=projects.flatMap(p=>Array.isArray(p.parts)?p.parts:[]),allWires=projects.flatMap(p=>Array.isArray(p.wires)?p.wires:[]),boards=new Set(projects.map(p=>String(p.bt||'uno'))),codeLines=projects.reduce((n,p)=>n+(typeof p.code==='string'?p.code.split('\n').filter(x=>x.trim()).length:0),0);
+ const sensors=allParts.filter(p=>/sensor|dht|hc.?sr04|ldr|pir|soil|mpu|gps|rfid|mq.?|max30|hx711|qmc|ds18|bmp|bme|ultra|therm|photoresistor|light/i.test(String(p.t||'')+' '+String(p.k||''))).length;
+ const complexProjects=projects.filter(p=>Array.isArray(p.parts)&&p.parts.length>=5).length,advancedProjects=projects.filter(p=>Array.isArray(p.parts)&&p.parts.length>=10).length;
+ const base={projects:projects.length,wires:allWires.length,codeLines,components:allParts.length,sensors,boards:boards.size,complexProjects,advancedProjects};
+ const unlocked=ACHIEVEMENTS.filter(a=>(base[a.metric]||0)>=a.goal).length;base.achievementPoints=unlocked;
+ base.achievements=ACHIEVEMENTS.filter(a=>(base[a.metric]||0)>=a.goal).map(a=>a.id);
+ return base;
 }
-async function syncCompetitionProfile(user){const projects=await getDocs(collection(db,'users',user.uid,'projects'));await updateCompetitionProfile(user,projects.size);return projects.size;}
+async function syncCompetitionProfile(user){
+ const projects=await getDocs(collection(db,'users',user.uid,'projects')),stats=calculateBuilderStats(projects.docs),profileRef=doc(db,'leaderboard',user.uid),old=await getDoc(profileRef),previous=old.exists()?old.data():{};
+ await setDoc(profileRef,{uid:user.uid,displayName:user.displayName||previous.displayName||'VOLTIX Builder',photoURL:user.photoURL||previous.photoURL||'',bio:String(previous.bio||'').slice(0,180),projectCount:stats.projects,stats,achievements:stats.achievements,updatedAt:serverTimestamp()},{merge:true});
+ return stats;
+}
+
 async function openLeaderboard() {
   try {
     await requireUser();
@@ -211,7 +235,43 @@ async function openProfileSettings(){
  }catch(error){showError(error);if(cloudModal)modalStatus(friendlyError(error),true)}
 }
 
-async function refreshLeaderboardSection(){
+async function refreshLeaderboardSection(selectedBoard){
+ const list=$vx('vx-leaderboard-list'),status=$vx('vx-challenge-status'),profileEl=$vx('vx-challenge-profile');if(!list||!status||!profileEl||!db)return;
+ if(selectedBoard)activeCompetitionBoard=selectedBoard;
+ const board=COMPETITION_BOARDS.find(b=>b.id===activeCompetitionBoard)||COMPETITION_BOARDS[0];
+ document.querySelectorAll('[data-competition-board]').forEach(btn=>{const active=btn.dataset.competitionBoard===board.id;btn.classList.toggle('is-active',active);btn.setAttribute('aria-pressed',String(active))});
+ status.textContent='Loading '+board.label.toLowerCase()+' rankings…';list.innerHTML='<div class="vx-leaderboard-loading"><span class="vx-loader"></span> Loading live rankings…</div>';
+ try{
+  let own={},stats={};if(currentUser){const ownSnap=await getDoc(doc(db,'leaderboard',currentUser.uid));if(ownSnap.exists())own=ownSnap.data();stats=own.stats||{};
+   profileEl.innerHTML='<div class="vx-profile-avatar"></div><div class="vx-profile-main"><b class="vx-profile-name"></b><span class="vx-profile-email"></span><small class="vx-profile-bio"></small><small class="vx-profile-score"></small><small class="vx-profile-badges"></small></div><button id="vx-profile-settings" type="button">Edit profile</button>';
+   const avatar=profileEl.querySelector('.vx-profile-avatar');if(currentUser.photoURL){const img=document.createElement('img');img.src=currentUser.photoURL;img.alt='';img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();avatar.textContent=(currentUser.displayName||'V').trim().slice(0,1).toUpperCase()};avatar.appendChild(img)}else avatar.textContent=(currentUser.displayName||'V').trim().slice(0,1).toUpperCase();
+   profileEl.querySelector('.vx-profile-name').textContent=own.displayName||currentUser.displayName||'VOLTIX Builder';profileEl.querySelector('.vx-profile-email').textContent=currentUser.email||'Google account connected';profileEl.querySelector('.vx-profile-bio').textContent=own.bio||'Add a short bio in your profile settings.';profileEl.querySelector('.vx-profile-score').textContent=(stats.achievementPoints||0)+' achievement points · '+(stats.projects||0)+' projects';profileEl.querySelector('.vx-profile-badges').textContent=(own.achievements||[]).length+' achievements unlocked';$vx('vx-profile-settings').addEventListener('click',openProfileSettings);
+   const hero=$vx('vx-challenge-signin');if(hero){hero.textContent='Profile settings';hero.onclick=openProfileSettings}
+  }else{
+   profileEl.innerHTML='<div class="vx-profile-placeholder">V</div><div><b>Guest builder</b><span>Sign in to create your public profile and compete in the challenge boards.</span></div><button id="vx-challenge-profile-action" type="button">Sign in</button>';$vx('vx-challenge-profile-action').addEventListener('click',openLoginExperience);
+   const hero=$vx('vx-challenge-signin');if(hero){hero.textContent='Sign in to join';hero.onclick=openLoginExperience}
+  }
+  const pointEl=$vx('vx-mission-points');if(pointEl)pointEl.textContent=String(stats.achievementPoints||0);
+  const grid=$vx('vx-mission-grid');if(grid){grid.replaceChildren();ACHIEVEMENTS.forEach((a,i)=>{const score=Number(stats[a.metric])||0,done=score>=a.goal,card=document.createElement('article');card.className='vx-mission-card'+(done?' is-complete':'');const num=document.createElement('span');num.className='vx-mission-number';num.textContent=String(i+1).padStart(2,'0');const copy=document.createElement('div'),title=document.createElement('b'),desc=document.createElement('p'),progress=document.createElement('small');title.textContent=a.name;desc.textContent=a.desc;progress.className='vx-mission-progress';progress.textContent=Math.min(score,a.goal)+' / '+a.goal;copy.append(title,desc,progress);const state=document.createElement('span');state.className='vx-mission-state';state.textContent=done?'UNLOCKED':(currentUser?'IN PROGRESS':'SIGN IN');card.append(num,copy,state);grid.appendChild(card)})}
+  const snap=await getDocs(query(collection(db,'leaderboard'),limit(200))),players=snap.docs.map(d=>({uid:d.id,...d.data()})).filter(p=>Number(p.stats&&p.stats[board.field]!==undefined?p.stats[board.field]:board.field==='projectCount'?p.projectCount:0)>0).sort((a,b)=>(Number(b.stats&&b.stats[board.field]!==undefined?b.stats[board.field]:b.projectCount)||0)-(Number(a.stats&&a.stats[board.field]!==undefined?a.stats[board.field]:a.projectCount)||0)).slice(0,50);
+  list.replaceChildren();if(!players.length){list.innerHTML='<div class="vx-leaderboard-empty"><span>01</span><b>Be the first to compete</b><p>Save a project and make progress on this challenge board.</p></div>';status.textContent=board.label+' · Waiting for the first competitor';return}
+  players.forEach((player,index)=>{const row=document.createElement('article');row.className='vx-leader-row'+(index<3?' vx-leader-podium':'');const rank=document.createElement('span');rank.className='vx-leader-rank';rank.textContent=String(index+1).padStart(2,'0');const avatar=document.createElement('div');avatar.className='vx-leader-avatar';if(player.photoURL){const img=document.createElement('img');img.src=player.photoURL;img.alt='';img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();avatar.textContent=(player.displayName||'V').trim().slice(0,1).toUpperCase()};avatar.appendChild(img)}else avatar.textContent=(player.displayName||'V').trim().slice(0,1).toUpperCase();const info=document.createElement('div');info.className='vx-leader-info';const name=document.createElement('b');name.textContent=player.displayName||'VOLTIX Builder';const sub=document.createElement('span');sub.textContent=player.bio||((player.achievements||[]).length+' achievements unlocked');info.append(name,sub);const score=document.createElement('div');score.className='vx-leader-score';const points=document.createElement('b');points.textContent=String(Number(player.stats&&player.stats[board.field]!==undefined?player.stats[board.field]:player.projectCount)||0);const label=document.createElement('span');label.textContent=board.unit.toUpperCase();score.append(points,label);row.append(rank,avatar,info,score);list.appendChild(row)});
+  status.textContent=board.label+' · '+players.length+' ranked builder'+(players.length===1?'':'s')+' · Top 50';
+ }catch(error){list.innerHTML='<div class="vx-leaderboard-empty"><b>Leaderboard temporarily unavailable</b><p></p></div>';list.querySelector('p').textContent=friendlyError(error);status.textContent='Could not load rankings.'}
+}
+const COMPETITION_BOARDS=[
+{id:'projects',label:'Project Builder',field:'projects',unit:'projects'},
+{id:'wires',label:'Wiring Pro',field:'wires',unit:'wire links'},
+{id:'coding',label:'Code Crafter',field:'codeLines',unit:'code lines'},
+{id:'components',label:'Component Collector',field:'components',unit:'components'},
+{id:'sensors',label:'Sensor Explorer',field:'sensors',unit:'sensors'},
+{id:'boards',label:'Multi-Board Maker',field:'boards',unit:'board types'},
+{id:'complex',label:'Prototype Maker',field:'complexProjects',unit:'prototypes'},
+{id:'achievements',label:'Achievement Hunter',field:'achievementPoints',unit:'achievements'}
+];
+let activeCompetitionBoard='projects';
+window.VOLTIXLeaderboardRefresh=refreshLeaderboardSection;
+async function refreshLeaderboardSection(selectedBoard){
  const list=$vx('vx-leaderboard-list'),status=$vx('vx-challenge-status'),profileEl=$vx('vx-challenge-profile');if(!list||!status||!profileEl||!db)return;
  status.textContent='Loading live rankings…';list.innerHTML='<div class="vx-leaderboard-loading"><span class="vx-loader"></span> Loading builder profiles…</div>';
  try{

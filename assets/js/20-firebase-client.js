@@ -485,8 +485,8 @@ signInBtn.addEventListener('click', async () => {
 saveBtn.addEventListener('click',async()=>{saveBtn.disabled=true;try{const saved=await saveCloudProject({interactive:true});if(saved){if(window.VOLTIXLeaderboardRefresh)window.VOLTIXLeaderboardRefresh();showSaveSuccess(saved)}}catch(error){showError(error);if(cloudModal)modalStatus(friendlyError(error),true)}finally{saveBtn.disabled=false}});
 projectsBtn.addEventListener('click', openCloudProjects);
 const challengeNav=$vx('vx-open-leaderboard');if(challengeNav)challengeNav.addEventListener('click',()=>{if(window.VOLTIXLeaderboardRefresh)window.VOLTIXLeaderboardRefresh()});
-const challengeSignIn=$vx('vx-challenge-signin'),challengeProfileAction=$vx('vx-challenge-profile-action'),challengeRefresh=$vx('vx-leaderboard-refresh');
-if(challengeSignIn)challengeSignIn.addEventListener('click',openLoginExperience);if(challengeProfileAction)challengeProfileAction.addEventListener('click',openLoginExperience);if(challengeRefresh)challengeRefresh.addEventListener('click',refreshLeaderboardSection);
+const challengeProfileAction=$vx('vx-challenge-profile-action'),challengeRefresh=$vx('vx-leaderboard-refresh');
+if(challengeProfileAction)challengeProfileAction.addEventListener('click',openLoginExperience);if(challengeRefresh)challengeRefresh.addEventListener('click',refreshLeaderboardSection);
 shareBtn.addEventListener('click', shareCurrentProject);
 
 try {
@@ -502,7 +502,8 @@ try {
       activeProjectId = null; activeProjectTitle = '';
     }
     renderAuth();
-    refreshLeaderboardSection();
+    if (u) syncCompetitionProfile(u).then(refreshLeaderboardSection).catch(() => refreshLeaderboardSection());
+    else refreshLeaderboardSection();
   }, (error) => showError(error));
   setStatus('Firebase initialized. Sign in to use cloud projects.');
   loadSharedProjectFromUrl();

@@ -20,9 +20,45 @@
   else if(window.P3X&&window.P3X(p,g,K,M,bx,cy)){}else{const W=Math.max(1.1,PT[p.t][3].split(' ').length*12/K+.4);g.add(bx(W,.07,.95,MC(p.t),0,.06,.1));g.add(bx(.45,.09,.35,'#111827',0,.13,0));if(k=='hb')g.add(bx(.7,.35,.4,'#374151',0,.25,0))}
   const n=PT[p.t][3].split(' ').length;for(let i=0;i<n;i++){const q=pinPos(p,i);g.add(bx(.06,.22,.06,'#e8c26a',(q[0]-88)/K,.11,(q[1]-52)/K))}
   g.userData=Object.assign(ud,{p});return g}
- function board3(){const g=new THREE.Group(),W=S.bw/K,H=S.bh/K,col={uno:'#0a7c86',mega:'#0a7c86',leo:'#0a7c86',nano:'#1f5fbf',pro:'#b3262f',pico:'#0b7a3d'}[S.bt]||'#171b26';g.position.set((S.bx+S.bw/2)/K,0,(S.by+S.bh/2)/K);g.add(bx(W,.12,H,col,0,.06,0,{roughness:.4}));g.add(bx(.9,.28,.8,'#c9ced6',-W/2+.2,.2,-H*.2,{metalness:.8}));g.add(bx(.8,.1,.35,'#111827',W*.1,.17,H*.15));
-  ['u','d'].forEach(d=>{const r=S.bp.filter(q=>q.d==d);if(r.length)g.add(bx((r[r.length-1].x-r[0].x+14)/K,.1,.2,'#0d0d0d',((r[0].x+r[r.length-1].x)/2-S.bw/2)/K,.17,(r[0].y-S.bh/2)/K))});S.bp.forEach(q=>g.add(bx(.06,.2,.06,'#e8c26a',(q.x-S.bw/2)/K,.22,(q.y-S.bh/2)/K)));return g}
- function wire3(w){const r=wroute(w);let pts=r.map((p,j)=>new THREE.Vector3(p.x/K,j==0||j==r.length-1?.3:.45,p.y/K));if(!(w.pts&&w.pts.length)){const a=pts[0],b=pts[pts.length-1],d=a.distanceTo(b);pts=[a,new THREE.Vector3((a.x+b.x)/2,.3+Math.min(.5,d*.07),(a.z+b.z)/2),b]}
+ function board3(){
+ const g=new THREE.Group(),W=S.bw/K,H=S.bh/K,uno=S.bt==='uno'||S.bt==='unor4',col={uno:'#087f86',unor4:'#087f86',mega:'#0a7c86',leo:'#0a7c86',nano:'#1f5fbf',pro:'#b3262f',pico:'#0b7a3d',esp32:'#176b52',cam:'#176b52'}[S.bt]||'#171b26';
+ g.position.set((S.bx+S.bw/2)/K,0,(S.by+S.bh/2)/K);
+ g.add(bx(W,.13,H,col,0,.065,0,{roughness:.48,metalness:.08}));
+ const chip=(x,z,w,h,label)=>{g.add(bx(w,.17,h,'#20242b',x,.19,z,{roughness:.6}));g.add(bx(w*.72,.035,h*.7,'#11151b',x,.29,z,{roughness:.35}));for(let q=-2;q<=2;q++){g.add(bx(.035,.09,.045,'#c8ccd0',x+q*w*.15,.13,z-h*.52));g.add(bx(.035,.09,.045,'#c8ccd0',x+q*w*.15,.13,z+h*.52))}return label};
+ const pad=(x,z)=>g.add(cy(.07,.018,'#0c1720',x,.14,z,{roughness:.8}));
+ const header=(x,z,n,dx)=>{for(let q=0;q<n;q++){const px=x+q*dx;g.add(bx(.075,.12,.075,'#111318',px,.16,z));g.add(cy(.022,.14,'#d6b86b',px,.22,z,{metalness:.85}))}};
+ if(uno){
+  // USB-B connector, barrel jack, voltage regulator and USB interface.
+  g.add(bx(.43,.28,.58,'#b9c0c9',-W*.42,.19,-H*.23,{metalness:.82,roughness:.28}));
+  g.add(bx(.30,.12,.34,'#252a32',-W*.42,.37,-H*.23,{metalness:.25}));
+  g.add(bx(.36,.27,.38,'#171b22',-W*.43,.18,H*.17,{roughness:.5}));
+  g.add(bx(.27,.14,.3,'#222830',-W*.31,.16,H*.31));
+  chip(-W*.19,-H*.23,.45,.36,'USB interface');
+  chip(W*.12,H*.06,.76,.42,'ATmega328P');
+  chip(W*.3,-H*.22,.35,.28,'regulator');
+  chip(-W*.08,H*.3,.24,.2,'op amp');
+  g.add(bx(.18,.2,.14,'#f1f3f5',W*.05,.19,-H*.29,{metalness:.25}));
+  g.add(cy(.085,.11,'#d6d9df',W*.28,.18,-H*.31,{metalness:.8}));
+  g.add(cy(.07,.1,'#d6d9df',W*.36,.18,-H*.31,{metalness:.8}));
+  g.add(bx(.13,.16,.12,'#161a20',W*.44,.18,-H*.05));
+  // Reset switch and status LEDs.
+  g.add(bx(.18,.12,.16,'#d8dce1',-W*.2,.16,H*.31,{metalness:.55}));
+  ['#39d98a','#ffcb4d','#e7eaf0'].forEach((c,n)=>g.add(cy(.035,.025,c,W*(.22+n*.075),.16,-H*.28,{emissive:c,emissiveIntensity:.18})));
+  header(-W*.35,-H*.43,8,W*.095);header(-W*.35,H*.43,8,W*.095);
+ }else{
+  chip(-W*.08,-H*.1,Math.min(.75,W*.3),Math.min(.42,H*.2),'main controller');
+  g.add(bx(W*.24,.16,H*.42,'#20252b',W*.28,.17,-H*.02,{metalness:.45}));
+  header(-W*.43,-H*.42,Math.max(4,Math.floor(W*2)),W*.86/Math.max(3,Math.floor(W*2)-1));
+  header(-W*.43,H*.42,Math.max(4,Math.floor(W*2)),W*.86/Math.max(3,Math.floor(W*2)-1));
+  if(/esp32|cam|nodemcu|s2|s3|c3/.test(S.bt)){g.add(bx(W*.26,.06,H*.12,'#c9ced6',W*.27,.2,-H*.28,{metalness:.7}));g.add(bx(W*.08,.035,H*.22,'#c4ccd5',W*.39,.17,-H*.28,{metalness:.75}))}
+ }
+ ['u','d'].forEach(d=>{const r=S.bp.filter(q=>q.d==d);if(r.length)g.add(bx((r[r.length-1].x-r[0].x+14)/K,.11,.2,'#101318',((r[0].x+r[r.length-1].x)/2-S.bw/2)/K,.16,(r[0].y-S.bh/2)/K))});
+ S.bp.forEach(q=>g.add(bx(.065,.2,.065,'#e5c77a',(q.x-S.bw/2)/K,.23,(q.y-S.bh/2)/K,{metalness:.85})));
+ // Four plated mounting holes with a subtle metal rim.
+ [[-.44,-.4],[.44,-.4],[-.44,.4],[.44,.4]].forEach(([x,z])=>{pad(W*x,H*z);g.add(cy(.085,.025,'#8e9aa7',W*x,.14,H*z,{metalness:.8}));pad(W*x,H*z)});
+ return g
+}
+function wire3(w){const r=wroute(w);let pts=r.map((p,j)=>new THREE.Vector3(p.x/K,j==0||j==r.length-1?.3:.45,p.y/K));if(!(w.pts&&w.pts.length)){const a=pts[0],b=pts[pts.length-1],d=a.distanceTo(b);pts=[a,new THREE.Vector3((a.x+b.x)/2,.3+Math.min(.5,d*.07),(a.z+b.z)/2),b]}
   const m=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),48,.034,10,false),M(w.c,{roughness:.35}));m.castShadow=true;return m}
  function build(){grp.clear();grp.add(board3());S.parts.forEach(p=>{try{grp.add(part3(p))}catch(e){}});S.wires.forEach(w=>{try{grp.add(wire3(w))}catch(e){}})}
  function cam3(){cm.position.set(tg.x+dist*Math.cos(el)*Math.sin(az),tg.y+dist*Math.sin(el),tg.z+dist*Math.cos(el)*Math.cos(az));cm.lookAt(tg)}

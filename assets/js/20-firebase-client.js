@@ -470,6 +470,8 @@ saveBtn.addEventListener('click', async () => {
   finally { saveBtn.disabled = false; }
 });
 projectsBtn.addEventListener('click', openCloudProjects);
+const challengeNav = $vx('vx-open-leaderboard');
+if (challengeNav) challengeNav.addEventListener('click', openLeaderboard);
 shareBtn.addEventListener('click', shareCurrentProject);
 
 try {

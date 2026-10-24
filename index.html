@@ -56,7 +56,7 @@ body:not([data-r=sim])>header,body:not([data-r=sim])>main,body:not([data-r=sim])
 #tip{position:absolute;pointer-events:none;padding:4px 8px;border-radius:6px;background:#10173aee;border:1px solid var(--line);font-size:11px;color:var(--acc);z-index:5;white-space:nowrap}#sig{width:100%;margin-top:8px;background:#070a22;border:1px solid var(--line);border-radius:8px}
 @media(max-width:900px){body{overflow:auto}main{grid-template-columns:1fr;grid-template-rows:auto minmax(420px,62vh) 380px;overflow:visible}#pal{max-height:150px}}
 </style></head><body data-r="home">
-<nav id="top"><span class="tb">VOLTIX SIMULATOR</span><div class="tl"><button data-go="home">Home</button><button data-go="sim">Simulator</button><button data-go="parts">Components</button><button data-go="pi">Raspberry Pi</button><button data-go="ai">AI Lab</button><button data-go="about">About</button></div><button class="mk" data-go="about">Made by <span class="hand">Ebraam Sameh</span> · S’28 Red Sea STEM</button></nav>
+<nav id="top"><span class="tb">VOLTIX SIMULATOR</span><div class="tl"><button data-go="home">Home</button><button data-go="sim">Simulator</button><button data-go="parts">Components</button><button data-go="pi">Raspberry Pi</button><button data-go="ai">AI Lab</button><button data-go="about">About</button></div><div id="vx-cloud-controls" aria-label="Cloud projects"><button id="vx-signin" type="button">Sign in with Google</button><button id="vx-save-cloud" type="button">Save to cloud</button><button id="vx-my-projects" type="button">My projects</button><button id="vx-share-cloud" type="button">Share</button><span id="vx-auth-label" role="status" aria-live="polite">Starting cloud tools…</span></div><button class="mk" data-go="about">Made by <span class="hand">Ebraam Sameh</span> · S’28 Red Sea STEM</button></nav>
 <header>
 <div class="logo">VOLTIX SIMULATOR<small>Wire it. Run it. See it work.</small></div>
 <select id="bd" title="Board"></select>
@@ -109,7 +109,7 @@ body:not([data-r=sim])>header,body:not([data-r=sim])>main,body:not([data-r=sim])
 <div class="cta"><select id="amode"><option value="motion">Motion detection</option><option value="color">Colour tracker</option><option value="light">Brightness meter</option></select><input id="acol" type="color" value="#ff3b3b"><label>Sensitivity <input id="amth" type="range" min="5" max="80" value="25"></label></div><pre class="cmd" id="airead">Camera off.</pre><img id="asnap" alt="" style="max-width:100%;border-radius:8px"></div>
 <div><h2>Target Raspberry Pi</h2><select id="aipi"></select> <select id="aiacc"><option>CPU only</option><option>AI HAT+ (Hailo)</option><option>AI Camera (IMX500)</option></select> <select id="aicam"><option>CSI camera</option><option>USB webcam</option></select><h2>Model</h2><select id="aimodel"></select><div id="aimeta"></div><div id="aichk"></div></div></div>
 <h2>Commands for the real Raspberry Pi</h2><div class="cta"><button id="aicopy">Copy commands</button></div><pre class="cmd" id="aicmd"></pre><h2>Model catalog</h2><div style="overflow:auto"><table id="mdtab"></table></div></section>
-<section class="pg" id="p-about"><h1>About VOLTIX</h1><p>VOLTIX SIMULATOR is a browser electronics lab: a circuit editor with a nodal-analysis solver, an Arduino-style code runner, a virtual Wi-Fi gateway, and a Raspberry Pi and AI preparation area.</p><div class="sigslot" style="margin:22px 0"></div><h2>What is not built yet</h2><p>Accounts and cloud saving, public project sharing, a Raspberry Pi companion service with device pairing, transistors, MOSFETs, op-amps, AC analysis, and a 3D lab. Projects are saved only in this browser.</p></section>
+<section class="pg" id="p-about"><h1>About VOLTIX</h1><p>VOLTIX SIMULATOR is a browser electronics lab: a circuit editor with a nodal-analysis solver, an Arduino-style code runner, a virtual Wi-Fi gateway, and a Raspberry Pi and AI preparation area.</p><div class="sigslot" style="margin:22px 0"></div><h2>Cloud features and scope</h2><p>Google sign-in, cloud projects, and public project links require the VOLTIX Firebase project to be configured, with Authentication providers and Firestore security rules enabled. Browser-local saving remains available. The simulator still does not provide a real ESP32 network bridge or run neural networks in the browser.</p><h2>Other development areas</h2><p>A Raspberry Pi companion service with device pairing, additional circuit models such as MOSFETs and op-amps, AC analysis, and broader 3D component coverage remain future development work.</p></section>
 </div>
 <script>
 const $=s=>document.querySelector(s),svg=$('#cv');
@@ -1813,4 +1813,437 @@ const sh=window.shape;window.shape=function(t,k,id,d,ohm,col){let s=sh(t,k,id,d,
 try{palBuild();document.querySelectorAll('#pal [data-add]').forEach(b=>{const k=b.dataset.add,w=SUPK[k]=='Full'||PD[k]||(typeof AN!='undefined'&&AN[k])||(typeof LIN!='undefined'&&LIN[k])||new Set(['an','dig','sx','joy','hb','sd','us','dht','servo','rgb','relay','disp','seg','neo','out','step','reg','led','res','btn','sw','bat','cap','ind','dio','fuse','dmm','i2c']).has(PT[k][4]);b.dataset.w=w?'w':'p';b.insertAdjacentHTML('beforeend',`<em class="bdg ${w?'w':'p'}">${w?'works':'basic'}</em>`)});ds().forEach((d,i)=>d.open=i<1);draw()}catch(e){console.warn(e)}
 })();
 </script>
+<style id="vx-firebase-style">
+#vx-cloud-controls{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+#vx-cloud-controls button{padding:5px 9px;font-size:11.5px;background:#11183f;border-color:#38428f;white-space:nowrap}
+#vx-cloud-controls #vx-signin{background:linear-gradient(135deg,#8b6cff,#c4b5fd);color:#090d2b;border:0;font-weight:700}
+#vx-auth-label{font:11px Inter,system-ui,sans-serif;color:#9a9fd4;max-width:220px;overflow-wrap:anywhere;padding:0 5px;margin-left:2px}
+#vx-auth-label.bad{color:#ff9eb4}
+#vx-cloud-modal{position:fixed;inset:0;z-index:2000;background:#020414d9;backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:18px}
+#vx-cloud-modal .vx-dialog{width:min(720px,100%);max-height:min(82vh,760px);display:flex;flex-direction:column;gap:12px;background:#0c1232;border:1px solid #454da0;border-radius:16px;padding:18px;box-shadow:0 24px 80px #000b;overflow:hidden}
+#vx-cloud-modal .vx-dialog-head{display:flex;align-items:center;gap:12px}
+#vx-cloud-modal h2{font:700 21px 'Space Grotesk',sans-serif;margin:0;color:#ebe9ff}
+#vx-cloud-modal .vx-dialog-head p{margin:4px 0 0;color:#9a9fd4;font-size:12px}
+#vx-cloud-modal .vx-close{margin-left:auto;padding:4px 10px;font-size:20px}
+#vx-cloud-modal .vx-cloud-message{font-size:12px;line-height:1.5;color:#b9bce9;white-space:pre-wrap}
+#vx-cloud-modal .vx-cloud-message.bad{color:#ff9eb4}
+#vx-cloud-modal .vx-cloud-list{overflow:auto;display:flex;flex-direction:column;gap:8px;min-height:70px;padding-right:2px}
+#vx-cloud-modal .vx-cloud-item{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px;border:1px solid #2c3578;border-radius:10px;background:#10173a}
+#vx-cloud-modal .vx-cloud-item-main{min-width:0;flex:1}
+#vx-cloud-modal .vx-cloud-item-title{font-weight:700;overflow-wrap:anywhere}
+#vx-cloud-modal .vx-cloud-item-meta{font-size:11px;color:#9a9fd4;margin-top:4px}
+#vx-cloud-modal .vx-cloud-item-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+#vx-cloud-modal .vx-cloud-item-actions button{font-size:11px;padding:5px 8px}
+#vx-cloud-modal .vx-danger{border-color:#80394f;color:#ffb3c4}
+#vx-cloud-modal .vx-empty{padding:20px;text-align:center;border:1px dashed #38428f;border-radius:10px;color:#9a9fd4}
+@media(max-width:850px){#vx-cloud-controls{width:100%;order:3}#top .mk{margin-left:auto}#vx-auth-label{max-width:none}}
+@media(max-width:560px){#vx-cloud-controls button{flex:1}#vx-auth-label{width:100%}#vx-cloud-modal .vx-dialog{padding:12px}#vx-cloud-modal .vx-cloud-item{align-items:flex-start;flex-direction:column}#vx-cloud-modal .vx-cloud-item-actions{justify-content:flex-start}}
+</style>
+<script>
+// Bridge between the existing simulator state and the separate Firebase module.
+// Keeping this adapter separate preserves the simulator's original local autosave.
+window.VOLTIXFirebaseBridge = {
+  getBoardName() { return BD[S.bt] ? BD[S.bt][0] : 'Circuit'; },
+  getProject() {
+    return JSON.parse(JSON.stringify({
+      schemaVersion: 1,
+      bt: S.bt,
+      parts: S.parts,
+      wires: S.wires,
+      bx: S.bx,
+      by: S.by,
+      n: S.n,
+      code: $('#code').value
+    }));
+  },
+  validateProject(p) {
+    if (!p || typeof p !== 'object' || !BD[p.bt]) throw new Error('This project has an unknown board type.');
+    if (!Array.isArray(p.parts) || !Array.isArray(p.wires)) throw new Error('This project is missing its parts or wires list.');
+    if (p.parts.length > 500 || p.wires.length > 2000) throw new Error('This project is larger than the simulator safety limits.');
+    if (typeof p.code !== 'string') p.code = '';
+    for (const part of p.parts) {
+      if (!part || typeof part.id !== 'string' || !PT[part.t] || !part.st || typeof part.st !== 'object' || !Number.isFinite(Number(part.x)) || !Number.isFinite(Number(part.y))) {
+        throw new Error('This project contains a component the simulator cannot load.');
+      }
+    }
+    for (const wire of p.wires) {
+      if (!wire || typeof wire.a !== 'string' || typeof wire.b !== 'string' || typeof wire.c !== 'string') {
+        throw new Error('This project contains a wire the simulator cannot load.');
+      }
+    }
+    return p;
+  },
+  applyProject(project) {
+    const p = this.validateProject(project);
+    stop();
+    Object.assign(S, {
+      bt: p.bt,
+      parts: JSON.parse(JSON.stringify(p.parts)),
+      wires: JSON.parse(JSON.stringify(p.wires)),
+      bx: Number.isFinite(Number(p.bx)) ? Number(p.bx) : 30,
+      by: Number.isFinite(Number(p.by)) ? Number(p.by) : 40,
+      n: Number.isFinite(Number(p.n)) ? Number(p.n) : p.parts.length,
+      sel: null,
+      pend: null
+    });
+    layout();
+    $('#bd').value = S.bt;
+    $('#code').value = p.code || '';
+    draw();
+    tab('code');
+    lnu();
+    fit();
+    go('sim');
+    return true;
+  },
+  notify(message, bad = false) { toast(message, bad ? 1 : 0); }
+};
+window.setTimeout(() => {
+  const label = document.getElementById('vx-auth-label');
+  if (label && label.textContent === 'Starting cloud tools…') {
+    label.textContent = 'Firebase SDK did not start. Check the connection and reload.';
+    label.classList.add('bad');
+  }
+}, 12000);
+</script>
+<script type="module">
+import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js';
+import {
+  getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc,
+  serverTimestamp, query, orderBy, limit
+} from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBjSYxFm7x-Us-0QkbP8f5IHghBWXO2IeY",
+  authDomain: "voltix-dc38e.firebaseapp.com",
+  projectId: "voltix-dc38e",
+  storageBucket: "voltix-dc38e.firebasestorage.app",
+  messagingSenderId: "336638796384",
+  appId: "1:336638796384:web:fa3a1505d6dc75c7ae5905",
+  measurementId: "G-0XM4G5DSZY"
+};
+
+const bridge = window.VOLTIXFirebaseBridge;
+const $vx = (id) => document.getElementById(id);
+const signInBtn = $vx('vx-signin');
+const saveBtn = $vx('vx-save-cloud');
+const projectsBtn = $vx('vx-my-projects');
+const shareBtn = $vx('vx-share-cloud');
+const authLabel = $vx('vx-auth-label');
+let auth, db, currentUser = null, activeProjectId = null, activeProjectTitle = '';
+let cloudModal = null;
+const storageGet = (key) => { try { return localStorage.getItem(key); } catch { return null; } };
+const storageSet = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
+const storageRemove = (key) => { try { localStorage.removeItem(key); } catch {} };
+const activeIdKey = (uid) => `vx-cloud-active:${uid}`;
+const activeTitleKey = (uid) => `vx-cloud-title:${uid}`;
+
+function setStatus(message, bad = false) {
+  authLabel.textContent = message;
+  authLabel.classList.toggle('bad', bad);
+  if (cloudModal) {
+    const msg = cloudModal.querySelector('.vx-cloud-message');
+    if (msg) {
+      msg.textContent = message;
+      msg.classList.toggle('bad', bad);
+    }
+  }
+}
+function friendlyError(error) {
+  const code = error && error.code ? error.code : '';
+  if (code === 'auth/operation-not-allowed') return 'Google sign-in is not enabled yet. In Firebase, open Authentication → Sign-in method and enable Google.';
+  if (code === 'auth/unauthorized-domain') return 'This website domain is not authorized. In Firebase Authentication settings, add ebramsameh.github.io under Authorized domains.';
+  if (code === 'auth/popup-blocked') return 'The browser blocked the sign-in popup. Allow popups for this site and try again.';
+  if (code === 'auth/popup-closed-by-user') return 'The sign-in window was closed before sign-in finished.';
+  if (code === 'auth/network-request-failed' || code === 'unavailable') return 'Network connection failed. Check your internet connection and try again.';
+  if (code === 'permission-denied' || code === 'firestore/permission-denied') return 'Firestore denied this request. Check the published security rules in firestore.rules.';
+  if (code === 'auth/invalid-api-key' || code === 'app/invalid-api-key') return 'Firebase rejected the web API key. Recheck the web app configuration in Project settings.';
+  return (error && error.message) ? error.message : 'An unexpected Firebase error occurred.';
+}
+function showError(error) {
+  const msg = friendlyError(error);
+  setStatus(msg, true);
+  console.error('[VOLTIX Firebase]', error);
+  return msg;
+}
+function renderAuth() {
+  if (currentUser) {
+    const label = currentUser.displayName || currentUser.email || 'Signed in';
+    signInBtn.textContent = 'Sign out';
+    signInBtn.title = `Signed in as ${label}. Click to sign out.`;
+    authLabel.textContent = `Signed in: ${label}`;
+    authLabel.classList.remove('bad');
+  } else {
+    signInBtn.textContent = 'Sign in with Google';
+    signInBtn.title = 'Sign in to save and open cloud projects';
+    authLabel.textContent = 'Not signed in';
+    authLabel.classList.remove('bad');
+  }
+}
+async function signIn() {
+  if (currentUser) return currentUser;
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    const result = await signInWithPopup(auth, provider);
+    currentUser = result.user;
+    if (!activeProjectId) activeProjectId = storageGet(activeIdKey(currentUser.uid));
+    if (!activeProjectTitle) activeProjectTitle = storageGet(activeTitleKey(currentUser.uid)) || '';
+    renderAuth();
+    setStatus(`Signed in as ${currentUser.displayName || currentUser.email || 'Google user'}.`);
+    return currentUser;
+  } catch (error) {
+    showError(error);
+    return null;
+  }
+}
+async function requireUser() {
+  if (currentUser) return currentUser;
+  const signedInUser = await signIn();
+  if (!signedInUser) throw new Error('Sign in was not completed.');
+  return signedInUser;
+}
+function projectFromSimulator() {
+  const p = bridge.getProject();
+  bridge.validateProject(p);
+  const bytes = new TextEncoder().encode(JSON.stringify(p)).length;
+  if (bytes > 800000) throw new Error('This circuit is too large for one Firestore document. Try reducing the circuit or code size.');
+  return p;
+}
+function projectTitleFallback(payload) {
+  const board = bridge.getBoardName ? bridge.getBoardName() : (payload && payload.bt ? payload.bt : 'circuit');
+  return `${board} circuit`;
+}
+async function saveCloudProject() {
+  const u = await requireUser();
+  const payload = projectFromSimulator();
+  let id = activeProjectId || storageGet(activeIdKey(u.uid));
+  let prior = null;
+  if (id) {
+    try {
+      const priorSnap = await getDoc(doc(db, 'users', u.uid, 'projects', id));
+      if (priorSnap.exists()) prior = priorSnap.data();
+      else id = null;
+    } catch (error) {
+      if (error.code === 'permission-denied') throw error;
+      id = null;
+    }
+  }
+  let title = activeProjectTitle || (prior && prior.title) || storageGet(activeTitleKey(u.uid)) || '';
+  if (!id || !title) {
+    const entered = window.prompt('Name this VOLTIX project:', title || projectTitleFallback(payload));
+    if (entered === null) return null;
+    title = entered.trim().slice(0, 120);
+    if (!title) throw new Error('Please enter a project name.');
+  }
+  const ref = id ? doc(db, 'users', u.uid, 'projects', id) : doc(collection(db, 'users', u.uid, 'projects'));
+  const record = {
+    ownerUid: u.uid,
+    title,
+    payload,
+    createdAt: (prior && prior.createdAt) || serverTimestamp(),
+    updatedAt: serverTimestamp()
+  };
+  await setDoc(ref, record);
+  activeProjectId = ref.id;
+  activeProjectTitle = title;
+  storageSet(activeIdKey(u.uid), activeProjectId);
+  storageSet(activeTitleKey(u.uid), activeProjectTitle);
+  setStatus(`Saved “${title}” to your cloud projects.`);
+  return { id: ref.id, title, payload };
+}
+function closeModal() {
+  if (cloudModal) cloudModal.remove();
+  cloudModal = null;
+}
+function openModal(title, description = '') {
+  closeModal();
+  const overlay = document.createElement('div');
+  overlay.id = 'vx-cloud-modal';
+  overlay.innerHTML = `<section class="vx-dialog" role="dialog" aria-modal="true" aria-labelledby="vx-cloud-heading"><div class="vx-dialog-head"><div><h2 id="vx-cloud-heading"></h2><p class="vx-cloud-description"></p></div><button class="vx-close" type="button" aria-label="Close">×</button></div><div class="vx-cloud-message" role="status" aria-live="polite"></div><div class="vx-cloud-list"></div></section>`;
+  overlay.querySelector('#vx-cloud-heading').textContent = title;
+  overlay.querySelector('.vx-cloud-description').textContent = description;
+  overlay.querySelector('.vx-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', (event) => { if (event.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function esc(event) {
+    if (event.key === 'Escape' && cloudModal === overlay) {
+      closeModal(); document.removeEventListener('keydown', esc);
+    }
+  });
+  document.body.appendChild(overlay);
+  cloudModal = overlay;
+  return overlay;
+}
+function modalStatus(message, bad = false) {
+  if (!cloudModal) return;
+  const el = cloudModal.querySelector('.vx-cloud-message');
+  el.textContent = message;
+  el.classList.toggle('bad', bad);
+}
+function makeButton(label, fn, className = '') {
+  const button = document.createElement('button');
+  button.type = 'button'; button.textContent = label;
+  if (className) button.className = className;
+  button.addEventListener('click', fn);
+  return button;
+}
+async function openCloudProjects() {
+  try {
+    const u = await requireUser();
+    const modal = openModal('My cloud projects', 'Saved to your VOLTIX account. Opening a project replaces the circuit currently on the canvas.');
+    modalStatus('Loading your projects…');
+    const list = modal.querySelector('.vx-cloud-list');
+    const q = query(collection(db, 'users', u.uid, 'projects'), orderBy('updatedAt', 'desc'), limit(50));
+    const result = await getDocs(q);
+    if (cloudModal !== modal) return;
+    list.replaceChildren();
+    if (result.empty) {
+      const empty = document.createElement('div');
+      empty.className = 'vx-empty';
+      empty.textContent = 'No cloud projects yet. Open the simulator and choose “Save to cloud”.';
+      list.appendChild(empty);
+      modalStatus('Cloud database connected. No saved projects found.');
+      return;
+    }
+    for (const snap of result.docs) {
+      const data = snap.data();
+      const item = document.createElement('article'); item.className = 'vx-cloud-item';
+      const main = document.createElement('div'); main.className = 'vx-cloud-item-main';
+      const name = document.createElement('div'); name.className = 'vx-cloud-item-title'; name.textContent = data.title || 'Untitled project';
+      const meta = document.createElement('div'); meta.className = 'vx-cloud-item-meta';
+      const date = data.updatedAt && typeof data.updatedAt.toDate === 'function' ? data.updatedAt.toDate().toLocaleString() : 'Date unavailable';
+      meta.textContent = `${data.payload && data.payload.bt ? data.payload.bt : 'board'} · Updated ${date}`;
+      main.append(name, meta);
+      const actions = document.createElement('div'); actions.className = 'vx-cloud-item-actions';
+      actions.appendChild(makeButton('Open', async () => {
+        try {
+          if (!window.confirm('Open this cloud project? The circuit currently on your canvas will be replaced.')) return;
+          bridge.applyProject(data.payload);
+          activeProjectId = snap.id; activeProjectTitle = data.title || 'Untitled project';
+          storageSet(activeIdKey(u.uid), activeProjectId); storageSet(activeTitleKey(u.uid), activeProjectTitle);
+          closeModal(); setStatus(`Opened “${activeProjectTitle}”.`);
+        } catch (error) { modalStatus(showError(error), true); }
+      }));
+      actions.appendChild(makeButton('Share', async () => {
+        try { await createShareLink(data.payload, data.title || 'Untitled project'); }
+        catch (error) { modalStatus(showError(error), true); }
+      }));
+      actions.appendChild(makeButton('Delete', async () => {
+        if (!window.confirm(`Delete “${data.title || 'Untitled project'}” from your cloud account? This cannot be undone.`)) return;
+        try {
+          await deleteDoc(doc(db, 'users', u.uid, 'projects', snap.id));
+          if (activeProjectId === snap.id) { activeProjectId = null; activeProjectTitle = ''; storageRemove(activeIdKey(u.uid)); storageRemove(activeTitleKey(u.uid)); }
+          item.remove();
+          if (!list.children.length) { const empty = document.createElement('div'); empty.className = 'vx-empty'; empty.textContent = 'No cloud projects left.'; list.appendChild(empty); }
+          modalStatus('Project deleted from your cloud account.');
+        } catch (error) { modalStatus(showError(error), true); }
+      }, 'vx-danger'));
+      item.append(main, actions); list.appendChild(item);
+    }
+    modalStatus(`Loaded ${result.size} project${result.size === 1 ? '' : 's'}.`);
+  } catch (error) {
+    showError(error);
+    if (cloudModal) modalStatus(friendlyError(error), true);
+  }
+}
+async function createShareLink(payload, title) {
+  const u = await requireUser();
+  if (!window.confirm('Anyone who has this link will be able to open a copy of this circuit, including its code. Do not share private information in the project. Create a public link?')) return null;
+  bridge.validateProject(payload);
+  const bytes = new TextEncoder().encode(JSON.stringify(payload)).length;
+  if (bytes > 800000) throw new Error('This circuit is too large to share in one Firestore document.');
+  const ref = doc(collection(db, 'sharedProjects'));
+  await setDoc(ref, {
+    ownerUid: u.uid,
+    title: String(title || 'VOLTIX project').slice(0, 120),
+    visibility: 'public',
+    payload,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  });
+  const link = new URL(window.location.href);
+  link.searchParams.set('share', ref.id);
+  link.hash = 'sim';
+  try {
+    await navigator.clipboard.writeText(link.toString());
+    setStatus('Public share link copied to clipboard. Anyone with the link can open this circuit.');
+    if (cloudModal) modalStatus('Public share link copied to clipboard. Anyone with the link can open the circuit.');
+  } catch {
+    window.prompt('Copy this public project link:', link.toString());
+    setStatus('Share link created. Copy it from the dialog to send it to others.');
+  }
+  return link.toString();
+}
+async function shareCurrentProject() {
+  try {
+    const saved = await saveCloudProject();
+    if (!saved) return;
+    await createShareLink(saved.payload, saved.title);
+  } catch (error) {
+    showError(error);
+  }
+}
+async function loadSharedProjectFromUrl() {
+  const shareId = new URLSearchParams(window.location.search).get('share');
+  if (!shareId) return;
+  try {
+    setStatus('Loading shared circuit…');
+    const snap = await getDoc(doc(db, 'sharedProjects', shareId));
+    if (!snap.exists()) throw new Error('This share link was not found, or its owner removed access.');
+    const data = snap.data();
+    if (data.visibility !== 'public') throw new Error('This project is not publicly shared. Ask its owner for an accessible link.');
+    if (!window.confirm(`Open the shared project “${data.title || 'VOLTIX project'}”? It will replace the circuit currently on your canvas.`)) {
+      setStatus('Shared project was not opened. Your current circuit was kept.');
+      return;
+    }
+    bridge.applyProject(data.payload);
+    activeProjectId = null; activeProjectTitle = '';
+    if (currentUser) {
+      storageRemove(activeIdKey(currentUser.uid)); storageRemove(activeTitleKey(currentUser.uid));
+    }
+    setStatus(`Opened shared project “${data.title || 'VOLTIX project'}” as a local copy. Save it to your account to keep your own copy.`);
+  } catch (error) {
+    showError(error);
+  }
+}
+
+signInBtn.addEventListener('click', async () => {
+  if (!currentUser) { await signIn(); return; }
+  try {
+    await signOut(auth);
+    currentUser = null; activeProjectId = null; activeProjectTitle = '';
+    renderAuth(); setStatus('Signed out. Browser-local saving is still available.');
+  } catch (error) { showError(error); }
+});
+saveBtn.addEventListener('click', async () => {
+  saveBtn.disabled = true;
+  try { const saved = await saveCloudProject(); if (saved) bridge.notify(`Saved “${saved.title}” to your cloud projects.`); }
+  catch (error) { showError(error); bridge.notify(friendlyError(error), true); }
+  finally { saveBtn.disabled = false; }
+});
+projectsBtn.addEventListener('click', openCloudProjects);
+shareBtn.addEventListener('click', shareCurrentProject);
+
+try {
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  onAuthStateChanged(auth, (u) => {
+    currentUser = u;
+    if (u) {
+      activeProjectId = activeProjectId || storageGet(activeIdKey(u.uid));
+      activeProjectTitle = activeProjectTitle || storageGet(activeTitleKey(u.uid)) || '';
+    } else {
+      activeProjectId = null; activeProjectTitle = '';
+    }
+    renderAuth();
+  }, (error) => showError(error));
+  setStatus('Firebase initialized. Sign in to use cloud projects.');
+  loadSharedProjectFromUrl();
+} catch (error) {
+  showError(error);
+}
+</script>
+
 </body></html>

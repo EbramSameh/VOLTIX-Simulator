@@ -307,35 +307,52 @@ function openLoginExperience() {
   const overlay = document.createElement('div');
   overlay.id = 'vx-cloud-modal';
   overlay.innerHTML = `<section class="vx-dialog vx-login-dialog" role="dialog" aria-modal="true" aria-labelledby="vx-login-heading">
-    <button class="vx-close" type="button" aria-label="Close">×</button>
-    <div class="vx-login-mark" aria-hidden="true">V</div>
-    <p class="vx-login-eyebrow">YOUR WORKSPACE, SAVED</p>
-    <h2 id="vx-login-heading">Welcome to VOLTIX</h2>
-    <p class="vx-login-copy">Sign in to keep your circuits in the cloud, reopen projects on another device, and share your work with a link.</p>
-    <button class="vx-google-login" type="button"><span class="vx-google-g" aria-hidden="true">G</span><span>Continue with Google</span></button>
-    <div class="vx-login-note">Secure Google sign-in · Your projects stay in your account</div>
-    <div class="vx-cloud-message" role="status" aria-live="polite">You can use the simulator without signing in.</div>
+    <button class="vx-close" type="button" aria-label="Close sign-in">×</button>
+    <div class="vx-login-brand">
+      <div class="vx-login-brand-top"><span class="vx-login-mark">V</span><span>VOLTIX<span class="vx-brand-dot">.</span></span></div>
+      <div class="vx-login-visual" aria-hidden="true">
+        <div class="vx-orbit vx-orbit-one"></div><div class="vx-orbit vx-orbit-two"></div>
+        <svg viewBox="0 0 220 160"><defs><linearGradient id="vx-login-line" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#22d3ee"/><stop offset="1" stop-color="#a99aff"/></linearGradient></defs><path d="M25 80H65L85 42H122L145 80H195M85 42V18M122 42V18M145 80V122H185" fill="none" stroke="url(#vx-login-line)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="25" cy="80" r="5" fill="#22d3ee"/><circle cx="85" cy="42" r="5" fill="#a99aff"/><circle cx="122" cy="42" r="5" fill="#22d3ee"/><circle cx="145" cy="80" r="5" fill="#a99aff"/><circle cx="185" cy="122" r="5" fill="#22d3ee"/><rect x="72" y="62" width="55" height="36" rx="8" fill="#161e4c" stroke="#6265b8"/><path d="M91 80h17m-8-8v16" stroke="#e8e8ff" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="vx-login-brand-copy"><p class="vx-login-eyebrow">YOUR IDEAS, CONNECTED</p><h3>Build something<br><span>brilliant.</span></h3><p>Pick up where inspiration strikes. Your circuits and projects, all in one workspace.</p></div>
+      <div class="vx-login-brand-foot"><span class="vx-status-dot"></span> Your personal electronics workspace</div>
+    </div>
+    <div class="vx-login-form">
+      <div class="vx-login-mobile-mark"><span class="vx-login-mark">V</span><b>VOLTIX<span class="vx-brand-dot">.</span></b></div>
+      <p class="vx-login-eyebrow">WELCOME BACK</p>
+      <h2 id="vx-login-heading">Sign in to your workspace</h2>
+      <p class="vx-login-copy">Access your saved circuits and continue building.</p>
+      <button class="vx-google-login" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.6 4.6 0 0 1-2 3.02v2.52h3.24c1.9-1.75 2.98-4.33 2.98-7.37Z"/><path fill="#34A853" d="M12 22c2.7 0 4.97-.9 6.62-2.4l-3.24-2.52c-.9.6-2.04.96-3.38.96-2.6 0-4.8-1.75-5.6-4.1H3.05v2.6A10 10 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.4 13.94a6 6 0 0 1 0-3.88v-2.6H3.05a10 10 0 0 0 0 9.08l3.35-2.6Z"/><path fill="#EA4335" d="M12 5.96c1.47 0 2.79.5 3.83 1.52l2.87-2.87C16.96 3.02 14.7 2 12 2a10 10 0 0 0-8.95 5.46l3.35 2.6c.8-2.35 3-4.1 5.6-4.1Z"/></svg><span>Continue with Google</span><span class="vx-login-arrow">→</span></button>
+      <div class="vx-login-divider"><span>QUICK AND SECURE</span></div>
+      <div class="vx-login-benefits"><div><span class="vx-benefit-icon">✓</span><span><b>Your projects, anywhere</b><small>Save and open your circuits across devices.</small></span></div><div><span class="vx-benefit-icon">↗</span><span><b>Share your work</b><small>Send a project link to your teammates.</small></span></div></div>
+      <div class="vx-cloud-message" role="status" aria-live="polite">No password to remember. Google handles sign-in securely.</div>
+      <p class="vx-login-terms">By continuing, you agree to use VOLTIX responsibly. <br/>You can explore the simulator without an account.</p>
+    </div>
   </section>`;
   const close = () => { if (cloudModal === overlay) closeModal(); };
   overlay.querySelector('.vx-close').addEventListener('click', close);
   overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
+  const onKey = event => { if (event.key === 'Escape' && cloudModal === overlay) { closeModal(); document.removeEventListener('keydown', onKey); } };
+  document.addEventListener('keydown', onKey);
   overlay.querySelector('.vx-google-login').addEventListener('click', async event => {
     const button = event.currentTarget;
     button.disabled = true;
-    button.querySelector('span:last-child').textContent = 'Connecting to Google…';
+    button.querySelector('span:nth-of-type(1)').textContent = 'Connecting to Google…';
     const msg = overlay.querySelector('.vx-cloud-message');
-    msg.textContent = 'A secure Google sign-in window will open.';
+    msg.textContent = 'Waiting for Google sign-in…';
+    msg.classList.remove('bad');
     const user = await signIn();
-    if (user) close();
+    if (user) { document.removeEventListener('keydown', onKey); close(); }
     else {
       button.disabled = false;
-      button.querySelector('span:last-child').textContent = 'Try Google sign-in again';
-      msg.textContent = 'Sign-in did not finish. Check the account status above, then try again.';
+      button.querySelector('span:nth-of-type(1)').textContent = 'Try Google sign-in again';
+      msg.textContent = authLabel.textContent || 'Sign-in did not finish. Please try again.';
       msg.classList.add('bad');
     }
   });
   document.body.appendChild(overlay);
   cloudModal = overlay;
+  requestAnimationFrame(() => overlay.querySelector('.vx-google-login').focus());
 }
 
 signInBtn.addEventListener('click', async () => {

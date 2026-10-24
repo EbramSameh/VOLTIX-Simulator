@@ -271,30 +271,7 @@ const COMPETITION_BOARDS=[
 ];
 let activeCompetitionBoard='projects';
 window.VOLTIXLeaderboardRefresh=refreshLeaderboardSection;
-async function refreshLeaderboardSection(selectedBoard){
- const list=$vx('vx-leaderboard-list'),status=$vx('vx-challenge-status'),profileEl=$vx('vx-challenge-profile');if(!list||!status||!profileEl||!db)return;
- status.textContent='Loading live rankings…';list.innerHTML='<div class="vx-leaderboard-loading"><span class="vx-loader"></span> Loading builder profiles…</div>';
- try{
-  let own={},count=0;
-  if(currentUser){
-   const ownSnap=await getDoc(doc(db,'leaderboard',currentUser.uid));if(ownSnap.exists())own=ownSnap.data();count=Number(own.projectCount)||0;
-   profileEl.innerHTML='<div class="vx-profile-avatar"></div><div class="vx-profile-main"><b class="vx-profile-name"></b><span class="vx-profile-email"></span><small class="vx-profile-bio"></small><small class="vx-profile-score"></small></div><button id="vx-profile-settings" type="button">Edit profile</button>';
-   const avatar=profileEl.querySelector('.vx-profile-avatar');if(currentUser.photoURL){const img=document.createElement('img');img.src=currentUser.photoURL;img.alt='';img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();avatar.textContent=(currentUser.displayName||'V').trim().slice(0,1).toUpperCase()};avatar.appendChild(img)}else avatar.textContent=(currentUser.displayName||'V').trim().slice(0,1).toUpperCase();
-   profileEl.querySelector('.vx-profile-name').textContent=own.displayName||currentUser.displayName||'VOLTIX Builder';profileEl.querySelector('.vx-profile-email').textContent=currentUser.email||'Google account connected';profileEl.querySelector('.vx-profile-bio').textContent=own.bio||'Add a short bio in your profile settings.';profileEl.querySelector('.vx-profile-score').textContent=count+' saved-project points';$vx('vx-profile-settings').addEventListener('click',openProfileSettings);
-   const hero=$vx('vx-challenge-signin');if(hero){hero.textContent='Profile settings';hero.onclick=openProfileSettings}
-  }else{
-   profileEl.innerHTML='<div class="vx-profile-placeholder">V</div><div><b>Guest builder</b><span>Sign in to create your public profile and join the rankings.</span></div><button id="vx-challenge-profile-action" type="button">Sign in</button>';$vx('vx-challenge-profile-action').addEventListener('click',openLoginExperience);
-   const hero=$vx('vx-challenge-signin');if(hero){hero.textContent='Sign in to join';hero.onclick=openLoginExperience}
-  }
-  const pointEl=$vx('vx-mission-points');if(pointEl)pointEl.textContent=String(count);const grid=$vx('vx-mission-grid');
-  if(grid){grid.replaceChildren();[{n:'01',title:'First circuit',desc:'Save your first cloud project.',goal:1},{n:'02',title:'Curious builder',desc:'Save 3 unique cloud projects.',goal:3},{n:'03',title:'Prototype creator',desc:'Save 5 unique cloud projects.',goal:5}].forEach(m=>{const done=count>=m.goal,card=document.createElement('article');card.className='vx-mission-card'+(done?' is-complete':'');const num=document.createElement('span');num.className='vx-mission-number';num.textContent=m.n;const copy=document.createElement('div'),title=document.createElement('b'),desc=document.createElement('p');title.textContent=m.title;desc.textContent=m.desc;copy.append(title,desc);const state=document.createElement('span');state.className='vx-mission-state';state.textContent=done?'COMPLETED':(currentUser?'IN PROGRESS':'SIGN IN');card.append(num,copy,state);grid.appendChild(card)})}
-  const result=await getDocs(query(collection(db,'leaderboard'),where('projectCount','>',0),orderBy('projectCount','desc'),limit(50)));list.replaceChildren();
-  if(result.empty){list.innerHTML='<div class="vx-leaderboard-empty"><span>01</span><b>Be the first builder</b><p>Save your first cloud project to appear on the leaderboard.</p></div>';status.textContent='The leaderboard is ready for its first saved project.';return}
-  result.docs.forEach((snap,index)=>{const player=snap.data(),row=document.createElement('article');row.className='vx-leader-row'+(index<3?' vx-leader-podium':'');const rank=document.createElement('span');rank.className='vx-leader-rank';rank.textContent=String(index+1).padStart(2,'0');const avatar=document.createElement('div');avatar.className='vx-leader-avatar';if(player.photoURL){const img=document.createElement('img');img.src=player.photoURL;img.alt='';img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();avatar.textContent=(player.displayName||'V').trim().slice(0,1).toUpperCase()};avatar.appendChild(img)}else avatar.textContent=(player.displayName||'V').trim().slice(0,1).toUpperCase();const info=document.createElement('div');info.className='vx-leader-info';const name=document.createElement('b');name.textContent=player.displayName||'VOLTIX Builder';const sub=document.createElement('span');sub.textContent=player.bio||(index===0?'Top builder':index<3?'Podium builder':'Community builder');info.append(name,sub);const score=document.createElement('div');score.className='vx-leader-score';const points=document.createElement('b');points.textContent=String(Number(player.projectCount)||0);const label=document.createElement('span');label.textContent='PROJECT PTS';score.append(points,label);row.append(rank,avatar,info,score);list.appendChild(row)});
-  status.textContent='Live rankings · '+result.size+' builder profile'+(result.size===1?'':'s')+' · Top 50';
- }catch(error){list.innerHTML='<div class="vx-leaderboard-empty"><b>Leaderboard temporarily unavailable</b><p></p></div>';list.querySelector('p').textContent=friendlyError(error);status.textContent='Could not load rankings.'}
-}
-window.VOLTIXLeaderboardRefresh=refreshLeaderboardSection;
+
 async function saveCloudProject(options = {}) {
   const u = await requireUser();
   const payload = projectFromSimulator();
@@ -547,6 +524,7 @@ projectsBtn.addEventListener('click', openCloudProjects);
 const challengeNav=$vx('vx-open-leaderboard');if(challengeNav)challengeNav.addEventListener('click',()=>{if(window.VOLTIXLeaderboardRefresh)window.VOLTIXLeaderboardRefresh()});
 const challengeProfileAction=$vx('vx-challenge-profile-action'),challengeRefresh=$vx('vx-leaderboard-refresh');
 if(challengeProfileAction)challengeProfileAction.addEventListener('click',openLoginExperience);if(challengeRefresh)challengeRefresh.addEventListener('click',refreshLeaderboardSection);
+document.querySelectorAll('[data-competition-board]').forEach(btn=>btn.addEventListener('click',()=>refreshLeaderboardSection(btn.dataset.competitionBoard)));
 shareBtn.addEventListener('click', shareCurrentProject);
 
 try {

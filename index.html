@@ -13,11 +13,11 @@
 <link rel="stylesheet" href="assets/css/voltix-core.css">
 <link rel="stylesheet" href="assets/css/voltix-components.css">
 </head><body data-r="home">
-<nav id="top"><span class="tb">VOLTIX SIMULATOR</span><div class="tl"><button data-go="home">Home</button><button data-go="sim">Simulator</button><button data-go="parts">Components</button><button data-go="pi">Raspberry Pi</button><button data-go="ai">AI Lab</button><button data-go="about">About</button><button id="vx-open-leaderboard" type="button" class="vx-nav-competition">Build Challenge</button></div><div id="vx-cloud-controls" aria-label="Cloud projects"><button id="vx-signin" type="button">Sign in with Google</button><button id="vx-save-cloud" type="button">Save to cloud</button><button id="vx-my-projects" type="button">My projects</button><button id="vx-share-cloud" type="button">Share</button><span id="vx-auth-label" role="status" aria-live="polite">Starting cloud tools…</span></div><button class="mk" data-go="about">Made by <span class="hand">Ebram Sameh</span> · S’28 Red Sea STEM</button></nav>
+<nav id="top"><span class="tb">VOLTIX SIMULATOR</span><div class="tl"><button data-go="home">Home</button><button data-go="sim">Simulator</button><button data-go="parts">Components</button><button data-go="pi">Raspberry Pi</button><button data-go="ai">AI Lab</button><button data-go="about">About</button><button id="vx-open-leaderboard" type="button" class="vx-nav-competition" data-go="challenge">Build Challenge</button></div><div id="vx-cloud-controls" aria-label="Cloud projects"><button id="vx-signin" type="button">Sign in with Google</button><button id="vx-save-cloud" type="button">Save to cloud</button><button id="vx-my-projects" type="button">My projects</button><button id="vx-share-cloud" type="button">Share</button><span id="vx-auth-label" role="status" aria-live="polite">Starting cloud tools…</span></div><button class="mk" data-go="about">Made by <span class="hand">Ebram Sameh</span> · S’28 Red Sea STEM</button></nav>
 <header>
 <div class="logo">VOLTIX SIMULATOR<small>Wire it. Run it. See it work.</small></div>
 <select id="bd" title="Board"></select>
-<select id="ex"><option value="">Load an example</option></select>
+<select id="ex"><option value="">Load an example</option></select><button id="vx-new-circuit" type="button" title="Start a fresh Arduino Uno circuit">＋ New circuit</button>
 <button class="run" id="run">▶ Run</button><button id="stop">■ Stop</button>
 <select id="sp" title="Simulation speed"><option value="1">Normal speed</option><option value="5">5× turbo</option><option value="20">20× turbo</option></select>
 <button id="v3">3D view</button><button id="und">Undo</button><button id="del">Delete part</button><button id="clr">Clear</button><button id="lib">Libraries</button><button id="bom">Parts list</button>
@@ -42,7 +42,7 @@
 <g id="wl"></g><g id="pl"></g><path id="pv" class="wire pv"/>
 </svg>
 <div id="guide"></div><div id="props" hidden><div id="pc"></div><label id="olbl" hidden>Resistance</label><input id="ohm" size="9" list="e12" placeholder="e.g. 4.7k"><datalist id="e12"><option value="10"><option value="47"><option value="100"><option value="220"><option value="330"><option value="470"><option value="1k"><option value="2.2k"><option value="4.7k"><option value="10k"><option value="47k"><option value="100k"><option value="1M"></datalist></div><div id="wtb"><button id="bfit" title="Fit the circuit in view">Fit</button><button id="btidy" title="Arrange parts neatly (Undo restores)">Tidy</button><button id="snap" data-on="1" title="Snap parts to the grid">Snap on</button><button id="bzo" title="Zoom out">−</button><span id="zl">100%</span><button id="bzi" title="Zoom in">+</button></div>
-<div id="empty"><b>Empty workspace</b><span>Pick a part from the library, or load an example.</span><button id="bex">Load the blink example</button></div>
+<div id="empty"><b>Empty workspace</b><span>Pick a part from the library, or load an example.</span><button id="bex">Load a Blink example</button></div>
 <div id="tip" hidden></div><div id="toast"></div><div id="prob" hidden></div>
 <div id="camp" hidden>ESP32-CAM live view<video id="vid" autoplay muted playsinline></video><div id="cmsg"></div></div>
 </section>
@@ -66,6 +66,16 @@
 <div class="cta"><select id="amode"><option value="motion">Motion detection</option><option value="color">Colour tracker</option><option value="light">Brightness meter</option></select><input id="acol" type="color" value="#ff3b3b"><label>Sensitivity <input id="amth" type="range" min="5" max="80" value="25"></label></div><pre class="cmd" id="airead">Camera off.</pre><img id="asnap" alt="" style="max-width:100%;border-radius:8px"></div>
 <div><h2>Target Raspberry Pi</h2><select id="aipi"></select> <select id="aiacc"><option>CPU only</option><option>AI HAT+ (Hailo)</option><option>AI Camera (IMX500)</option></select> <select id="aicam"><option>CSI camera</option><option>USB webcam</option></select><h2>Model</h2><select id="aimodel"></select><div id="aimeta"></div><div id="aichk"></div></div></div>
 <h2>Commands for the real Raspberry Pi</h2><div class="cta"><button id="aicopy">Copy commands</button></div><pre class="cmd" id="aicmd"></pre><h2>Model catalog</h2><div style="overflow:auto"><table id="mdtab"></table></div></section>
+<section class="pg" id="p-challenge">
+<h1>Build Challenge</h1>
+<p>Build circuits, save your projects, and climb the VOLTIX community leaderboard. Rankings are based on unique cloud projects saved to your account.</p>
+<div class="vx-challenge-hero"><div class="vx-challenge-mark" aria-hidden="true">V<span>×</span></div><div class="vx-challenge-copy"><span class="vx-challenge-kicker">VOLTIX COMMUNITY</span><h2>Make it work. Make it yours.</h2><p>Your builder profile and project score appear here when you sign in. The public rankings show the builders with the most saved projects.</p></div><button id="vx-challenge-signin" class="run" type="button">Sign in to join</button></div>
+<div class="vx-challenge-profile" id="vx-challenge-profile"><div class="vx-profile-placeholder">V</div><div><b>Guest builder</b><span>Sign in to view your builder profile and project score.</span></div><button id="vx-challenge-profile-action" type="button">Sign in</button></div>
+<div class="vx-leaderboard-heading"><div><span class="vx-challenge-kicker">THE RANKINGS</span><h2>Top builders</h2><p>Ranked by saved cloud projects.</p></div><button id="vx-leaderboard-refresh" type="button">↻ Refresh rankings</button></div>
+<div id="vx-challenge-status" class="vx-challenge-status" role="status" aria-live="polite">Connecting to the leaderboard…</div>
+<div id="vx-leaderboard-list" class="vx-leaderboard-list"><div class="vx-leaderboard-loading"><span class="vx-loader"></span> Loading builder profiles…</div></div>
+<p class="note">Competition scores are based on saved cloud projects. Public profile names and profile photos come from Google sign-in.</p>
+</section>
 <section class="pg" id="p-about"><h1>About VOLTIX</h1><p>VOLTIX SIMULATOR is a browser electronics lab: a circuit editor with a nodal-analysis solver, an Arduino-style code runner, a virtual Wi-Fi gateway, and a Raspberry Pi and AI preparation area.</p><div class="sigslot" style="margin:22px 0"></div><h2>Cloud features and scope</h2><p>Google sign-in, cloud projects, and public project links require the VOLTIX Firebase project to be configured, with Authentication providers and Firestore security rules enabled. Browser-local saving remains available. The simulator still does not provide a real ESP32 network bridge or run neural networks in the browser.</p><h2>Other development areas</h2><p>A Raspberry Pi companion service with device pairing, additional circuit models such as MOSFETs and op-amps, AC analysis, and broader 3D component coverage remain future development work.</p></section>
 </div>
 <script>

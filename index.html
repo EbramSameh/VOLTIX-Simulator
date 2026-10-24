@@ -413,6 +413,123 @@ void setup() {
 
 void loop() {
 }`};
+EX.pi_guardian={bt:'pico',P:'bme280 230 25,oled 470 25,us 250 210,pir 490 210,ledr 700 30,res220 700 130,ledg 820 30,res220 820 130,buz 700 240,btn 850 240',W:'p1:VCC>b:3V3,p1:GND>b:GND,p1:SCL>b:G5,p1:SDA>b:G4,p2:VCC>b:3V3,p2:GND>b:GND2,p2:SDA>b:G4,p2:SCL>b:G5,p3:VCC>b:5V,p3:TRIG>b:G16,p3:ECHO>b:G17,p3:GND>b:GND,p4:VCC>b:3V3,p4:OUT>b:G18,p4:GND>b:GND2,b:G19>p6:A,p6:B>p5:A,p5:C>b:GND,b:G20>p8:A,p8:B>p7:A,p7:C>b:GND2,b:G21>p9:+,p9:->b:GND,b:G22>p10:1,p10:2>b:GND2',c:`#include <Wire.h>
+#include <Adafruit_BME280.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+const int TRIG_PIN = 16;
+const int ECHO_PIN = 17;
+const int PIR_PIN = 18;
+const int RED_LED = 19;
+const int GREEN_LED = 20;
+const int BUZZER = 21;
+const int ARM_BUTTON = 22;
+
+Adafruit_BME280 bme;
+Adafruit_SSD1306 display(128, 64, &Wire, -1);
+
+bool armed = false;
+bool lastButton = HIGH;
+unsigned long lastChange = 0;
+
+float readDistanceCm() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(3);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  unsigned long duration = pulseIn(ECHO_PIN, HIGH, 30000);
+  if (duration == 0) return 999.0;
+  return duration * 0.0343 / 2.0;
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(PIR_PIN, INPUT);
+  pinMode(RED_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
+  pinMode(ARM_BUTTON, INPUT_PULLUP);
+
+  Wire.setSDA(4);
+  Wire.setSCL(5);
+  Wire.begin();
+
+  bool sensorOK = bme.begin(0x76);
+  if (!sensorOK) sensorOK = bme.begin(0x77);
+
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.clearDisplay();
+  display.setTextColor(SSD1306_WHITE);
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.println("VOLTIX LAB GUARD");
+  display.println(sensorOK ? "BME280 ready" : "BME280 not found");
+  display.display();
+  delay(1000);
+}
+
+void loop() {
+  bool buttonNow = digitalRead(ARM_BUTTON);
+  if (buttonNow != lastButton && millis() - lastChange > 40) {
+    lastChange = millis();
+    lastButton = buttonNow;
+    if (buttonNow == LOW) armed = !armed;
+  }
+
+  float distance = readDistanceCm();
+  bool motion = digitalRead(PIR_PIN) == HIGH;
+  bool alarm = armed && (motion || distance < 30.0);
+
+  digitalWrite(RED_LED, alarm ? HIGH : LOW);
+  digitalWrite(GREEN_LED, alarm ? LOW : HIGH);
+  digitalWrite(BUZZER, alarm ? HIGH : LOW);
+
+  float temp = bme.readTemperature();
+  float humidity = bme.readHumidity();
+  float pressure = bme.readPressure() / 100.0F;
+
+  display.clearDisplay();
+  display.setCursor(0, 0);
+  display.println("VOLTIX | LAB GUARD");
+  display.print("Mode: ");
+  display.println(armed ? "ARMED" : "DISARMED");
+  display.print("Temp: ");
+  display.print(temp, 1);
+  display.println(" C");
+  display.print("Humidity: ");
+  display.print(humidity, 0);
+  display.println("%");
+  display.print("Pressure: ");
+  display.print(pressure, 0);
+  display.println(" hPa");
+  display.print("Distance: ");
+  if (distance > 400) display.println("--");
+  else {
+    display.print(distance, 0);
+    display.println(" cm");
+  }
+  display.print("Motion: ");
+  display.println(motion ? "YES" : "NO");
+  display.display();
+
+  Serial.print("armed=");
+  Serial.print(armed);
+  Serial.print(", motion=");
+  Serial.print(motion);
+  Serial.print(", distance_cm=");
+  Serial.print(distance);
+  Serial.print(", alarm=");
+  Serial.println(alarm);
+
+  delay(250);
+}`};
+EXN.pi_guardian='Smart Lab Guardian (Raspberry Pi Pico)';
+
 const S={bt:'uno',parts:[],wires:[],bx:30,by:40,n:0,sel:null,pend:null,bp:[],bh:0};
 const H={pm:{},pv:{},tn:{},sv:{},scr:{},sg:{},rq:[],inb:[],neo:{},fl:[],tok:0,sp:1,t0:0,run:0};
 const GW={ssid:'WES-Private',pw:'wes12345',on:true,rssi:-48};
@@ -890,6 +1007,6 @@ layout();S.bt='uno';$('#bd').value='uno';S.parts=[];S.wires=[];S.n=0;S.sel=null;
 <script src="assets/js/18-responsive-layout.js"></script>
 
 <script src="assets/js/19-firebase-bridge.js"></script>
-<script type="module" src="assets/js/20-firebase-client.js?v=20261024-final-polish"></script>
+<script type="module" src="assets/js/20-firebase-client.js?v=20261024-pico-guardian"></script>
 
 </body></html>

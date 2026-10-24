@@ -36,3 +36,29 @@ $q('#pgo').onclick=()=>{const txt=$q('#ptxt').value,head=txt.split(/[:.;\n]/)[0]
  const r=wireParts(S.parts.slice(mark));try{fit()}catch(e){}draw();
  $q('#pout').innerHTML=`<b style="color:var(--ink)">Added:</b> ${added.join(', ')}<br><b style="color:var(--ink)">Wired:</b> ${r.n} connections on ${BD[S.bt][0]} (LEDs got a 220 Ω resistor).`+(r.miss.length?'<br>No free pin for: '+r.miss.join(', '):'')+(unk.length?'<br>Not recognised: '+unk.join(', '):'')+'<br>Next: write or paste code in the editor, then press Run.'};
 })();
+
+// --- electrical safety pass: visual diagnostics for common wiring mistakes ---
+(()=>{const $=s=>document.querySelector(s),root=x=>{while(parent.has(x)&&parent.get(x)!==x)x=parent.get(x);return x},parent=new Map();
+ const ensure=x=>{if(!parent.has(x))parent.set(x,x)},join=(a,b)=>{ensure(a);ensure(b);const x=root(a),y=root(b);if(x!==y)parent.set(x,y)};
+ function analyze(){if(!window.S||!Array.isArray(S.parts)||!Array.isArray(S.wires)||!Array.isArray(S.bp))return[];parent.clear();S.wires.forEach(w=>join(w.a,w.b));const net=x=>{ensure(x);return root(x)},messages=[],seen=new Set(),add=(level,title,detail)=>{const key=level+title+detail;if(!seen.has(key)){seen.add(key);messages.push({level,title,detail})}},boardNets=new Map();
+ S.bp.forEach(p=>{const r=net('b:'+p.l);if(!boardNets.has(r))boardNets.set(r,[]);boardNets.get(r).push(p)});
+ boardNets.forEach((pins,r)=>{const power=pins.some(p=>p.k==='p5'||p.k==='p3'),ground=pins.some(p=>p.k==='g');if(power&&ground)add('danger','Power-to-ground short','A single connected net contains both a supply pin and GND. Disconnect the short before running the circuit.')});
+ const byId=new Map(S.parts.map(p=>[String(p.id),p])),resistors=S.parts.filter(p=>p.k==='res'||/resistor/i.test(String(p.t||'')));
+ const pinNet=(p,l)=>{const pin=p.id+':'+l;return S.wires.some(w=>w.a===pin||w.b===pin)?net(pin):null};
+ S.parts.forEach(p=>{
+  const type=String(p.t||'').toLowerCase(),kind=String(p.k||'').toLowerCase(),pins=typeof pinsOf==='function'?pinsOf(p):[];
+  const vPins=pins.filter(l=>/^(VCC|VIN|VS|VM|VMOT|V\+|VDD|5V|3V3|3\.3V|\+)$/.test(l));
+  vPins.forEach(l=>{const n=pinNet(p,l);if(n===null)return;const source=boardNets.get(n)||[];if(source.some(q=>q.k==='p5')&&/mpu6050|mpu9250|qmc|rc522|max301|esp32cam|sx127|3v3only|bmp280|bme280/i.test(type+' '+kind))add('danger','Possible 5 V overvoltage',PT[p.t]?.[0]+' appears connected directly to the 5 V rail. Check its exact module rating before powering it.')});
+  if(/hc.?sr04|ultrasonic/i.test(type+' '+kind)&&/esp32|cam|s2|s3|c3|nodemcu|pico/i.test(S.bt)){const echo=pins.find(l=>/ECHO/i.test(l));if(echo){const n=pinNet(p,echo),source=n===null?[]:(boardNets.get(n)||[]);if(source.some(q=>q.k==='io'))add('warning','Check ultrasonic ECHO voltage','HC-SR04 ECHO can output 5 V. Use a suitable voltage divider or level shifter before a 3.3 V GPIO.')}}
+  if(/servo|stepper|motor|fan/i.test(type+' '+kind)){pins.forEach(l=>{const n=pinNet(p,l);if(n!==null&&(boardNets.get(n)||[]).some(q=>q.k==='io'))add('warning','Motor load on a GPIO','A motor or servo signal is connected to a board pin. Power the load correctly and use a suitable driver where required.')})}
+  if(kind==='led'||/^led/.test(type)){const labels=pins.length?pins:['A','K'],hasRes=labels.some(l=>resistors.some(r=>pinsOf(r).some(rl=>S.wires.some(w=>(w.a===p.id+':'+l&&w.b===r.id+':'+rl)||(w.b===p.id+':'+l&&w.a===r.id+':'+rl)))));if(!hasRes){const direct=labels.some(l=>{const n=pinNet(p,l);return n!==null&&(boardNets.get(n)||[]).some(q=>q.k==='io'||q.k==='p5'||q.k==='p3')});if(direct)add('danger','LED may be missing a resistor','Place a suitable series resistor in the LED path to limit current and protect the LED and board pin.')}}
+ });
+ return messages;
+ }
+ function render(){const box=$('#diag');if(!box)return;const issues=analyze();box.innerHTML='';const head=document.createElement('div');head.className='vx-diag-head';const title=document.createElement('b');title.textContent='Electrical health check';const count=document.createElement('span');count.className='vx-diag-count '+(issues.some(x=>x.level==='danger')?'has-danger':issues.length?'has-warning':'is-clean');count.textContent=issues.length?issues.length+' issue'+(issues.length===1?'':'s'):'No detected issues';head.append(title,count);box.appendChild(head);
+ const intro=document.createElement('p');intro.className='vx-diag-intro';intro.textContent='Checks common wiring risks using the simulator’s component and pin model. This is a helpful warning system, not a substitute for a datasheet or a real electrical test.';box.appendChild(intro);
+ if(!issues.length){const clean=document.createElement('div');clean.className='vx-diag-clean';clean.textContent=S.parts.length?'No common wiring hazards detected in the current circuit.':'Add components and wires to run electrical checks.';box.appendChild(clean)}
+ issues.forEach(issue=>{const card=document.createElement('article');card.className='vx-diag-card '+issue.level;const badge=document.createElement('span');badge.className='vx-diag-icon';badge.textContent=issue.level==='danger'?'!':'i';const body=document.createElement('div'),name=document.createElement('b'),detail=document.createElement('p');name.textContent=issue.title;detail.textContent=issue.detail;body.append(name,detail);card.append(badge,body);box.appendChild(card)});
+ }
+ setInterval(()=>{try{render()}catch(e){}},1100);document.querySelectorAll('.tabs button[data-t="diag"]').forEach(b=>b.addEventListener('click',render));window.VOLTIXRunDiagnostics=render;
+})();

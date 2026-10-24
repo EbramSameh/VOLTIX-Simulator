@@ -7,8 +7,9 @@
  const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.55,metalness:.1},o||{}));
  const bx=(w,h,d,c,x,y,z,o)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(c,o));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;return m};
  const cy=(r,h,c,x,y,z,o,hz)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,24),M(c,o));m.position.set(x,y,z);if(hz)m.rotation.z=Math.PI/2;m.castShadow=true;return m};
- function part3(p){const g=new THREE.Group(),k=p.k,s=p.st,ud={};g.position.set((p.x+88)/K,0,(p.y+52)/K);const lead=()=>g.add(cy(.012,.95,'#cbd5e1',0,.12,0,{metalness:.9},1));
-  if(k=='led'){const col=LC[s.color||'red'][0];g.add(cy(.17,.14,'#d1d5db',0,.1,0));const dm=new THREE.Mesh(new THREE.SphereGeometry(.15,20,12,0,6.3,0,1.6),M(col,{transparent:true,opacity:.88,emissive:col,emissiveIntensity:0}));dm.position.y=.17;g.add(dm);ud.led=dm}
+ function part3(p){const g=new THREE.Group(),k=p.k,s=p.st,ud={};g.position.set((p.x+(k=='piboard'?150:88))/K,0,(p.y+(k=='piboard'?110:52))/K);const lead=()=>g.add(cy(.012,.95,'#cbd5e1',0,.12,0,{metalness:.9},1));
+  if(k=='piboard'){g.add(bx(2.5,.12,1.65,'#166534',0,.06,0,{roughness:.55}));g.add(bx(.72,.18,.52,'#111827',-.62,.19,-.28));g.add(bx(.48,.15,.4,'#111827',.12,.18,-.28));g.add(bx(.48,.15,.4,'#111827',.7,.18,-.28));g.add(bx(.9,.1,.34,'#0f172a',.1,.16,.42));}
+  else if(k=='led'){const col=LC[s.color||'red'][0];g.add(cy(.17,.14,'#d1d5db',0,.1,0));const dm=new THREE.Mesh(new THREE.SphereGeometry(.15,20,12,0,6.3,0,1.6),M(col,{transparent:true,opacity:.88,emissive:col,emissiveIntensity:0}));dm.position.y=.17;g.add(dm);ud.led=dm}
   else if(k=='res'){lead();g.add(cy(.075,.5,'#d9b88f',0,.12,0,{},1));bands(s.ohm||220).forEach((c,i)=>g.add(cy(.08,.045,c,-.13+i*.1,.12,0,{},1)))}
   else if(k=='cap'){if(s.ctype=='ceramic')g.add(cy(.17,.06,'#f59e0b',0,.25,0));else{g.add(cy(.16,.42,'#1e3a8a',0,.24,0));g.add(bx(.04,.4,.1,'#cbd5e1',-.14,.24,0))}}
   else if(k=='ind'){lead();g.add(cy(.1,.5,'#7c2d12',0,.12,0,{},1));for(let i=0;i<6;i++)g.add(cy(.105,.03,'#d97706',-.2+i*.08,.12,0,{metalness:.7},1))}
@@ -18,7 +19,7 @@
   else if(k=='bat'){g.add(bx(.7,.5,.4,'#111827',0,.26,0));g.add(bx(.7,.12,.4,'#f59e0b',0,.56,0))}
   else if(k=='disp'){g.add(bx(1.5,.1,.9,'#1b2166',0,.06,0));g.add(bx(1.2,.03,.62,p.t=='lcd'?'#a8e063':'#02040f',0,.13,-.02,{emissive:p.t=='lcd'?'#3b5a1a':'#06202a',emissiveIntensity:.8}))}
   else if(window.P3X&&window.P3X(p,g,K,M,bx,cy)){}else{const W=Math.max(1.1,PT[p.t][3].split(' ').length*12/K+.4);g.add(bx(W,.07,.95,MC(p.t),0,.06,.1));g.add(bx(.45,.09,.35,'#111827',0,.13,0));if(k=='hb')g.add(bx(.7,.35,.4,'#374151',0,.25,0))}
-  const n=PT[p.t][3].split(' ').length;for(let i=0;i<n;i++){const q=pinPos(p,i);g.add(bx(.06,.22,.06,'#e8c26a',(q[0]-88)/K,.11,(q[1]-52)/K))}
+  const n=PT[p.t][3].split(' ').length,cx=k=='piboard'?150:88,cy0=k=='piboard'?110:52;for(let i=0;i<n;i++){const q=pinPos(p,i);g.add(bx(.06,.22,.06,'#e8c26a',(q[0]-cx)/K,.11,(q[1]-cy0)/K))}
   g.userData=Object.assign(ud,{p});return g}
  function board3(){
  const g=new THREE.Group(),W=S.bw/K,H=S.bh/K,uno=S.bt==='uno'||S.bt==='unor4',col={uno:'#087f86',unor4:'#087f86',mega:'#0a7c86',leo:'#0a7c86',nano:'#1f5fbf',pro:'#b3262f',pico:'#0b7a3d',esp32:'#176b52',cam:'#176b52'}[S.bt]||'#171b26';

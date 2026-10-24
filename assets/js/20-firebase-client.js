@@ -146,7 +146,7 @@ function calculateBuilderStats(projectDocs){
 }
 async function syncCompetitionProfile(user){
  const projects=await getDocs(collection(db,'users',user.uid,'projects')),stats=calculateBuilderStats(projects.docs),profileRef=doc(db,'leaderboard',user.uid),old=await getDoc(profileRef),previous=old.exists()?old.data():{};
- await setDoc(profileRef,{uid:user.uid,displayName:user.displayName||previous.displayName||'VOLTIX Builder',photoURL:user.photoURL||previous.photoURL||'',bio:String(previous.bio||'').slice(0,180),projectCount:stats.projects,stats,achievements:stats.achievements,updatedAt:serverTimestamp()},{merge:true});
+ await setDoc(profileRef,{uid:user.uid,displayName:user.displayName||previous.displayName||'VOLTIX Builder',photoURL:user.photoURL||previous.photoURL||'',bio:String(previous.bio||'').slice(0,180),projectCount:stats.projects,wireScore:stats.wires,codeScore:stats.codeLines,componentScore:stats.components,sensorScore:stats.sensors,boardScore:stats.boards,prototypeScore:stats.complexProjects,achievementPoints:stats.achievementPoints,stats,achievements:stats.achievements,updatedAt:serverTimestamp()},{merge:true});
  return stats;
 }
 
@@ -206,21 +206,21 @@ async function refreshLeaderboardSection(selectedBoard){
   }
   const pointEl=$vx('vx-mission-points');if(pointEl)pointEl.textContent=String(stats.achievementPoints||0);
   const grid=$vx('vx-mission-grid');if(grid){grid.replaceChildren();ACHIEVEMENTS.forEach((a,i)=>{const score=Number(stats[a.metric])||0,done=score>=a.goal,card=document.createElement('article');card.className='vx-mission-card'+(done?' is-complete':'');const num=document.createElement('span');num.className='vx-mission-number';num.textContent=String(i+1).padStart(2,'0');const copy=document.createElement('div'),title=document.createElement('b'),desc=document.createElement('p'),progress=document.createElement('small');title.textContent=a.name;desc.textContent=a.desc;progress.className='vx-mission-progress';progress.textContent=Math.min(score,a.goal)+' / '+a.goal;copy.append(title,desc,progress);const state=document.createElement('span');state.className='vx-mission-state';state.textContent=done?'UNLOCKED':(currentUser?'IN PROGRESS':'SIGN IN');card.append(num,copy,state);grid.appendChild(card)})}
-  const snap=await getDocs(query(collection(db,'leaderboard'),limit(200))),players=snap.docs.map(d=>({uid:d.id,...d.data()})).filter(p=>Number(p.stats&&p.stats[board.field]!==undefined?p.stats[board.field]:board.field==='projects'?p.projectCount:0)>0).sort((a,b)=>(Number(b.stats&&b.stats[board.field]!==undefined?b.stats[board.field]:b.projectCount)||0)-(Number(a.stats&&a.stats[board.field]!==undefined?a.stats[board.field]:a.projectCount)||0)).slice(0,50);
+  const snap=await getDocs(query(collection(db,'leaderboard'),orderBy(board.field,'desc'),limit(50))),players=snap.docs.map(d=>({uid:d.id,...d.data()})).filter(p=>Number(p[board.field])>0);
   list.replaceChildren();if(!players.length){list.innerHTML='<div class="vx-leaderboard-empty"><span>01</span><b>Be the first to compete</b><p>Save a project and make progress on this challenge board.</p></div>';status.textContent=board.label+' · Waiting for the first competitor';return}
-  players.forEach((player,index)=>{const row=document.createElement('article');row.className='vx-leader-row'+(index<3?' vx-leader-podium':'');const rank=document.createElement('span');rank.className='vx-leader-rank';rank.textContent=String(index+1).padStart(2,'0');const avatar=document.createElement('div');avatar.className='vx-leader-avatar';if(player.photoURL){const img=document.createElement('img');img.src=player.photoURL;img.alt='';img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();avatar.textContent=(player.displayName||'V').trim().slice(0,1).toUpperCase()};avatar.appendChild(img)}else avatar.textContent=(player.displayName||'V').trim().slice(0,1).toUpperCase();const info=document.createElement('div');info.className='vx-leader-info';const name=document.createElement('b');name.textContent=player.displayName||'VOLTIX Builder';const sub=document.createElement('span');sub.textContent=player.bio||((player.achievements||[]).length+' achievements unlocked');info.append(name,sub);const score=document.createElement('div');score.className='vx-leader-score';const points=document.createElement('b');points.textContent=String(Number(player.stats&&player.stats[board.field]!==undefined?player.stats[board.field]:player.projectCount)||0);const label=document.createElement('span');label.textContent=board.unit.toUpperCase();score.append(points,label);row.append(rank,avatar,info,score);list.appendChild(row)});
+  players.forEach((player,index)=>{const row=document.createElement('article');row.className='vx-leader-row'+(index<3?' vx-leader-podium':'');const rank=document.createElement('span');rank.className='vx-leader-rank';rank.textContent=String(index+1).padStart(2,'0');const avatar=document.createElement('div');avatar.className='vx-leader-avatar';if(player.photoURL){const img=document.createElement('img');img.src=player.photoURL;img.alt='';img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();avatar.textContent=(player.displayName||'V').trim().slice(0,1).toUpperCase()};avatar.appendChild(img)}else avatar.textContent=(player.displayName||'V').trim().slice(0,1).toUpperCase();const info=document.createElement('div');info.className='vx-leader-info';const name=document.createElement('b');name.textContent=player.displayName||'VOLTIX Builder';const sub=document.createElement('span');sub.textContent=player.bio||((player.achievements||[]).length+' achievements unlocked');info.append(name,sub);const score=document.createElement('div');score.className='vx-leader-score';const points=document.createElement('b');points.textContent=String(Number(player[board.field])||0);const label=document.createElement('span');label.textContent=board.unit.toUpperCase();score.append(points,label);row.append(rank,avatar,info,score);list.appendChild(row)});
   status.textContent=board.label+' · '+players.length+' ranked builder'+(players.length===1?'':'s')+' · Top 50';
  }catch(error){list.innerHTML='<div class="vx-leaderboard-empty"><b>Leaderboard temporarily unavailable</b><p></p></div>';list.querySelector('p').textContent=friendlyError(error);status.textContent='Could not load rankings.'}
 }
 const COMPETITION_BOARDS=[
-{id:'projects',label:'Project Builder',field:'projects',unit:'projects'},
-{id:'wires',label:'Wiring Pro',field:'wires',unit:'wire links'},
-{id:'coding',label:'Code Crafter',field:'codeLines',unit:'code lines'},
-{id:'components',label:'Component Collector',field:'components',unit:'components'},
-{id:'sensors',label:'Sensor Explorer',field:'sensors',unit:'sensors'},
-{id:'boards',label:'Multi-Board Maker',field:'boards',unit:'board types'},
-{id:'complex',label:'Prototype Maker',field:'complexProjects',unit:'prototypes'},
-{id:'achievements',label:'Achievement Hunter',field:'achievementPoints',unit:'achievements'}
+{id:'projects',label:'Project Builder',field:'projectCount',stat:'projects',unit:'projects'},
+{id:'wires',label:'Wiring Pro',field:'wireScore',stat:'wires',unit:'wire links'},
+{id:'coding',label:'Code Crafter',field:'codeScore',stat:'codeLines',unit:'code lines'},
+{id:'components',label:'Component Collector',field:'componentScore',stat:'components',unit:'components'},
+{id:'sensors',label:'Sensor Explorer',field:'sensorScore',stat:'sensors',unit:'sensors'},
+{id:'boards',label:'Multi-Board Maker',field:'boardScore',stat:'boards',unit:'board types'},
+{id:'complex',label:'Prototype Maker',field:'prototypeScore',stat:'complexProjects',unit:'prototypes'},
+{id:'achievements',label:'Achievement Hunter',field:'achievementPoints',stat:'achievementPoints',unit:'achievements'}
 ];
 let activeCompetitionBoard='projects';
 window.VOLTIXLeaderboardRefresh=refreshLeaderboardSection;

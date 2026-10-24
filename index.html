@@ -67,7 +67,7 @@
 <div class="vx-ai-bridge" style="margin-top:14px;padding:14px;border:1px solid #3b4389;border-radius:14px;background:#101638">
 <h3 style="margin:0 0 6px">Test your own AI model</h3>
 <p style="font-size:12px;opacity:.8;margin:0 0 10px">Load a TensorFlow.js GraphModel image classifier from local files. Select the model.json and every referenced weight shard together. Files stay in this browser; the model is not uploaded to VOLTIX.</p>
-<div class="cta"><input id="vx-ai-model-files" type="file" accept=".json,.bin" multiple><button id="vx-ai-load-model" type="button">Load custom model</button></div>
+<div class="cta"><input id="vx-ai-model-files" type="file" accept=".json,.bin" multiple><button id="vx-ai-load-model" type="button">Load custom model</button><label>Input normalization <select id="vx-ai-normalize"><option value="zeroone">0 to 1 (divide by 255)</option><option value="minusone">−1 to 1</option><option value="raw">0 to 255 (raw pixels)</option></select></label></div>
 <label>Class labels (optional, one per line or comma-separated)<textarea id="vx-ai-labels" rows="3" placeholder="person&#10;car&#10;dog"></textarea></label>
 <span id="vx-ai-model-status" class="rec"><i></i><span>No custom model loaded</span></span>
 <p style="font-size:11px;opacity:.75">This browser mode supports image-classification GraphModels with RGB image input. TFLite, ONNX, PyTorch and detection models need conversion or a model-specific adapter; the Raspberry Pi hardware guide remains separate.</p>

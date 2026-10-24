@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="assets/css/voltix-core.css">
 <link rel="stylesheet" href="assets/css/voltix-components.css">
 </head><body data-r="home">
-<nav id="top"><span class="tb">VOLTIX SIMULATOR</span><div class="tl"><button data-go="home">Home</button><button data-go="sim">Simulator</button><button data-go="parts">Components</button><button data-go="pi">Raspberry Pi</button><button data-go="ai">AI Lab</button><button data-go="about">About</button></div><div id="vx-cloud-controls" aria-label="Cloud projects"><button id="vx-signin" type="button">Sign in with Google</button><button id="vx-save-cloud" type="button">Save to cloud</button><button id="vx-my-projects" type="button">My projects</button><button id="vx-share-cloud" type="button">Share</button><span id="vx-auth-label" role="status" aria-live="polite">Starting cloud tools…</span></div><button class="mk" data-go="about">Made by <span class="hand">Ebram Sameh</span> · S’28 Red Sea STEM</button></nav>
+<nav id="top"><span class="tb">VOLTIX SIMULATOR</span><div class="tl"><button data-go="home">Home</button><button data-go="sim">Simulator</button><button data-go="parts">Components</button><button data-go="pi">Raspberry Pi</button><button data-go="ai">AI Lab</button><button data-go="about">About</button><button id="vx-open-leaderboard" type="button" class="vx-nav-competition">Build Challenge</button></div><div id="vx-cloud-controls" aria-label="Cloud projects"><button id="vx-signin" type="button">Sign in with Google</button><button id="vx-save-cloud" type="button">Save to cloud</button><button id="vx-my-projects" type="button">My projects</button><button id="vx-share-cloud" type="button">Share</button><span id="vx-auth-label" role="status" aria-live="polite">Starting cloud tools…</span></div><button class="mk" data-go="about">Made by <span class="hand">Ebram Sameh</span> · S’28 Red Sea STEM</button></nav>
 <header>
 <div class="logo">VOLTIX SIMULATOR<small>Wire it. Run it. See it work.</small></div>
 <select id="bd" title="Board"></select>
@@ -847,7 +847,7 @@ const cats=[...new Set(Object.values(PT).map(d=>d[1]))];
 $('#pal').insertAdjacentHTML('beforeend',cats.map(c=>`<h4>${c}</h4><div class="gr">`+Object.entries(PT).filter(([k,d])=>d[1]==c&&!/^led[rgbywopk]$/.test(k)).map(([k,d])=>`<button data-add="${k}"><svg viewBox="52 22 72 62" width="32" height="28">${shape(k,d[4],null,d)}</svg>${d[0]}</button>`).join('')+'</div>').join(''));
 $('#pal').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b){addPart(b.dataset.add);draw()}});
 $('#q').oninput=e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('[data-add]').forEach(b=>b.hidden=!b.textContent.toLowerCase().includes(q))};
-layout();loadEx('blink');lnu();fit();
+layout();S.bt='uno';$('#bd').value='uno';S.parts=[];S.wires=[];S.n=0;S.sel=null;$('#code').value='void setup() {\n}\n\nvoid loop() {\n}\n';draw();lnu();fit();
 (function frame(t){tick(t);requestAnimationFrame(frame)})(performance.now());
 </script>
 <script src="assets/js/02-app-router-and-catalogs.js"></script>

@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono&family=Caveat:wght@600&display=swap" rel="stylesheet">
 
 <link rel="icon" type="image/svg+xml" href="assets/voltix-icon.svg">
-<link rel="stylesheet" href="assets/css/voltix-core.css">
+<link rel="stylesheet" href="assets/css/voltix-core.css?v=20261024-material-pass">
 <link rel="stylesheet" href="assets/css/voltix-components.css">
 </head><body data-r="home">
 <nav id="top"><span class="tb">VOLTIX SIMULATOR</span><div class="tl"><button data-go="home">Home</button><button data-go="sim">Simulator</button><button data-go="parts">Components</button><button data-go="pi">Raspberry Pi</button><button data-go="ai">AI Lab</button><button data-go="about">About</button><button id="vx-open-leaderboard" type="button" class="vx-nav-competition" data-go="challenge">Build Challenge</button></div><div id="vx-cloud-controls" aria-label="Cloud projects"><button id="vx-signin" type="button">Sign in with Google</button><button id="vx-save-cloud" type="button">Save to cloud</button><button id="vx-my-projects" type="button">My projects</button><button id="vx-share-cloud" type="button">Share</button><span id="vx-auth-label" role="status" aria-live="polite">Starting cloud tools…</span></div><button class="mk" data-go="about">Made by <span class="hand">Ebram Sameh</span> · S’28 Red Sea STEM</button></nav>
@@ -29,7 +29,7 @@
 <svg id="cv" viewBox="0 0 1100 800" preserveAspectRatio="xMidYMid meet">
 <defs><pattern id="gr" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#2c3578"/></pattern>
 <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34318f"/><stop offset="1" stop-color="#161c58"/></linearGradient>
-<radialGradient id="specular" cx=".35" cy=".3" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></radialGradient><linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient><linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b8892b"/><stop offset=".5" stop-color="#ffe08a"/><stop offset="1" stop-color="#b8892b"/></linearGradient>
+<radialGradient id="specular" cx=".35" cy=".3" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></radialGradient><linearGradient id="component-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c8bff" stop-opacity=".17"/><stop offset=".42" stop-color="#242d66" stop-opacity=".2"/><stop offset="1" stop-color="#05091e" stop-opacity=".5"/></linearGradient><linearGradient id="metal-surface" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".3" stop-color="#b9c6e4" stop-opacity=".4"/><stop offset=".6" stop-color="#596886" stop-opacity=".3"/><stop offset="1" stop-color="#f5f7ff" stop-opacity=".65"/></linearGradient><linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient><linearGradient id="gold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b8892b"/><stop offset=".5" stop-color="#ffe08a"/><stop offset="1" stop-color="#b8892b"/></linearGradient>
 <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
 <defs><pattern id="grM" width="130" height="130" patternUnits="userSpaceOnUse"><path d="M130,0H0V130" fill="none" stroke="#3a4496" stroke-opacity=".45"/></pattern></defs>
 <rect x="-4000" y="-4000" width="9800" height="9200" fill="#03051a"/>
@@ -520,8 +520,9 @@ function drawPart(p){const d=PT[p.t],k=p.k,ps=pinsOf(p),sl=k=='dht'?['v','v2']:(
  +`<text id="s-${id}" x="88" y="126" text-anchor="middle" class="ps"></text>`
  +sl.map((s,i)=>`<foreignObject x="10" y="${h-28-(sl.length-1-i)*24}" width="114" height="22"><input type="range" min="0" max="100" value="${Math.round(p.st[s]*100)}" data-p="${id}" data-s="${s}" title="${s=='v2'?'Humidity':k=='dht'?'Temperature':k=='us'?'Distance':'Level'}"></foreignObject>`).join('')+'</g>'}
 function drawWires(){const bad=new Set(SO.bad.map(b=>b.r));
- $('#wl').innerHTML=S.wires.map((w,i)=>{const a=pp(w.a),b=pp(w.b),da=dv(w.a),db=dv(w.b);
- return`<path class="wire" data-w="${i}" stroke="${bad.has(SO.f(w.a))?'#ff3b6b':w.c}" d="M${a.x},${a.y}C${a.x+da[0]},${a.y+da[1]} ${b.x+db[0]},${b.y+db[1]} ${b.x},${b.y}"/>`}).join('')}
+ $('#wl').innerHTML=S.wires.map((w,i)=>{const a=pp(w.a),b=pp(w.b),da=dv(w.a),db=dv(w.b),dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy)||1,lane=((i%11)-5)*5+Math.floor(i/11)*2.5,nx=-dy/len,ny=dx/len;
+ const c1x=a.x+da[0]+nx*lane,c1y=a.y+da[1]+ny*lane,c2x=b.x+db[0]+nx*lane,c2y=b.y+db[1]+ny*lane;
+ return`<path class="wire" data-w="${i}" stroke="${bad.has(SO.f(w.a))?'#ff3b6b':w.c}" d="M${a.x},${a.y}C${c1x},${c1y} ${c2x},${c2y} ${b.x},${b.y}"/>`}).join('')}
 function draw(){clampAll();$('#pl').innerHTML=drawBoard2()+S.parts.map(drawPart).join('');drawWires();save()}
 const U=[];let UR=0;
 function snap(){if(UR)return;const j=JSON.stringify({bt:S.bt,parts:S.parts,wires:S.wires,bx:S.bx,by:S.by,n:S.n});if(U[U.length-1]!==j){U.push(j);if(U.length>60)U.shift()}}
@@ -889,6 +890,6 @@ layout();S.bt='uno';$('#bd').value='uno';S.parts=[];S.wires=[];S.n=0;S.sel=null;
 <script src="assets/js/18-responsive-layout.js"></script>
 
 <script src="assets/js/19-firebase-bridge.js"></script>
-<script type="module" src="assets/js/20-firebase-client.js?v=20261024-achievements-v2"></script>
+<script type="module" src="assets/js/20-firebase-client.js?v=20261024-overall-board"></script>
 
 </body></html>

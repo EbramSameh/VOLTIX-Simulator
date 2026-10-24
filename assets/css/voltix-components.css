@@ -150,3 +150,21 @@ body.lc main{--lpw:0px!important}body.rc main{--rpw:0px!important}body.lc #pal,b
 #vx-cloud-modal .vx-rank-caption{font:10px Inter,sans-serif;color:#8f9ac8;margin-top:4px}
 #vx-cloud-modal .vx-rank-score{font:700 12px 'Space Grotesk',sans-serif;color:#80e7ff;white-space:nowrap}
 @media(max-width:520px){#vx-leaderboard{margin-right:4px}#vx-cloud-modal .vx-rank-row{grid-template-columns:25px 36px minmax(0,1fr) auto;gap:8px;padding:11px 8px}#vx-cloud-modal .vx-rank-avatar{width:34px;height:34px}}
+
+/* Final interface polish: clear navigation, compact cloud actions and richer dialogs */
+#top{gap:10px;flex-wrap:wrap}
+#top .tl{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+#top .tl button{white-space:nowrap}
+#top .tl .vx-nav-competition{border:1px solid #4d5cb0;background:linear-gradient(120deg,#202a63,#382c70);color:#dffaff;box-shadow:inset 0 1px #ffffff12}
+#vx-cloud-controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+#vx-cloud-controls button{white-space:nowrap}
+#vx-auth-label{max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#vx-cloud-modal .vx-dialog{border:1px solid #3a477f;background:radial-gradient(ellipse at top right,#24285b 0,transparent 46%),linear-gradient(145deg,#101731,#090e20);box-shadow:0 28px 100px #0009,0 0 0 1px #a4b5ff0c inset}
+#vx-cloud-modal .vx-dialog-head h2{letter-spacing:-.5px}
+#vx-cloud-modal .vx-dialog button:not(.vx-close){transition:transform .16s,border-color .16s,filter .16s}
+#vx-cloud-modal .vx-dialog button:not(.vx-close):hover{transform:translateY(-1px);filter:brightness(1.12)}
+#vx-cloud-modal .vx-cloud-item{border:1px solid #29335f;background:linear-gradient(115deg,#151d3a,#10162b);border-radius:14px;padding:14px;margin:9px 0}
+#vx-cloud-modal .vx-cloud-item-title{font-weight:700;color:#f2f4ff}
+#vx-cloud-modal .vx-cloud-item-meta{color:#99a5d5}
+@media(max-width:900px){#top{align-items:flex-start}#top .tl{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}#vx-cloud-controls{margin-left:auto}#top .mk{display:none}}
+@media(max-width:560px){#vx-cloud-controls{width:100%;order:4}#vx-auth-label{max-width:100%;width:100%}#top .tl button{padding:7px 9px}}

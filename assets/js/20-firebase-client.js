@@ -150,59 +150,12 @@ async function syncCompetitionProfile(user){
  return stats;
 }
 
-async function openLeaderboard() {
-  try {
-    await requireUser();
-    const modal = openModal('VOLTIX Build Challenge', 'Earn points by creating and saving unique cloud projects. One point per project; updating a project does not add points.');
-    modalStatus('Loading live rankings…');
-    const list = modal.querySelector('.vx-cloud-list');
-    const q = query(collection(db, 'leaderboard'), orderBy('projectCount', 'desc'), limit(50));
-    const result = await getDocs(q);
-    if (cloudModal !== modal) return;
-    list.replaceChildren();
-    if (result.empty) {
-      const empty = document.createElement('div');
-      empty.className = 'vx-empty';
-      empty.textContent = 'The competition starts with the first saved cloud project. Save a circuit to enter the leaderboard.';
-      list.appendChild(empty);
-      modalStatus('No players ranked yet. Be the first builder!');
-      return;
-    }
-    result.docs.forEach((snap, index) => {
-      const player = snap.data();
-      const item = document.createElement('article');
-      item.className = 'vx-rank-row' + (index < 3 ? ' vx-rank-top' : '');
-      const rank = document.createElement('div');
-      rank.className = 'vx-rank-number';
-      rank.textContent = String(index + 1).padStart(2, '0');
-      const avatar = document.createElement('img');
-      avatar.className = 'vx-rank-avatar';
-      avatar.alt = '';
-      avatar.src = player.photoURL || '';
-      avatar.referrerPolicy = 'no-referrer';
-      avatar.onerror = () => { avatar.style.display = 'none'; };
-      const name = document.createElement('div');
-      name.className = 'vx-rank-name';
-      name.textContent = player.displayName || 'VOLTIX Builder';
-      const caption = document.createElement('div');
-      caption.className = 'vx-rank-caption';
-      caption.textContent = 'Cloud projects created';
-      const score = document.createElement('div');
-      score.className = 'vx-rank-score';
-      score.textContent = String(Number(player.projectCount) || 0) + ' pts';
-      const details = document.createElement('div');
-      details.className = 'vx-rank-player';
-      details.append(name, caption);
-      item.append(rank, avatar, details, score);
-      list.appendChild(item);
-    });
-    modalStatus('Live account data · Ranked by unique cloud projects · Top 50');
-  } catch (error) {
-    showError(error);
-    if (cloudModal) modalStatus(friendlyError(error), true);
-  }
+async function openLeaderboard(){
+ const challenge=document.querySelector('#p-challenge'),sim=document.querySelector('#p-sim');
+ if(typeof go==='function')go('challenge');
+ if(window.VOLTIXLeaderboardRefresh)window.VOLTIXLeaderboardRefresh();
+ if(!challenge&&sim)setStatus('Open Build Challenge from the top navigation to view all competition rankings.');
 }
-
 function askProjectDetails(defaultTitle,allowCopy=false){
  const modal=openModal('Save your project','Name your circuit and choose whether to update the current project or save a separate copy.'),list=modal.querySelector('.vx-cloud-list');
  list.innerHTML=`<form class="vx-project-form"><label for="vx-project-title">PROJECT NAME</label><input id="vx-project-title" maxlength="120" required autocomplete="off" placeholder="e.g. Smart greenhouse controller"><div class="vx-project-preview"><span class="vx-preview-icon">⌘</span><div><b>VOLTIX circuit</b><small>Board, wiring, component settings and code</small></div><span class="vx-preview-live">READY TO SAVE</span></div>${allowCopy?'<label class="vx-copy-choice"><input id="vx-save-copy" type="checkbox"><span><b>Save as a new copy</b><small>Keep the current saved project unchanged.</small></span></label>':''}<div class="vx-project-actions"><button type="button" class="vx-secondary" data-project-cancel>Cancel</button><button type="submit" class="vx-primary">Save project</button></div></form>`;

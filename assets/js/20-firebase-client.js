@@ -68,8 +68,8 @@ function renderAuth() {
     authLabel.textContent = `Signed in: ${label}`;
     authLabel.classList.remove('bad');
   } else {
-    signInBtn.textContent = 'Sign in with Google';
-    signInBtn.title = 'Sign in to save and open cloud projects';
+    signInBtn.textContent = 'Sign in';
+    signInBtn.title = 'Sign in securely with Google to save and share projects';
     authLabel.textContent = 'Not signed in';
     authLabel.classList.remove('bad');
   }
@@ -301,8 +301,44 @@ async function loadSharedProjectFromUrl() {
   }
 }
 
-signInBtn.addEventListener('click', async () => {
-  if (!currentUser) { await signIn(); return; }
+
+function openLoginExperience() {
+  closeModal();
+  const overlay = document.createElement('div');
+  overlay.id = 'vx-cloud-modal';
+  overlay.innerHTML = `<section class="vx-dialog vx-login-dialog" role="dialog" aria-modal="true" aria-labelledby="vx-login-heading">
+    <button class="vx-close" type="button" aria-label="Close">×</button>
+    <div class="vx-login-mark" aria-hidden="true">V</div>
+    <p class="vx-login-eyebrow">YOUR WORKSPACE, SAVED</p>
+    <h2 id="vx-login-heading">Welcome to VOLTIX</h2>
+    <p class="vx-login-copy">Sign in to keep your circuits in the cloud, reopen projects on another device, and share your work with a link.</p>
+    <button class="vx-google-login" type="button"><span class="vx-google-g" aria-hidden="true">G</span><span>Continue with Google</span></button>
+    <div class="vx-login-note">Secure Google sign-in · Your projects stay in your account</div>
+    <div class="vx-cloud-message" role="status" aria-live="polite">You can use the simulator without signing in.</div>
+  </section>`;
+  const close = () => { if (cloudModal === overlay) closeModal(); };
+  overlay.querySelector('.vx-close').addEventListener('click', close);
+  overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
+  overlay.querySelector('.vx-google-login').addEventListener('click', async event => {
+    const button = event.currentTarget;
+    button.disabled = true;
+    button.querySelector('span:last-child').textContent = 'Connecting to Google…';
+    const msg = overlay.querySelector('.vx-cloud-message');
+    msg.textContent = 'A secure Google sign-in window will open.';
+    const user = await signIn();
+    if (user) close();
+    else {
+      button.disabled = false;
+      button.querySelector('span:last-child').textContent = 'Try Google sign-in again';
+      msg.textContent = 'Sign-in did not finish. Check the account status above, then try again.';
+      msg.classList.add('bad');
+    }
+  });
+  document.body.appendChild(overlay);
+  cloudModal = overlay;
+}
+\nsignInBtn.addEventListener('click', async () => {
+  if (!currentUser) { openLoginExperience(); return; }
   try {
     await signOut(auth);
     currentUser = null; activeProjectId = null; activeProjectTitle = '';

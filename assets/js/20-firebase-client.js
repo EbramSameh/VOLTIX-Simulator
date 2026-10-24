@@ -122,25 +122,64 @@ function ensureCompetitionButton() {
   signInBtn.parentElement.insertBefore(leaderboardBtn, signInBtn);
 }
 const ACHIEVEMENTS=[
-{id:'firstCircuit',name:'First Circuit',desc:'Save your first cloud project.',goal:1,metric:'projects',field:'projectCount'},
-{id:'wireStarter',name:'Wire Starter',desc:'Make 5 wire connections across your saved projects.',goal:5,metric:'wires',field:'wires'},
-{id:'wireArchitect',name:'Wire Architect',desc:'Reach 25 saved wire connections.',goal:25,metric:'wires',field:'wires'},
-{id:'codeAuthor',name:'Code Author',desc:'Write 50 lines of code across saved projects.',goal:50,metric:'codeLines',field:'codeLines'},
-{id:'codeEngineer',name:'Code Engineer',desc:'Reach 250 lines of saved code.',goal:250,metric:'codeLines',field:'codeLines'},
-{id:'componentCollector',name:'Component Collector',desc:'Use 20 components across your saved projects.',goal:20,metric:'components',field:'components'},
-{id:'sensorExplorer',name:'Sensor Explorer',desc:'Build with 5 sensor modules.',goal:5,metric:'sensors',field:'sensors'},
-{id:'boardHopper',name:'Board Hopper',desc:'Experiment with 2 different board types.',goal:2,metric:'boards',field:'boards'},
-{id:'prototypeMaker',name:'Prototype Maker',desc:'Save 3 projects with at least 5 components each.',goal:3,metric:'complexProjects',field:'complexProjects'},
-{id:'circuitArchitect',name:'Circuit Architect',desc:'Save 5 projects with at least 10 components each.',goal:5,metric:'advancedProjects',field:'advancedProjects'},
-{id:'masterBuilder',name:'Master Builder',desc:'Save 10 cloud projects.',goal:10,metric:'projects',field:'projectCount'},
-{id:'achievementHunter',name:'Achievement Hunter',desc:'Unlock 8 achievements.',goal:8,metric:'achievementPoints',field:'achievementPoints'}
+{id:'firstCircuit',name:'First Circuit',desc:'Save your first cloud project.',goal:1,metric:'projects'},
+{id:'wireStarter',name:'Wire Starter',desc:'Create 5 saved wire connections.',goal:5,metric:'wires'},
+{id:'wireArchitect',name:'Wire Architect',desc:'Reach 25 saved wire connections.',goal:25,metric:'wires'},
+{id:'signalEngineer',name:'Signal Engineer',desc:'Reach 100 saved wire connections.',goal:100,metric:'wires'},
+{id:'wiringSpecialist',name:'Wiring Specialist',desc:'Reach 250 saved wire connections.',goal:250,metric:'wires'},
+{id:'codeAuthor',name:'Code Author',desc:'Save 50 non-empty code lines.',goal:50,metric:'codeLines'},
+{id:'codeEngineer',name:'Code Engineer',desc:'Reach 250 non-empty code lines.',goal:250,metric:'codeLines'},
+{id:'firmwareArchitect',name:'Firmware Architect',desc:'Reach 750 non-empty code lines.',goal:750,metric:'codeLines'},
+{id:'embeddedVeteran',name:'Embedded Systems Veteran',desc:'Reach 1,500 non-empty code lines.',goal:1500,metric:'codeLines'},
+{id:'componentCollector',name:'Component Collector',desc:'Use 20 components across saved projects.',goal:20,metric:'components'},
+{id:'benchStock',name:'Bench Stock',desc:'Use 75 components across saved projects.',goal:75,metric:'components'},
+{id:'labInventory',name:'Lab Inventory',desc:'Use 200 components across saved projects.',goal:200,metric:'components'},
+{id:'sensorExplorer',name:'Sensor Explorer',desc:'Use 5 sensor modules across saved projects.',goal:5,metric:'sensors'},
+{id:'sensorSpecialist',name:'Sensor Specialist',desc:'Use 15 sensor modules across saved projects.',goal:15,metric:'sensors'},
+{id:'sensorArray',name:'Sensor Array',desc:'Use 30 sensor modules across saved projects.',goal:30,metric:'sensors'},
+{id:'boardHopper',name:'Board Hopper',desc:'Save projects using 2 different board types.',goal:2,metric:'boards'},
+{id:'crossPlatformBuilder',name:'Cross-Platform Builder',desc:'Experiment with 3 different board types.',goal:3,metric:'boards'},
+{id:'universalTinkerer',name:'Universal Tinkerer',desc:'Experiment with 5 different board types.',goal:5,metric:'boards'},
+{id:'prototypeMaker',name:'Prototype Maker',desc:'Save 3 projects with at least 5 components each.',goal:3,metric:'complexProjects'},
+{id:'circuitArchitect',name:'Circuit Architect',desc:'Save 5 projects with at least 10 components each.',goal:5,metric:'advancedProjects'},
+{id:'systemsEngineer',name:'Systems Engineer',desc:'Save 3 projects with at least 20 components each.',goal:3,metric:'expertProjects'},
+{id:'wiringVeteran',name:'Wiring Veteran',desc:'Save 3 projects containing at least 10 wires each.',goal:3,metric:'wiredProjects10'},
+{id:'harnessDesigner',name:'Harness Designer',desc:'Save 5 projects containing at least 25 wires each.',goal:5,metric:'wiredProjects25'},
+{id:'firmwareSpecialist',name:'Firmware Specialist',desc:'Save 3 projects with at least 50 code lines each.',goal:3,metric:'codeProjects50'},
+{id:'codebaseBuilder',name:'Codebase Builder',desc:'Save 5 projects with at least 150 code lines each.',goal:5,metric:'codeProjects150'},
+{id:'integratedPrototype',name:'Integrated Prototype',desc:'Save one build with 10+ components, 20+ wires and 100+ code lines.',goal:1,metric:'integratedProjects'},
+{id:'sensorFusion',name:'Sensor Fusion',desc:'Save 3 projects using at least 3 sensors each.',goal:3,metric:'sensorProjects'},
+{id:'bigBuild',name:'Big Build',desc:'Put 30 or more components in a single saved project.',goal:30,metric:'peakComponents'},
+{id:'denseWiring',name:'Dense Wiring',desc:'Create 75 or more wires in a single saved project.',goal:75,metric:'peakWires'},
+{id:'marathonBuilder',name:'Marathon Builder',desc:'Save 25 cloud projects.',goal:25,metric:'projects'},
+{id:'factoryFloor',name:'Factory Floor',desc:'Save 50 cloud projects.',goal:50,metric:'projects'},
+{id:'achievementHunter',name:'Achievement Hunter',desc:'Unlock 20 other achievements.',goal:20,metric:'achievementPoints'}
 ];
 function calculateBuilderStats(projectDocs){
- const projects=projectDocs.map(d=>d.data().payload||{}),allParts=projects.flatMap(p=>Array.isArray(p.parts)?p.parts:[]),allWires=projects.flatMap(p=>Array.isArray(p.wires)?p.wires:[]),boards=new Set(projects.map(p=>String(p.bt||'uno'))),codeLines=projects.reduce((n,p)=>n+(typeof p.code==='string'?p.code.split('\n').filter(x=>x.trim()).length:0),0);
- const sensors=allParts.filter(p=>/sensor|dht|hc.?sr04|ldr|pir|soil|mpu|gps|rfid|mq.?|max30|hx711|qmc|ds18|bmp|bme|ultra|therm|photoresistor|light/i.test(String(p.t||'')+' '+String(p.k||''))).length;
- const complexProjects=projects.filter(p=>Array.isArray(p.parts)&&p.parts.length>=5).length,advancedProjects=projects.filter(p=>Array.isArray(p.parts)&&p.parts.length>=10).length;
- const base={projects:projects.length,wires:allWires.length,codeLines,components:allParts.length,sensors,boards:boards.size,complexProjects,advancedProjects};
- const unlocked=ACHIEVEMENTS.filter(a=>(base[a.metric]||0)>=a.goal).length;base.achievementPoints=unlocked;
+ const projects=projectDocs.map(d=>d.data().payload||{}),
+ allParts=projects.flatMap(p=>Array.isArray(p.parts)?p.parts:[]),
+ allWires=projects.flatMap(p=>Array.isArray(p.wires)?p.wires:[]),
+ boards=new Set(projects.map(p=>String(p.bt||'uno'))),
+ codeCount=p=>typeof p.code==='string'?p.code.split('\\n').filter(x=>x.trim()).length:0,
+ partsCount=p=>Array.isArray(p.parts)?p.parts.length:0,
+ wiresCount=p=>Array.isArray(p.wires)?p.wires.length:0,
+ sensorsCount=p=>(Array.isArray(p.parts)?p.parts:[]).filter(x=>/sensor|dht|hc.?sr04|ldr|pir|soil|mpu|gps|rfid|mq.?|max30|hx711|qmc|ds18|bmp|bme|ultra|therm|photoresistor|light/i.test(String(x.t||'')+' '+String(x.k||''))).length,
+ codeLines=projects.reduce((n,p)=>n+codeCount(p),0),
+ sensors=projects.reduce((n,p)=>n+sensorsCount(p),0),
+ complexProjects=projects.filter(p=>partsCount(p)>=5).length,
+ advancedProjects=projects.filter(p=>partsCount(p)>=10).length,
+ expertProjects=projects.filter(p=>partsCount(p)>=20).length,
+ wiredProjects10=projects.filter(p=>wiresCount(p)>=10).length,
+ wiredProjects25=projects.filter(p=>wiresCount(p)>=25).length,
+ codeProjects50=projects.filter(p=>codeCount(p)>=50).length,
+ codeProjects150=projects.filter(p=>codeCount(p)>=150).length,
+ integratedProjects=projects.filter(p=>partsCount(p)>=10&&wiresCount(p)>=20&&codeCount(p)>=100).length,
+ sensorProjects=projects.filter(p=>sensorsCount(p)>=3).length,
+ peakComponents=Math.max(0,...projects.map(partsCount)),
+ peakWires=Math.max(0,...projects.map(wiresCount));
+ const base={projects:projects.length,wires:allWires.length,codeLines,components:allParts.length,sensors,boards:boards.size,complexProjects,advancedProjects,expertProjects,wiredProjects10,wiredProjects25,codeProjects50,codeProjects150,integratedProjects,sensorProjects,peakComponents,peakWires};
+ const unlocked=ACHIEVEMENTS.filter(a=>(base[a.metric]||0)>=a.goal).length;
+ base.achievementPoints=unlocked;
  base.achievements=ACHIEVEMENTS.filter(a=>(base[a.metric]||0)>=a.goal).map(a=>a.id);
  return base;
 }
@@ -157,8 +196,8 @@ async function openLeaderboard(){
  if(!challenge&&sim)setStatus('Open Build Challenge from the top navigation to view all competition rankings.');
 }
 function askProjectDetails(defaultTitle,allowCopy=false){
- const modal=openModal('Save your project','Name your circuit and choose whether to update the current project or save a separate copy.'),list=modal.querySelector('.vx-cloud-list');
- list.innerHTML=`<form class="vx-project-form"><label for="vx-project-title">PROJECT NAME</label><input id="vx-project-title" maxlength="120" required autocomplete="off" placeholder="e.g. Smart greenhouse controller"><div class="vx-project-preview"><span class="vx-preview-icon">⌘</span><div><b>VOLTIX circuit</b><small>Board, wiring, component settings and code</small></div><span class="vx-preview-live">READY TO SAVE</span></div>${allowCopy?'<label class="vx-copy-choice"><input id="vx-save-copy" type="checkbox"><span><b>Save as a new copy</b><small>Keep the current saved project unchanged.</small></span></label>':''}<div class="vx-project-actions"><button type="button" class="vx-secondary" data-project-cancel>Cancel</button><button type="submit" class="vx-primary">Save project</button></div></form>`;
+ const modal=openModal('Save your project','Project names do not have to be unique. Reuse a name anytime; choose “Save as a new copy” to keep both projects.'),list=modal.querySelector('.vx-cloud-list');
+ list.innerHTML=`<form class="vx-project-form"><label for="vx-project-title">PROJECT NAME</label><input id="vx-project-title" maxlength="120" required autocomplete="off" placeholder="e.g. Smart greenhouse controller"><small class="vx-project-name-note">Names can repeat. Use “Save as a new copy” to create another project with this same name.</small><div class="vx-project-preview"><span class="vx-preview-icon">⌘</span><div><b>VOLTIX circuit</b><small>Board, wiring, component settings and code</small></div><span class="vx-preview-live">READY TO SAVE</span></div>${allowCopy?'<label class="vx-copy-choice"><input id="vx-save-copy" type="checkbox"><span><b>Save as a new copy</b><small>Keep the current saved project unchanged.</small></span></label>':''}<div class="vx-project-actions"><button type="button" class="vx-secondary" data-project-cancel>Cancel</button><button type="submit" class="vx-primary">Save project</button></div></form>`;
  const input=list.querySelector('#vx-project-title');input.value=defaultTitle||'';
  return new Promise(resolve=>{const done=value=>{closeModal();resolve(value)};list.querySelector('[data-project-cancel]').addEventListener('click',()=>done(null));list.querySelector('form').addEventListener('submit',e=>{e.preventDefault();const title=input.value.trim().slice(0,120);if(!title){modalStatus('Enter a project name before saving.',true);input.focus();return}done({title,saveAsCopy:!!(list.querySelector('#vx-save-copy')&&list.querySelector('#vx-save-copy').checked)})});input.focus();input.select()});
 }

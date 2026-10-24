@@ -26,6 +26,7 @@ const shareBtn = $vx('vx-share-cloud');
 const authLabel = $vx('vx-auth-label');
 let auth, db, currentUser = null, activeProjectId = null, activeProjectTitle = '';
 let cloudModal = null;
+let leaderboardBtn = null;
 let loginResolve = null;
 const storageGet = (key) => { try { return localStorage.getItem(key); } catch { return null; } };
 const storageSet = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
@@ -109,6 +110,81 @@ function projectTitleFallback(payload) {
   const board = bridge.getBoardName ? bridge.getBoardName() : (payload && payload.bt ? payload.bt : 'circuit');
   return `${board} circuit`;
 }
+function ensureCompetitionButton() {
+  if (leaderboardBtn || !signInBtn || !signInBtn.parentElement) return;
+  leaderboardBtn = document.createElement('button');
+  leaderboardBtn.type = 'button';
+  leaderboardBtn.id = 'vx-leaderboard';
+  leaderboardBtn.className = signInBtn.className;
+  leaderboardBtn.textContent = 'Leaderboard';
+  leaderboardBtn.title = 'Open the VOLTIX Build Challenge leaderboard';
+  leaderboardBtn.addEventListener('click', openLeaderboard);
+  signInBtn.parentElement.insertBefore(leaderboardBtn, signInBtn);
+}
+async function updateCompetitionProfile(user, projectCount) {
+  const profileRef = doc(db, 'leaderboard', user.uid);
+  const old = await getDoc(profileRef);
+  const previous = old.exists() ? old.data() : {};
+  await setDoc(profileRef, {
+    uid: user.uid,
+    displayName: user.displayName || 'VOLTIX Builder',
+    photoURL: user.photoURL || '',
+    projectCount: Math.max(Number(previous.projectCount) || 0, projectCount || 0),
+    updatedAt: serverTimestamp()
+  }, { merge: true });
+}
+async function openLeaderboard() {
+  try {
+    await requireUser();
+    const modal = openModal('VOLTIX Build Challenge', 'Earn points by creating and saving unique cloud projects. One point per project; updating a project does not add points.');
+    modalStatus('Loading live rankings…');
+    const list = modal.querySelector('.vx-cloud-list');
+    const q = query(collection(db, 'leaderboard'), orderBy('projectCount', 'desc'), limit(50));
+    const result = await getDocs(q);
+    if (cloudModal !== modal) return;
+    list.replaceChildren();
+    if (result.empty) {
+      const empty = document.createElement('div');
+      empty.className = 'vx-empty';
+      empty.textContent = 'The competition starts with the first saved cloud project. Save a circuit to enter the leaderboard.';
+      list.appendChild(empty);
+      modalStatus('No players ranked yet. Be the first builder!');
+      return;
+    }
+    result.docs.forEach((snap, index) => {
+      const player = snap.data();
+      const item = document.createElement('article');
+      item.className = 'vx-rank-row' + (index < 3 ? ' vx-rank-top' : '');
+      const rank = document.createElement('div');
+      rank.className = 'vx-rank-number';
+      rank.textContent = String(index + 1).padStart(2, '0');
+      const avatar = document.createElement('img');
+      avatar.className = 'vx-rank-avatar';
+      avatar.alt = '';
+      avatar.src = player.photoURL || '';
+      avatar.referrerPolicy = 'no-referrer';
+      avatar.onerror = () => { avatar.style.display = 'none'; };
+      const name = document.createElement('div');
+      name.className = 'vx-rank-name';
+      name.textContent = player.displayName || 'VOLTIX Builder';
+      const caption = document.createElement('div');
+      caption.className = 'vx-rank-caption';
+      caption.textContent = 'Cloud projects created';
+      const score = document.createElement('div');
+      score.className = 'vx-rank-score';
+      score.textContent = String(Number(player.projectCount) || 0) + ' pts';
+      const details = document.createElement('div');
+      details.className = 'vx-rank-player';
+      details.append(name, caption);
+      item.append(rank, avatar, details, score);
+      list.appendChild(item);
+    });
+    modalStatus('Live account data · Ranked by unique cloud projects · Top 50');
+  } catch (error) {
+    showError(error);
+    if (cloudModal) modalStatus(friendlyError(error), true);
+  }
+}
 async function saveCloudProject() {
   const u = await requireUser();
   const payload = projectFromSimulator();
@@ -140,6 +216,20 @@ async function saveCloudProject() {
     updatedAt: serverTimestamp()
   };
   await setDoc(ref, record);
+  if (!prior) {
+    const leaderboardRef = doc(db, 'leaderboard', u.uid);
+    const leaderboardSnap = await getDoc(leaderboardRef);
+    const leaderboardData = leaderboardSnap.exists() ? leaderboardSnap.data() : {};
+    await setDoc(leaderboardRef, {
+      uid: u.uid,
+      displayName: u.displayName || 'VOLTIX Builder',
+      photoURL: u.photoURL || '',
+      projectCount: (Number(leaderboardData.projectCount) || 0) + 1,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  } else {
+    await updateCompetitionProfile(u, Number((await getDoc(doc(db, 'leaderboard', u.uid))).data()?.projectCount) || 0);
+  }
   activeProjectId = ref.id;
   activeProjectTitle = title;
   storageSet(activeIdKey(u.uid), activeProjectId);
@@ -396,6 +486,7 @@ try {
     }
     renderAuth();
   }, (error) => showError(error));
+  ensureCompetitionButton();
   setStatus('Firebase initialized. Sign in to use cloud projects.');
   loadSharedProjectFromUrl();
 } catch (error) {

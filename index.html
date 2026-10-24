@@ -809,6 +809,7 @@ function shape(t,k,id,d,ohm,col){const c=id?`id="c-${id}" `:'',g=id?`id="i-${id}
  if(t=='diode')return`<line x1="56" y1="52" x2="120" y2="52" stroke="#cbd0ff" stroke-width="2.5"/><rect x="68" y="44" width="40" height="16" rx="3" fill="#111827" stroke="#6b7280"/><rect x="96" y="44" width="6" height="16" fill="#e5e7eb"/><rect x="68" y="44" width="40" height="16" rx="3" fill="url(#gl)"/>`;
  if(t=='fuse')return`<line x1="56" y1="52" x2="120" y2="52" stroke="#cbd0ff" stroke-width="2.5"/><rect x="66" y="43" width="44" height="18" rx="4" fill="#bae6fd" fill-opacity=".35" stroke="#e0f2fe"/><path d="M70,52q4,-8 8,0t8,0t8,0t8,0" stroke="#fbbf24" fill="none" stroke-width="1.5"/><rect x="60" y="43" width="8" height="18" fill="#d6b86b"/><rect x="108" y="43" width="8" height="18" fill="#d6b86b"/>`;
  if(t=='tmp36'||t=='lm35')return`<path d="M76,64V44a12,12 0 0 1 24,0V64Z" fill="#111827" stroke="#cbd0ff" stroke-width="1.5"/><text x="88" y="56" text-anchor="middle" font-size="6" fill="#fff">${t=='tmp36'?'TMP36':'LM35'}</text>`+L(80,64,75)+L(88,64,75)+L(96,64,75);
+ if(k=='piboard')return P('#166534',52,22,72,60)+`<rect x="61" y="31" width="22" height="18" rx="2" fill="#111827" stroke="#94a3b8"/><rect x="88" y="31" width="14" height="18" rx="2" fill="#111827" stroke="#94a3b8"/><rect x="105" y="31" width="12" height="18" rx="2" fill="#111827" stroke="#94a3b8"/><path d="M59,60h58" stroke="#4ade80" stroke-width="3"/>`;
  if(t=='aicam')return P('#172554',60,25,56,54)+`<rect x="69" y="34" width="38" height="30" rx="5" fill="#0f172a" stroke="#67e8f9" stroke-width="2"/><circle cx="88" cy="49" r="12" fill="#164e63" stroke="#a5f3fc" stroke-width="2"/><circle cx="88" cy="49" r="6" fill="#020617" stroke="#67e8f9"/><circle cx="88" cy="49" r="2" fill="#e0f2fe"/><path d="M72,28h32" stroke="#67e8f9" stroke-width="2"/>`;
  if(t=='bat')return P('#111827',66,28,44,52)+`<rect x="66" y="28" width="44" height="14" rx="3" fill="#f59e0b"/><text x="88" y="64" text-anchor="middle" font-size="14" font-weight="700" fill="#f59e0b">DC</text><circle cx="78" cy="26" r="4" fill="#cbd0ff"/><circle cx="98" cy="26" r="5" fill="#cbd0ff"/>`;
  if(t=='pump')return`<rect x="56" y="48" width="14" height="8" rx="2" fill="#cbd0ff"/><rect x="84" y="24" width="8" height="14" rx="2" fill="#cbd0ff"/><circle cx="88" cy="52" r="20" fill="#2563eb" stroke="#bcd0ff" stroke-width="2"/><circle cx="88" cy="52" r="20" fill="url(#specular)"/><circle cx="88" cy="52" r="14" fill="#1e3a8a"/><g ${g}>`+[0,72,144,216,288].map(a=>`<ellipse cx="88" cy="43" rx="3" ry="7" fill="#bfdbfe" transform="rotate(${a} 88 52)"/>`).join('')+`</g><circle cx="88" cy="52" r="3" fill="#fff"/>`;
@@ -1020,7 +1021,7 @@ layout();S.bt='uno';$('#bd').value='uno';S.parts=[];S.wires=[];S.n=0;S.sel=null;
 <script src="assets/js/03-code-editor.js"></script>
 <script src="assets/js/04-component-menu-and-wiring.js"></script>
 <script src="assets/js/05-raspberry-pi-targets.js"></script>
-<script src="assets/js/06-3d-view.js"></script>
+<script src="assets/js/06-3d-view.js?v=20261024-pi-ai-iot></script>
 <script src="assets/js/07-pin-rendering.js"></script>
 
 <script src="assets/js/08-wire-rendering.js"></script>
@@ -1034,7 +1035,7 @@ layout();S.bt='uno';$('#bd').value='uno';S.parts=[];S.wires=[];S.n=0;S.sel=null;
 
 <script src="assets/js/13-board-catalog.js"></script>
 
-<script src="assets/js/14-component-specifications.js"></script>
+<script src="assets/js/14-component-specifications.js?v=20261024-pi-ai-iot></script>
 
 <script src="assets/js/15-board-expansion.js"></script>
 <script src="assets/js/16-wire-routing.js"></script>

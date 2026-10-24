@@ -972,6 +972,7 @@ function loadEx(k){const e=EX[k];stop();S.bt=e.bt;layout();S.parts=[];S.wires=[]
  e.P.split(',').forEach(s=>{const[t,x,y,v]=s.split(' ');addPart(t,+x+110,+y+20);if(v)S.parts[S.parts.length-1].st.volt=+v});
  e.W.split(',').forEach(s=>{const[a,b]=s.split('>');S.wires.push({a,b,c:wc(a,b)})});
  $('#code').value=e.c;$('#bd').value=S.bt;draw();tab('code');fit()}
+const sharedExample=new URLSearchParams(location.search).get('example');if(sharedExample&&EX[sharedExample]){loadEx(sharedExample);go('sim')}
 const cats=[...new Set(Object.values(PT).map(d=>d[1]))];
 $('#pal').insertAdjacentHTML('beforeend',cats.map(c=>`<h4>${c}</h4><div class="gr">`+Object.entries(PT).filter(([k,d])=>d[1]==c&&!/^led[rgbywopk]$/.test(k)).map(([k,d])=>`<button data-add="${k}"><svg viewBox="52 22 72 62" width="32" height="28">${shape(k,d[4],null,d)}</svg>${d[0]}</button>`).join('')+'</div>').join(''));
 $('#pal').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b){addPart(b.dataset.add);draw()}});

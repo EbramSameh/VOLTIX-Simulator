@@ -52,7 +52,7 @@ function friendlyError(error) {
   if (code === 'auth/popup-blocked') return 'The browser blocked the sign-in popup. Allow popups for this site and try again.';
   if (code === 'auth/popup-closed-by-user') return 'The sign-in window was closed before sign-in finished.';
   if (code === 'auth/network-request-failed' || code === 'unavailable') return 'Network connection failed. Check your internet connection and try again.';
-  if (code === 'permission-denied' || code === 'firestore/permission-denied') return 'Firestore denied this request. Check the published security rules in firestore.rules.';
+  if (code === 'permission-denied' || code === 'firestore/permission-denied') return 'Firestore blocked this request. Open Firebase Console → Firestore Database → Rules, publish the rules from the repository file firestore.rules, then reload VOLTIX.';
   if (code === 'auth/invalid-api-key' || code === 'app/invalid-api-key') return 'Firebase rejected the web API key. Recheck the web app configuration in Project settings.';
   return (error && error.message) ? error.message : 'An unexpected Firebase error occurred.';
 }

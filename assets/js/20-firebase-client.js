@@ -26,6 +26,7 @@ const shareBtn = $vx('vx-share-cloud');
 const authLabel = $vx('vx-auth-label');
 let auth, db, currentUser = null, activeProjectId = null, activeProjectTitle = '';
 let cloudModal = null;
+let loginResolve = null;
 const storageGet = (key) => { try { return localStorage.getItem(key); } catch { return null; } };
 const storageSet = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
 const storageRemove = (key) => { try { localStorage.removeItem(key); } catch {} };
@@ -93,7 +94,7 @@ async function signIn() {
 }
 async function requireUser() {
   if (currentUser) return currentUser;
-  const signedInUser = await signIn();
+  const signedInUser = await openLoginExperience();
   if (!signedInUser) throw new Error('Sign in was not completed.');
   return signedInUser;
 }
@@ -146,9 +147,14 @@ async function saveCloudProject() {
   setStatus(`Saved “${title}” to your cloud projects.`);
   return { id: ref.id, title, payload };
 }
-function closeModal() {
+function closeModal(result = null) {
   if (cloudModal) cloudModal.remove();
   cloudModal = null;
+  if (loginResolve) {
+    const resolve = loginResolve;
+    loginResolve = null;
+    resolve(result);
+  }
 }
 function openModal(title, description = '') {
   closeModal();
@@ -303,7 +309,10 @@ async function loadSharedProjectFromUrl() {
 
 
 function openLoginExperience() {
+  if (currentUser) return Promise.resolve(currentUser);
   closeModal();
+  return new Promise(resolve => {
+  loginResolve = resolve;
   const overlay = document.createElement('div');
   overlay.id = 'vx-cloud-modal';
   overlay.innerHTML = `<section class="vx-dialog vx-login-dialog" role="dialog" aria-modal="true" aria-labelledby="vx-login-heading">
@@ -329,7 +338,7 @@ function openLoginExperience() {
       <p class="vx-login-terms">By continuing, you agree to use VOLTIX responsibly. <br/>You can explore the simulator without an account.</p>
     </div>
   </section>`;
-  const close = () => { if (cloudModal === overlay) closeModal(); };
+  const close = (user = null) => { if (cloudModal === overlay) closeModal(user); };
   overlay.querySelector('.vx-close').addEventListener('click', close);
   overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
   const onKey = event => { if (event.key === 'Escape' && cloudModal === overlay) { closeModal(); document.removeEventListener('keydown', onKey); } };
@@ -342,7 +351,7 @@ function openLoginExperience() {
     msg.textContent = 'Waiting for Google sign-in…';
     msg.classList.remove('bad');
     const user = await signIn();
-    if (user) { document.removeEventListener('keydown', onKey); close(); }
+    if (user) { document.removeEventListener('keydown', onKey); close(user); }
     else {
       button.disabled = false;
       button.querySelector('span:nth-of-type(1)').textContent = 'Try Google sign-in again';
@@ -353,6 +362,7 @@ function openLoginExperience() {
   document.body.appendChild(overlay);
   cloudModal = overlay;
   requestAnimationFrame(() => overlay.querySelector('.vx-google-login').focus());
+  });
 }
 
 signInBtn.addEventListener('click', async () => {

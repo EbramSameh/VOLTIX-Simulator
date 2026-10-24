@@ -9,10 +9,14 @@ const tl=mk('tl','☰ Parts','Show / hide the parts list ( [ )',()=>tog('lc')),t
 const v3=$q('#v3');v3.before(tl,tr,fc);
 if(ls('vx_lc')==='1')B.classList.add('lc');if(ls('vx_rc')==='1')B.classList.add('rc');upd();
 document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.ctrlKey||e.metaKey)return;if(e.key=='[')tog('lc');else if(e.key==']')tog('rc');else if(e.key=='f'||e.key=='F')fc.onclick()});
-// "More" menu keeps rarely used buttons out of the way
-const more=document.createElement('span');more.id='more';more.innerHTML='<button class="tb2" id="mb">⋯ More</button><div id="mm"></div>';$q('#lib').before(more);
-['#clr','#bom','#lib'].forEach(s=>{const b=$q(s);if(b)$q('#mm').appendChild(b)});[...document.querySelectorAll('button')].filter(b=>/Delete wire|Libraries/.test(b.textContent)&&b.parentNode!==$q('#mm')).forEach(b=>$q('#mm').appendChild(b));
-$q('#mb').onclick=e=>{e.stopPropagation();$q('#mm').classList.toggle('o')};document.addEventListener('click',()=>$q('#mm').classList.remove('o'));
+// Keep useful tools visible in the toolbar instead of hiding them in a More menu.
+['#clr','#bom','#lib'].forEach(s=>{const b=$q(s);if(b){b.classList.add('tb2');$q('#v3').before(b)}});
+const fresh=$q('#vx-new-circuit');
+if(fresh)fresh.addEventListener('click',()=>{
+  stop();S.bt='uno';layout();S.parts=[];S.wires=[];S.n=0;S.sel=null;S.pend=null;
+  $q('#bd').value='uno';$q('#ex').value='';$q('#code').value='void setup() {\n}\n\nvoid loop() {\n}\n';
+  draw();lnu();fit();tab('code');go('sim');toast('Fresh Arduino Uno circuit ready.');
+});
 // parts list: categories start collapsed (first one open), with an expand/collapse-all toggle
 const ds=()=>[...document.querySelectorAll('#pal details')];ds().forEach((d,i)=>d.open=i<1);
 const ex=document.createElement('button');ex.textContent='⇕';ex.title='Expand / collapse all categories';ex.style.cssText='flex:0 0 28px;padding:3px';ex.onclick=()=>{const any=ds().some(d=>d.open);ds().forEach(d=>d.open=!any)};$q('#chips').appendChild(ex);

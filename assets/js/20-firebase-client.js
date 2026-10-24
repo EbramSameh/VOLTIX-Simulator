@@ -337,7 +337,8 @@ function openLoginExperience() {
   document.body.appendChild(overlay);
   cloudModal = overlay;
 }
-\nsignInBtn.addEventListener('click', async () => {
+
+signInBtn.addEventListener('click', async () => {
   if (!currentUser) { openLoginExperience(); return; }
   try {
     await signOut(auth);

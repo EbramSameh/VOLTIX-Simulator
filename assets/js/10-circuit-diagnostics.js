@@ -40,7 +40,7 @@ $q('#pgo').onclick=()=>{const txt=$q('#ptxt').value,head=txt.split(/[:.;\n]/)[0]
 // --- electrical safety pass: visual diagnostics for common wiring mistakes ---
 (()=>{const $=s=>document.querySelector(s),root=x=>{while(parent.has(x)&&parent.get(x)!==x)x=parent.get(x);return x},parent=new Map();
  const ensure=x=>{if(!parent.has(x))parent.set(x,x)},join=(a,b)=>{ensure(a);ensure(b);const x=root(a),y=root(b);if(x!==y)parent.set(x,y)};
- function analyze(){if(!window.S||!Array.isArray(S.parts)||!Array.isArray(S.wires)||!Array.isArray(S.bp))return[];parent.clear();S.wires.forEach(w=>join(w.a,w.b));const net=x=>{ensure(x);return root(x)},messages=[],seen=new Set(),add=(level,title,detail)=>{const key=level+title+detail;if(!seen.has(key)){seen.add(key);messages.push({level,title,detail})}},boardNets=new Map();
+ function analyze(){if(typeof S==='undefined'||!Array.isArray(S.parts)||!Array.isArray(S.wires)||!Array.isArray(S.bp))return[];parent.clear();S.wires.forEach(w=>join(w.a,w.b));const net=x=>{ensure(x);return root(x)},messages=[],seen=new Set(),add=(level,title,detail)=>{const key=level+title+detail;if(!seen.has(key)){seen.add(key);messages.push({level,title,detail})}},boardNets=new Map();
  S.bp.forEach(p=>{const r=net('b:'+p.l);if(!boardNets.has(r))boardNets.set(r,[]);boardNets.get(r).push(p)});
  boardNets.forEach((pins,r)=>{const power=pins.some(p=>p.k==='p5'||p.k==='p3'),ground=pins.some(p=>p.k==='g');if(power&&ground)add('danger','Power-to-ground short','A single connected net contains both a supply pin and GND. Disconnect the short before running the circuit.')});
  const byId=new Map(S.parts.map(p=>[String(p.id),p])),resistors=S.parts.filter(p=>p.k==='res'||/resistor/i.test(String(p.t||'')));

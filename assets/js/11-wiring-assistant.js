@@ -1,0 +1,42 @@
+/* Role-aware wiring assistant. */
+
+(()=>{const $q=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function build(){const B=BD[S.bt],uf={},F=x=>uf[x]==null||uf[x]==x?(uf[x]=x):(uf[x]=F(uf[x]));S.wires.forEach(w=>{F(w.a);F(w.b);uf[F(w.a)]=F(w.b)});
+ const pre={res:'R',led:'D',cap:'C',ind:'L',dio:'D',fuse:'F',sw:'SW',btn:'SW',bat:'BT'},cnt={},ref={};
+ S.parts.forEach(p=>{const x=pre[p.k]||'U';cnt[x]=(cnt[x]||0)+1;ref[p.id]=x+cnt[x]});
+ const bq=l=>S.bp.find(q=>q.l==l),bUsed=[...new Set(S.wires.flatMap(w=>[w.a,w.b]).filter(r=>r[0]=='b').map(r=>r.slice(2)))].map(bq).filter(Boolean).sort((a,b)=>({p5:0,p3:1,g:2,io:3}[a.k]-{p5:0,p3:1,g:2,io:3}[b.k])||a.n-b.n);
+ const BX=40,BY=70,BW=170,RH=26,BH=50+Math.max(1,bUsed.length)*RH,by={};bUsed.forEach((q,i)=>by[q.l]=BY+44+i*RH+RH/2);
+ const act=S.parts.filter(p=>S.wires.some(w=>w.a.startsWith(p.id+':')||w.b.startsWith(p.id+':')));
+ const avg=p=>{const ys=S.wires.flatMap(w=>[w.a,w.b]).filter(r=>r.startsWith(p.id+':')).map(r=>{const o=S.wires.find(w=>(w.a==r||w.b==r)&&(w.a[0]=='b'||w.b[0]=='b'));const b=o&&(o.a[0]=='b'?o.a:o.b);return b?by[b.slice(2)]:999});return ys.reduce((a,b)=>a+b,0)/(ys.length||1)};
+ act.sort((a,b)=>avg(a)-avg(b));const PX=BX+BW+70+S.wires.length*11,PW=210;let y=BY;const pos={};
+ act.forEach(p=>{const n=pinsOf(p).length,h=44+n*20;pos[p.id]={y,h};y+=h+26});
+ const pinXY=r=>{if(r[0]=='b')return[BX+BW,by[r.slice(2)]];const[id,l]=r.split(':'),o=pos[id];return[PX,o.y+36+pinsOf(S.parts.find(p=>p.id==id)).indexOf(l)*20+10]};
+ const nets={};Object.keys(uf).forEach(r=>{(nets[F(r)]=nets[F(r)]||[]).push(r)});
+ const kind=ms=>{const b=ms.filter(r=>r[0]=='b').map(r=>bq(r.slice(2)));return b.find(q=>q.k=='g')?'g':b.find(q=>q.k=='p5')?'p5':b.find(q=>q.k=='p3')?'p3':'s'};
+ let g='',ci=0,nl=[],LN=0,PL=0;const pn={};const col=i=>`hsl(${(i*67)%360},65%,38%)`;
+ const sym=(x,y,k,dir)=>{const d=dir;return k=='g'?`<path d="M${x},${y}h${d*14}M${x+d*14},${y-8}v16M${x+d*18},${y-5}v10M${x+d*22},${y-2}v4" stroke="#222" stroke-width="1.6" fill="none"/>`:`<path d="M${x},${y}h${d*10}M${x+d*10},${y-7}v14" stroke="#c62828" stroke-width="1.8" fill="none"/><text x="${x+d*14}" y="${y+4}" font-size="11" fill="#c62828" ${d<0?'text-anchor="end"':''}>${k=='p5'?'+5V':'+3.3V'}</text>`};
+ Object.values(nets).forEach(ms=>{const k=kind(ms),b=ms.filter(r=>r[0]=='b'),nm=k=='g'?'GND':k=='p5'?'+5V':k=='p3'?'+3.3V':b.length?b[0].slice(2):'N'+(++ci);
+  ms.forEach(r=>pn[r]=nm);nl.push([nm,ms.map(r=>r[0]=='b'?B[0]+' '+r.slice(2):ref[r.split(':')[0]]+'.'+r.split(':')[1])]);
+  if(k!='s'){ms.forEach(r=>{const[x,yy]=pinXY(r);g+=sym(x,yy,k,r[0]=='b'?1:-1)});return}
+  const src=b[0]||ms[0],[sx,sy]=pinXY(src),c=col(++ci),xc=b.length?BX+BW+30+(LN++)*11:PX-26-(PL++)*10;let ys=[sy];
+  ms.filter(r=>r!=src).forEach(r=>{const[dx,dy]=pinXY(r);ys.push(dy);g+=`<path d="M${sx},${sy}H${xc}V${dy}H${dx}" stroke="${c}" stroke-width="2" fill="none" stroke-linejoin="round"/><circle cx="${dx}" cy="${dy}" r="3" fill="${c}"/>`});
+  g+=`<circle cx="${xc}" cy="${sy}" r="3.4" fill="${c}"/>${b.length?`<text x="${sx+8}" y="${sy-5}" font-size="10" fill="${c}" font-weight="700">${esc(nm)}</text>`:''}`});
+ let h=`<rect x="${BX}" y="${BY}" width="${BW}" height="${BH}" rx="8" fill="#eaf4ff" stroke="#1d4ed8" stroke-width="2"/><text x="${BX+BW/2}" y="${BY+26}" text-anchor="middle" font-weight="700" font-size="14" fill="#10224f">${esc(B[0])}</text>`;
+ const role=q=>q.k=='p5'?'5 V power':q.k=='p3'?'3.3 V power':q.k=='g'?'ground':q.l==(S.bp.find(x=>x.n===(I2P[S.bt]||[])[0])||{}).l?'I²C SDA':q.l==(S.bp.find(x=>x.n===(I2P[S.bt]||[])[1])||{}).l?'I²C SCL':/^A\d$/.test(q.l)?'analog in':'digital I/O';
+ bUsed.forEach(q=>{const yy=by[q.l];h+=`<text x="${BX+12}" y="${yy+3}" font-size="9" fill="#5b6b99">${role(q)}</text><text x="${BX+BW-14}" y="${yy+4}" text-anchor="end" font-size="12" font-weight="700" fill="#10224f">${esc(q.l)}</text><circle cx="${BX+BW}" cy="${yy}" r="4" fill="#e6c76a" stroke="#333"/>`});
+ act.forEach(p=>{const o=pos[p.id],d=PT[p.t],cc=['led','rgb','out','servo','relay','disp','neo','seg','a4988','hb','sd','step'].includes(p.k)?['#eafaf0','#15803d']:['res','cap','ind','dio','fuse','bat','btn','sw'].includes(p.k)?['#fff8e6','#b45309']:['#eef2ff','#4338ca'],val=p.k=='res'?fmtOhm(p.st.ohm||220):p.k=='led'?(p.st.color||'red')+' LED':p.k=='bat'?(p.st.volt||5)+' V':'';
+  h+=`<rect x="${PX}" y="${o.y}" width="${PW}" height="${o.h}" rx="8" fill="${cc[0]}" stroke="${cc[1]}" stroke-width="2"/><text x="${PX+10}" y="${o.y+18}" font-weight="700" font-size="13" fill="#4a2a05">${ref[p.id]}  ${esc(d[0])}</text>${p.k=='res'?`<path d="M${PX+PW-70},${o.y+14}h10l3,-7l6,14l6,-14l6,14l3,-7h10" stroke="#b45309" fill="none" stroke-width="1.6"/>`:p.k=='led'?`<path d="M${PX+PW-50},${o.y+8}v12l12,-6zM${PX+PW-38},${o.y+8}v12" stroke="#b45309" fill="#fde68a" stroke-width="1.6"/>`:''}${val?`<text x="${PX+10}" y="${o.y+32}" font-size="11" fill="#7a5a2a">${esc(val)}</text>`:''}`;
+  pinsOf(p).forEach((l,i)=>{const yy=o.y+36+i*20+10;h+=`<circle cx="${PX}" cy="${yy}" r="4" fill="#e6c76a" stroke="#333"/><text x="${PX+12}" y="${yy+4}" font-size="12" fill="#222">${esc(l)}</text>${pn[p.id+':'+l]?`<text x="${PX+PW-8}" y="${yy+3}" text-anchor="end" font-size="9" fill="#8a6a3a">${esc(pn[p.id+':'+l])}</text>`:''}`})});
+ const W=PX+PW+60,H0=Math.max(BY+BH,y)+30;let t=`<text x="${BX}" y="42" font-size="20" font-weight="700" fill="#10224f">Schematic · ${esc(B[0])}</text><text x="${BX}" y="58" font-size="11" fill="#667">Generated by VOLTIX · ${new Date().toLocaleDateString()} · red = power, black = ground, colours = signal nets · green = outputs, blue = sensors/modules, amber = passives</text>`;
+ let ty=H0+10;t+=`<text x="${BX}" y="${ty}" font-size="15" font-weight="700" fill="#10224f">Netlist</text>`;nl.forEach(([n,m])=>{ty+=18;t+=`<text x="${BX}" y="${ty}" font-size="12" font-family="monospace" fill="#222"><tspan font-weight="700">${esc(n)}</tspan>: ${esc(m.join('  ↔  '))}</text>`});
+ ty+=34;t+=`<text x="${BX}" y="${ty}" font-size="15" font-weight="700" fill="#10224f">Parts list</text>`;act.forEach(p=>{ty+=18;t+=`<text x="${BX}" y="${ty}" font-size="12" font-family="monospace" fill="#222">${ref[p.id]}  ${esc(PT[p.t][0])}</text>`});
+ const HH=ty+60;t+=`<rect x="14" y="14" width="${W-28}" height="${HH-28}" fill="none" stroke="#10224f" stroke-width="1.5"/><rect x="${W-300}" y="${HH-74}" width="286" height="60" fill="#f3f6ff" stroke="#10224f"/><text x="${W-290}" y="${HH-54}" font-size="11" font-weight="700" fill="#10224f">VOLTIX project schematic</text><text x="${W-290}" y="${HH-38}" font-size="10" fill="#445">Board: ${esc(B[0])}  ·  ${act.length} parts  ·  ${nl.length} nets</text><text x="${W-290}" y="${HH-24}" font-size="10" fill="#445">Logic level ${B[1]} V  ·  ${new Date().toISOString().slice(0,10)}</text>`;return`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${HH}" viewBox="0 0 ${W} ${HH}" font-family="Inter,Arial,sans-serif"><rect width="100%" height="100%" fill="#fff"/>${t}${h}${g}</svg>`}
+const M=document.createElement('div');M.id='sch';M.innerHTML='<div class="box"><div class="bar"><b>📐 Schematic · netlist · parts list</b><button id="sv1">Download SVG</button><button id="sv2">Download PNG</button><button id="sv3">Print / PDF</button><button id="sv4">✕</button></div><div class="vw"></div></div>';document.body.appendChild(M);
+let cur='';const dl=(u,n)=>{const a=document.createElement('a');a.href=u;a.download=n;a.click()};
+const open=()=>{if(!S.wires.length)return toast('Connect something first.',1);cur=build();M.querySelector('.vw').innerHTML=cur;M.style.display='flex'};
+$q('#sv4').onclick=()=>M.style.display='none';$q('#sv1').onclick=()=>dl(URL.createObjectURL(new Blob([cur],{type:'image/svg+xml'})),'voltix-schematic.svg');
+$q('#sv2').onclick=()=>{const im=new Image(),sz=M.querySelector('svg');im.onload=()=>{const c=document.createElement('canvas');c.width=sz.width.baseVal.value*2;c.height=sz.height.baseVal.value*2;const x=c.getContext('2d');x.scale(2,2);x.drawImage(im,0,0);dl(c.toDataURL('image/png'),'voltix-schematic.png')};im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(cur)};
+$q('#sv3').onclick=()=>{const w=window.open('','_blank');if(!w)return toast('Allow pop-ups to print.',1);w.document.write('<title>Schematic</title>'+cur);w.document.close();w.print()};
+const hb=document.createElement('button');hb.textContent='📐 Schematic';hb.onclick=open;$q('#awb').before(hb);
+
+})();

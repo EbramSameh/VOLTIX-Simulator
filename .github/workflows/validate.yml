@@ -55,3 +55,28 @@ jobs:
               raise SystemExit("Missing asset files: " + ", ".join(missing))
           print(f"Verified {len(refs)} local asset references")
           PY
+      - name: Check duplicate HTML IDs
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from collections import Counter
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          class IdChecker(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.ids = []
+              def handle_starttag(self, tag, attrs):
+                  for key, value in attrs:
+                      if key == "id" and value:
+                          self.ids.append(value)
+
+          checker = IdChecker()
+          checker.feed(Path("index.html").read_text(encoding="utf-8"))
+          counts = Counter(checker.ids)
+          duplicates = sorted(key for key, count in counts.items() if count > 1)
+          if duplicates:
+              raise SystemExit("Duplicate HTML IDs: " + ", ".join(duplicates))
+          print(f"Verified {len(checker.ids)} unique HTML IDs")
+          PY

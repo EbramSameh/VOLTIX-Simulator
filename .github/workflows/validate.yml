@@ -1,0 +1,57 @@
+name: Validate VOLTIX
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check JavaScript modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          find assets/js -type f -name '*.js' -print0 | while IFS= read -r -d '' file; do
+            echo "Checking $file"
+            node --check "$file"
+          done
+      - name: Check inline simulator engine
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path("index.html").read_text(encoding="utf-8")
+          scripts = re.findall(r'<script\b([^>]*)>([\s\S]*?)</script>', html, re.I)
+          inline = [(attrs, body) for attrs, body in scripts
+                    if not re.search(r'\bsrc\s*=', attrs, re.I)
+                    and not re.search(r'application/ld\+json', attrs, re.I)
+                    and body.strip()]
+          if not inline:
+              raise SystemExit("No inline JavaScript engine found")
+          Path("/tmp/voltix-inline.js").write_text(inline[0][1], encoding="utf-8")
+          print("Extracted inline simulator engine for Node syntax check")
+          PY
+          node --check /tmp/voltix-inline.js
+      - name: Check stylesheet references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path("index.html").read_text(encoding="utf-8")
+          refs = re.findall(r'(?:src|href)="(assets/(?:js|css)/[^"]+)"', html)
+          missing = [ref for ref in refs if not Path(ref).is_file()]
+          if missing:
+              raise SystemExit("Missing asset files: " + ", ".join(missing))
+          print(f"Verified {len(refs)} local asset references")
+          PY

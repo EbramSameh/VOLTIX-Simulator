@@ -3,7 +3,7 @@
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js';
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut, updateProfile } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js';
 import {
-  getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc,
+  getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot,
   serverTimestamp, query, orderBy, limit, where
 } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js';
 
@@ -28,6 +28,8 @@ let auth, db, currentUser = null, activeProjectId = null, activeProjectTitle = '
 let cloudModal = null;
 let leaderboardBtn = null;
 let loginResolve = null;
+let authGateActive = false;
+let presenceUnsubscribe = null, presenceHeartbeat = null, presenceUid = null;
 const storageGet = (key) => { try { return localStorage.getItem(key); } catch { return null; } };
 const storageSet = (key, value) => { try { localStorage.setItem(key, value); } catch {} };
 const storageRemove = (key) => { try { localStorage.removeItem(key); } catch {} };
@@ -61,6 +63,48 @@ function showError(error) {
   setStatus(msg, true);
   console.error('[VOLTIX Firebase]', error);
   return msg;
+}
+function paintLiveUsers(count) {
+  const el = $vx('vx-live-users-count');
+  if (el) el.textContent = String(count);
+}
+function stopPresence() {
+  if (presenceHeartbeat) clearInterval(presenceHeartbeat);
+  presenceHeartbeat = null;
+  if (presenceUnsubscribe) presenceUnsubscribe();
+  presenceUnsubscribe = null;
+  const oldUid = presenceUid;
+  presenceUid = null;
+  paintLiveUsers('—');
+  if (oldUid && db) deleteDoc(doc(db, 'onlinePresence', oldUid)).catch(() => {});
+}
+function startPresence(user) {
+  if (!db || !user) return;
+  if (presenceUid === user.uid && presenceUnsubscribe) return;
+  if (presenceUid) stopPresence();
+  presenceUid = user.uid;
+  const presenceRef = doc(db, 'onlinePresence', user.uid);
+  const heartbeat = () => setDoc(presenceRef, {
+    displayName: user.displayName || 'Builder',
+    lastSeen: serverTimestamp()
+  }, { merge: true }).catch(error => {
+    console.warn('[VOLTIX presence] Could not update live status:', error);
+    paintLiveUsers('—');
+  });
+  heartbeat();
+  presenceHeartbeat = setInterval(heartbeat, 45000);
+  presenceUnsubscribe = onSnapshot(collection(db, 'onlinePresence'), snapshot => {
+    const now = Date.now();
+    let active = 0;
+    snapshot.forEach(item => {
+      const seen = item.data().lastSeen;
+      if (seen && typeof seen.toMillis === 'function' && now - seen.toMillis() < 120000) active++;
+    });
+    paintLiveUsers(active);
+  }, error => {
+    console.warn('[VOLTIX presence] Live counter unavailable. Check Firestore rules.', error);
+    paintLiveUsers('—');
+  });
 }
 function renderAuth() {
   if (currentUser) {
@@ -295,6 +339,7 @@ async function saveCloudProject(options = {}) {
 }
 function closeModal(result = null) {
   if (cloudModal) cloudModal.remove();
+  if (result || currentUser) authGateActive = false;
   cloudModal = null;
   if (loginResolve) {
     const resolve = loginResolve;
@@ -439,13 +484,15 @@ async function loadSharedProjectFromUrl() {
 }
 
 
-function openLoginExperience() {
+function openLoginExperience(required = false) {
   if (currentUser) return Promise.resolve(currentUser);
+  authGateActive = required || authGateActive;
   closeModal();
   return new Promise(resolve => {
   loginResolve = resolve;
   const overlay = document.createElement('div');
   overlay.id = 'vx-cloud-modal';
+  if (authGateActive) overlay.classList.add('vx-required-login');
   overlay.innerHTML = `<section class="vx-dialog vx-login-dialog" role="dialog" aria-modal="true" aria-labelledby="vx-login-heading">
     <button class="vx-close" type="button" aria-label="Close sign-in">×</button>
     <div class="vx-login-brand">
@@ -466,13 +513,14 @@ function openLoginExperience() {
       <div class="vx-login-divider"><span>QUICK AND SECURE</span></div>
       <div class="vx-login-benefits"><div><span class="vx-benefit-icon">✓</span><span><b>Your projects, anywhere</b><small>Save and open your circuits across devices.</small></span></div><div><span class="vx-benefit-icon">↗</span><span><b>Share your work</b><small>Send a project link to your teammates.</small></span></div></div>
       <div class="vx-cloud-message" role="status" aria-live="polite">No password to remember. Google handles sign-in securely.</div>
-      <p class="vx-login-terms">By continuing, you agree to use VOLTIX responsibly. <br/>You can explore the simulator without an account.</p>
+      <p class="vx-login-terms">Sign in with your Google account to continue. Your email is used for account identity; VOLTIX does not access your inbox.</p>
     </div>
   </section>`;
-  const close = (user = null) => { if (cloudModal === overlay) closeModal(user); };
+  const close = (user = null) => { if (authGateActive && !currentUser && !user) return; if (cloudModal === overlay) closeModal(user); };
   overlay.querySelector('.vx-close').addEventListener('click', close);
-  overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
-  const onKey = event => { if (event.key === 'Escape' && cloudModal === overlay) { closeModal(); document.removeEventListener('keydown', onKey); } };
+  if (authGateActive) overlay.querySelector('.vx-close').hidden = true;
+  overlay.addEventListener('click', event => { if (event.target === overlay && !authGateActive) close(); });
+  const onKey = event => { if (event.key === 'Escape' && cloudModal === overlay && !authGateActive) { closeModal(); document.removeEventListener('keydown', onKey); } };
   document.addEventListener('keydown', onKey);
   overlay.querySelector('.vx-google-login').addEventListener('click', async event => {
     const button = event.currentTarget;
@@ -519,6 +567,15 @@ try {
   onAuthStateChanged(auth, (u) => {
     currentUser = u;
     if (u) {
+      document.body.classList.add('vx-authenticated');
+      authGateActive = false;
+      if (cloudModal && cloudModal.classList.contains('vx-required-login')) closeModal(u);
+      startPresence(u);
+    } else {
+      document.body.classList.remove('vx-authenticated');
+      stopPresence();
+    }
+    if (u) {
       activeProjectId = activeProjectId || storageGet(activeIdKey(u.uid));
       activeProjectTitle = activeProjectTitle || storageGet(activeTitleKey(u.uid)) || '';
     } else {
@@ -526,7 +583,7 @@ try {
     }
     renderAuth();
     if (u) syncCompetitionProfile(u).then(refreshLeaderboardSection).catch(() => refreshLeaderboardSection());
-    else refreshLeaderboardSection();
+    else { refreshLeaderboardSection(); openLoginExperience(true); }
   }, (error) => showError(error));
   setStatus('Firebase initialized. Sign in to use cloud projects.');
   loadSharedProjectFromUrl();

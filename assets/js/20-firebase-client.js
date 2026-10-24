@@ -1,7 +1,7 @@
 /* Firebase authentication and Firestore client integration. */
 
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js';
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut, updateProfile } from 'https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js';
 import {
   getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc,
   serverTimestamp, query, orderBy, limit
@@ -122,17 +122,10 @@ function ensureCompetitionButton() {
   signInBtn.parentElement.insertBefore(leaderboardBtn, signInBtn);
 }
 async function updateCompetitionProfile(user, projectCount) {
-  const profileRef = doc(db, 'leaderboard', user.uid);
-  const old = await getDoc(profileRef);
-  const previous = old.exists() ? old.data() : {};
-  await setDoc(profileRef, {
-    uid: user.uid,
-    displayName: user.displayName || 'VOLTIX Builder',
-    photoURL: user.photoURL || '',
-    projectCount: Math.max(Number(previous.projectCount) || 0, projectCount || 0),
-    updatedAt: serverTimestamp()
-  }, { merge: true });
+  const profileRef=doc(db,'leaderboard',user.uid),old=await getDoc(profileRef),previous=old.exists()?old.data():{};
+  await setDoc(profileRef,{uid:user.uid,displayName:user.displayName||previous.displayName||'VOLTIX Builder',photoURL:user.photoURL||previous.photoURL||'',bio:String(previous.bio||'').slice(0,180),projectCount:Math.max(0,Number(projectCount)||0),updatedAt:serverTimestamp()},{merge:true});
 }
+async function syncCompetitionProfile(user){const projects=await getDocs(collection(db,'users',user.uid,'projects'));await updateCompetitionProfile(user,projects.size);return projects.size;}
 async function openLeaderboard() {
   try {
     await requireUser();
@@ -185,7 +178,64 @@ async function openLeaderboard() {
     if (cloudModal) modalStatus(friendlyError(error), true);
   }
 }
-async function saveCloudProject() {
+
+function askProjectDetails(defaultTitle,allowCopy=false){
+ const modal=openModal('Save your project','Name your circuit and choose whether to update the current project or save a separate copy.'),list=modal.querySelector('.vx-cloud-list');
+ list.innerHTML=`<form class="vx-project-form"><label for="vx-project-title">PROJECT NAME</label><input id="vx-project-title" maxlength="120" required autocomplete="off" placeholder="e.g. Smart greenhouse controller"><div class="vx-project-preview"><span class="vx-preview-icon">⌘</span><div><b>VOLTIX circuit</b><small>Board, wiring, component settings and code</small></div><span class="vx-preview-live">READY TO SAVE</span></div>${allowCopy?'<label class="vx-copy-choice"><input id="vx-save-copy" type="checkbox"><span><b>Save as a new copy</b><small>Keep the current saved project unchanged.</small></span></label>':''}<div class="vx-project-actions"><button type="button" class="vx-secondary" data-project-cancel>Cancel</button><button type="submit" class="vx-primary">Save project</button></div></form>`;
+ const input=list.querySelector('#vx-project-title');input.value=defaultTitle||'';
+ return new Promise(resolve=>{const done=value=>{closeModal();resolve(value)};list.querySelector('[data-project-cancel]').addEventListener('click',()=>done(null));list.querySelector('form').addEventListener('submit',e=>{e.preventDefault();const title=input.value.trim().slice(0,120);if(!title){modalStatus('Enter a project name before saving.',true);input.focus();return}done({title,saveAsCopy:!!(list.querySelector('#vx-save-copy')&&list.querySelector('#vx-save-copy').checked)})});input.focus();input.select()});
+}
+function askShareConfirmation(title){
+ const modal=openModal('Create a share link','Share a read-only link that opens a copy of this circuit.'),list=modal.querySelector('.vx-cloud-list');
+ list.innerHTML=`<div class="vx-share-preview"><div class="vx-share-icon">↗</div><div><b></b><small>Anyone with the link can open the circuit and view its code.</small></div></div><div class="vx-share-notice"><span>i</span><p>Do not include passwords, private keys, or personal information in a public project. Your saved original remains in your account.</p></div><div class="vx-project-actions"><button type="button" class="vx-secondary" data-share-cancel>Cancel</button><button type="button" class="vx-primary" data-share-confirm>Create public link</button></div>`;
+ list.querySelector('.vx-share-preview b').textContent=title||'VOLTIX project';
+ return new Promise(resolve=>{list.querySelector('[data-share-cancel]').addEventListener('click',()=>{closeModal();resolve(false)});list.querySelector('[data-share-confirm]').addEventListener('click',()=>{closeModal();resolve(true)})});
+}
+function showShareLink(link){
+ const modal=openModal('Your share link is ready','Anyone with this link can open a copy of your circuit.'),list=modal.querySelector('.vx-cloud-list');
+ list.innerHTML=`<div class="vx-share-success"><span>✓</span><div><b>Project link created</b><small>Copy it and send it to your teammates.</small></div></div><label class="vx-link-label" for="vx-share-link">PUBLIC PROJECT LINK</label><div class="vx-link-row"><input id="vx-share-link" readonly><button type="button" class="vx-primary" data-copy-link>Copy link</button></div><div class="vx-project-actions"><button type="button" class="vx-secondary" data-share-done>Done</button></div>`;
+ const input=list.querySelector('#vx-share-link');input.value=link;list.querySelector('[data-copy-link]').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(link);modalStatus('Copied! Your public share link is ready to send.')}catch{input.focus();input.select();modalStatus('Select the link and copy it with Ctrl+C (or ⌘C).')}});list.querySelector('[data-share-done]').addEventListener('click',closeModal);
+}
+function showSaveSuccess(saved){
+ const modal=openModal('Project saved','Your circuit is now stored in your VOLTIX cloud projects.'),list=modal.querySelector('.vx-cloud-list');
+ list.innerHTML=`<div class="vx-save-success"><span>✓</span><div><b class="vx-save-name"></b><small class="vx-save-meta"></small></div></div><div class="vx-save-summary"><span><b class="vx-save-parts"></b><small>Components</small></span><span><b class="vx-save-wires"></b><small>Wires</small></span><span><b class="vx-save-code"></b><small>Code lines</small></span></div><div class="vx-project-actions"><button type="button" class="vx-secondary" data-open-projects>My projects</button><button type="button" class="vx-primary" data-save-done>Done</button></div>`;
+ list.querySelector('.vx-save-name').textContent=saved.title;list.querySelector('.vx-save-meta').textContent='Saved to your account · '+(saved.payload.bt||'Circuit');list.querySelector('.vx-save-parts').textContent=saved.payload.parts.length;list.querySelector('.vx-save-wires').textContent=saved.payload.wires.length;list.querySelector('.vx-save-code').textContent=saved.payload.code.split('\n').length;list.querySelector('[data-open-projects]').addEventListener('click',openCloudProjects);list.querySelector('[data-save-done]').addEventListener('click',closeModal);
+}
+async function openProfileSettings(){
+ try{
+  const user=await requireUser(),snap=await getDoc(doc(db,'leaderboard',user.uid)),profile=snap.exists()?snap.data():{},modal=openModal('Builder profile settings','Manage the public name and short bio shown on the VOLTIX Build Challenge leaderboard.'),list=modal.querySelector('.vx-cloud-list');
+  list.innerHTML=`<div class="vx-settings-identity"><div class="vx-settings-avatar"></div><div><b class="vx-settings-account"></b><small>Profile photo is managed by your Google account.</small></div></div><form class="vx-project-form vx-profile-form"><label for="vx-public-name">PUBLIC DISPLAY NAME</label><input id="vx-public-name" maxlength="40" required><label for="vx-public-bio">BUILDER BIO</label><textarea id="vx-public-bio" maxlength="180" rows="3" placeholder="What are you building?"></textarea><small class="vx-profile-count">0 / 180 characters</small><div class="vx-project-actions"><button type="button" class="vx-secondary" data-profile-cancel>Cancel</button><button type="submit" class="vx-primary">Save profile</button></div></form>`;
+  const avatar=list.querySelector('.vx-settings-avatar');if(user.photoURL){const img=document.createElement('img');img.src=user.photoURL;img.alt='';img.referrerPolicy='no-referrer';avatar.appendChild(img)}else avatar.textContent=(user.displayName||'V').trim().slice(0,1).toUpperCase();
+  list.querySelector('.vx-settings-account').textContent=user.email||'Google account connected';const name=list.querySelector('#vx-public-name'),bio=list.querySelector('#vx-public-bio'),count=list.querySelector('.vx-profile-count');name.value=profile.displayName||user.displayName||'VOLTIX Builder';bio.value=profile.bio||'';const updateCount=()=>count.textContent=bio.value.length+' / 180 characters';bio.addEventListener('input',updateCount);updateCount();list.querySelector('[data-profile-cancel]').addEventListener('click',closeModal);
+  list.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();const displayName=name.value.trim().slice(0,40),cleanBio=bio.value.trim().slice(0,180);if(!displayName){modalStatus('Please enter a public display name.',true);name.focus();return}const submit=list.querySelector('[type=submit]');submit.disabled=true;submit.textContent='Saving…';try{await updateProfile(auth.currentUser,{displayName});const oldSnap=await getDoc(doc(db,'leaderboard',user.uid)),old=oldSnap.exists()?oldSnap.data():{},projects=await getDocs(collection(db,'users',user.uid,'projects'));await setDoc(doc(db,'leaderboard',user.uid),{uid:user.uid,displayName,photoURL:user.photoURL||old.photoURL||'',bio:cleanBio,projectCount:projects.size,updatedAt:serverTimestamp()},{merge:true});currentUser=auth.currentUser;renderAuth();closeModal();if(window.VOLTIXLeaderboardRefresh)window.VOLTIXLeaderboardRefresh();setStatus('Builder profile updated.')}catch(error){modalStatus(friendlyError(error),true);submit.disabled=false;submit.textContent='Save profile'}});
+ }catch(error){showError(error);if(cloudModal)modalStatus(friendlyError(error),true)}
+}
+
+async function refreshLeaderboardSection(){
+ const list=$vx('vx-leaderboard-list'),status=$vx('vx-challenge-status'),profileEl=$vx('vx-challenge-profile');if(!list||!status||!profileEl||!db)return;
+ status.textContent='Loading live rankings…';list.innerHTML='<div class="vx-leaderboard-loading"><span class="vx-loader"></span> Loading builder profiles…</div>';
+ try{
+  let own={},count=0;
+  if(currentUser){
+   const ownSnap=await getDoc(doc(db,'leaderboard',currentUser.uid));if(ownSnap.exists())own=ownSnap.data();count=Number(own.projectCount)||0;
+   profileEl.innerHTML='<div class="vx-profile-avatar"></div><div class="vx-profile-main"><b class="vx-profile-name"></b><span class="vx-profile-email"></span><small class="vx-profile-bio"></small><small class="vx-profile-score"></small></div><button id="vx-profile-settings" type="button">Edit profile</button>';
+   const avatar=profileEl.querySelector('.vx-profile-avatar');if(currentUser.photoURL){const img=document.createElement('img');img.src=currentUser.photoURL;img.alt='';img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();avatar.textContent=(currentUser.displayName||'V').trim().slice(0,1).toUpperCase()};avatar.appendChild(img)}else avatar.textContent=(currentUser.displayName||'V').trim().slice(0,1).toUpperCase();
+   profileEl.querySelector('.vx-profile-name').textContent=own.displayName||currentUser.displayName||'VOLTIX Builder';profileEl.querySelector('.vx-profile-email').textContent=currentUser.email||'Google account connected';profileEl.querySelector('.vx-profile-bio').textContent=own.bio||'Add a short bio in your profile settings.';profileEl.querySelector('.vx-profile-score').textContent=count+' saved-project points';$vx('vx-profile-settings').addEventListener('click',openProfileSettings);
+   const hero=$vx('vx-challenge-signin');if(hero){hero.textContent='Profile settings';hero.onclick=openProfileSettings}
+  }else{
+   profileEl.innerHTML='<div class="vx-profile-placeholder">V</div><div><b>Guest builder</b><span>Sign in to create your public profile and join the rankings.</span></div><button id="vx-challenge-profile-action" type="button">Sign in</button>';$vx('vx-challenge-profile-action').addEventListener('click',openLoginExperience);
+   const hero=$vx('vx-challenge-signin');if(hero){hero.textContent='Sign in to join';hero.onclick=openLoginExperience}
+  }
+  const pointEl=$vx('vx-mission-points');if(pointEl)pointEl.textContent=String(count);const grid=$vx('vx-mission-grid');
+  if(grid){grid.replaceChildren();[{n:'01',title:'First circuit',desc:'Save your first cloud project.',goal:1},{n:'02',title:'Curious builder',desc:'Save 3 unique cloud projects.',goal:3},{n:'03',title:'Prototype creator',desc:'Save 5 unique cloud projects.',goal:5}].forEach(m=>{const done=count>=m.goal,card=document.createElement('article');card.className='vx-mission-card'+(done?' is-complete':'');const num=document.createElement('span');num.className='vx-mission-number';num.textContent=m.n;const copy=document.createElement('div'),title=document.createElement('b'),desc=document.createElement('p');title.textContent=m.title;desc.textContent=m.desc;copy.append(title,desc);const state=document.createElement('span');state.className='vx-mission-state';state.textContent=done?'COMPLETED':(currentUser?'IN PROGRESS':'SIGN IN');card.append(num,copy,state);grid.appendChild(card)})}
+  const result=await getDocs(query(collection(db,'leaderboard'),orderBy('projectCount','desc'),limit(50)));list.replaceChildren();
+  if(result.empty){list.innerHTML='<div class="vx-leaderboard-empty"><span>01</span><b>Be the first builder</b><p>Save your first cloud project to appear on the leaderboard.</p></div>';status.textContent='The leaderboard is ready for its first saved project.';return}
+  result.docs.forEach((snap,index)=>{const player=snap.data(),row=document.createElement('article');row.className='vx-leader-row'+(index<3?' vx-leader-podium':'');const rank=document.createElement('span');rank.className='vx-leader-rank';rank.textContent=String(index+1).padStart(2,'0');const avatar=document.createElement('div');avatar.className='vx-leader-avatar';if(player.photoURL){const img=document.createElement('img');img.src=player.photoURL;img.alt='';img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();avatar.textContent=(player.displayName||'V').trim().slice(0,1).toUpperCase()};avatar.appendChild(img)}else avatar.textContent=(player.displayName||'V').trim().slice(0,1).toUpperCase();const info=document.createElement('div');info.className='vx-leader-info';const name=document.createElement('b');name.textContent=player.displayName||'VOLTIX Builder';const sub=document.createElement('span');sub.textContent=player.bio||(index===0?'Top builder':index<3?'Podium builder':'Community builder');info.append(name,sub);const score=document.createElement('div');score.className='vx-leader-score';const points=document.createElement('b');points.textContent=String(Number(player.projectCount)||0);const label=document.createElement('span');label.textContent='PROJECT PTS';score.append(points,label);row.append(rank,avatar,info,score);list.appendChild(row)});
+  status.textContent='Live rankings · '+result.size+' builder profile'+(result.size===1?'':'s')+' · Top 50';
+ }catch(error){list.innerHTML='<div class="vx-leaderboard-empty"><b>Leaderboard temporarily unavailable</b><p></p></div>';list.querySelector('p').textContent=friendlyError(error);status.textContent='Could not load rankings.'}
+}
+window.VOLTIXLeaderboardRefresh=refreshLeaderboardSection;
+async function saveCloudProject(options = {}) {
   const u = await requireUser();
   const payload = projectFromSimulator();
   let id = activeProjectId || storageGet(activeIdKey(u.uid));
@@ -200,13 +250,10 @@ async function saveCloudProject() {
       id = null;
     }
   }
-  let title = activeProjectTitle || (prior && prior.title) || storageGet(activeTitleKey(u.uid)) || '';
-  if (!id || !title) {
-    const entered = window.prompt('Name this VOLTIX project:', title || projectTitleFallback(payload));
-    if (entered === null) return null;
-    title = entered.trim().slice(0, 120);
-    if (!title) throw new Error('Please enter a project name.');
-  }
+  let title=activeProjectTitle||(prior&&prior.title)||storageGet(activeTitleKey(u.uid))||projectTitleFallback(payload);
+  if(options.interactive!==false){const choice=await askProjectDetails(title,!!id);if(!choice)return null;title=choice.title;if(choice.saveAsCopy){id=null;prior=null}}
+  else if(options.title)title=String(options.title).trim().slice(0,120);
+  if(!title)throw new Error('Please enter a project name.');
   const ref = id ? doc(db, 'users', u.uid, 'projects', id) : doc(collection(db, 'users', u.uid, 'projects'));
   const record = {
     ownerUid: u.uid,
@@ -216,20 +263,7 @@ async function saveCloudProject() {
     updatedAt: serverTimestamp()
   };
   await setDoc(ref, record);
-  if (!prior) {
-    const leaderboardRef = doc(db, 'leaderboard', u.uid);
-    const leaderboardSnap = await getDoc(leaderboardRef);
-    const leaderboardData = leaderboardSnap.exists() ? leaderboardSnap.data() : {};
-    await setDoc(leaderboardRef, {
-      uid: u.uid,
-      displayName: u.displayName || 'VOLTIX Builder',
-      photoURL: u.photoURL || '',
-      projectCount: (Number(leaderboardData.projectCount) || 0) + 1,
-      updatedAt: serverTimestamp()
-    }, { merge: true });
-  } else {
-    await updateCompetitionProfile(u, Number((await getDoc(doc(db, 'leaderboard', u.uid))).data()?.projectCount) || 0);
-  }
+  await syncCompetitionProfile(u);
   activeProjectId = ref.id;
   activeProjectTitle = title;
   storageSet(activeIdKey(u.uid), activeProjectId);
@@ -322,6 +356,8 @@ async function openCloudProjects() {
         if (!window.confirm(`Delete “${data.title || 'Untitled project'}” from your cloud account? This cannot be undone.`)) return;
         try {
           await deleteDoc(doc(db, 'users', u.uid, 'projects', snap.id));
+          await syncCompetitionProfile(u);
+          if(window.VOLTIXLeaderboardRefresh)window.VOLTIXLeaderboardRefresh();
           if (activeProjectId === snap.id) { activeProjectId = null; activeProjectTitle = ''; storageRemove(activeIdKey(u.uid)); storageRemove(activeTitleKey(u.uid)); }
           item.remove();
           if (!list.children.length) { const empty = document.createElement('div'); empty.className = 'vx-empty'; empty.textContent = 'No cloud projects left.'; list.appendChild(empty); }
@@ -336,9 +372,8 @@ async function openCloudProjects() {
     if (cloudModal) modalStatus(friendlyError(error), true);
   }
 }
-async function createShareLink(payload, title) {
-  const u = await requireUser();
-  if (!window.confirm('Anyone who has this link will be able to open a copy of this circuit, including its code. Do not share private information in the project. Create a public link?')) return null;
+async function createShareLink(payload,title){
+ const u=await requireUser();if(!await askShareConfirmation(title))return null;
   bridge.validateProject(payload);
   const bytes = new TextEncoder().encode(JSON.stringify(payload)).length;
   if (bytes > 800000) throw new Error('This circuit is too large to share in one Firestore document.');
@@ -354,25 +389,9 @@ async function createShareLink(payload, title) {
   const link = new URL(window.location.href);
   link.searchParams.set('share', ref.id);
   link.hash = 'sim';
-  try {
-    await navigator.clipboard.writeText(link.toString());
-    setStatus('Public share link copied to clipboard. Anyone with the link can open this circuit.');
-    if (cloudModal) modalStatus('Public share link copied to clipboard. Anyone with the link can open the circuit.');
-  } catch {
-    window.prompt('Copy this public project link:', link.toString());
-    setStatus('Share link created. Copy it from the dialog to send it to others.');
-  }
-  return link.toString();
+  setStatus('Public share link created.');showShareLink(link.toString());return link.toString();
 }
-async function shareCurrentProject() {
-  try {
-    const saved = await saveCloudProject();
-    if (!saved) return;
-    await createShareLink(saved.payload, saved.title);
-  } catch (error) {
-    showError(error);
-  }
-}
+async function shareCurrentProject(){try{const saved=await saveCloudProject({interactive:true});if(!saved)return;const link=await createShareLink(saved.payload,saved.title);if(link)setStatus('Public share link created.')}catch(error){showError(error);if(cloudModal)modalStatus(friendlyError(error),true)}}
 async function loadSharedProjectFromUrl() {
   const shareId = new URLSearchParams(window.location.search).get('share');
   if (!shareId) return;
@@ -463,15 +482,11 @@ signInBtn.addEventListener('click', async () => {
     renderAuth(); setStatus('Signed out. Browser-local saving is still available.');
   } catch (error) { showError(error); }
 });
-saveBtn.addEventListener('click', async () => {
-  saveBtn.disabled = true;
-  try { const saved = await saveCloudProject(); if (saved) bridge.notify(`Saved “${saved.title}” to your cloud projects.`); }
-  catch (error) { showError(error); bridge.notify(friendlyError(error), true); }
-  finally { saveBtn.disabled = false; }
-});
+saveBtn.addEventListener('click',async()=>{saveBtn.disabled=true;try{const saved=await saveCloudProject({interactive:true});if(saved){if(window.VOLTIXLeaderboardRefresh)window.VOLTIXLeaderboardRefresh();showSaveSuccess(saved)}}catch(error){showError(error);if(cloudModal)modalStatus(friendlyError(error),true)}finally{saveBtn.disabled=false}});
 projectsBtn.addEventListener('click', openCloudProjects);
-const challengeNav = $vx('vx-open-leaderboard');
-if (challengeNav) challengeNav.addEventListener('click', openLeaderboard);
+const challengeNav=$vx('vx-open-leaderboard');if(challengeNav)challengeNav.addEventListener('click',()=>{if(window.VOLTIXLeaderboardRefresh)window.VOLTIXLeaderboardRefresh()});
+const challengeSignIn=$vx('vx-challenge-signin'),challengeProfileAction=$vx('vx-challenge-profile-action'),challengeRefresh=$vx('vx-leaderboard-refresh');
+if(challengeSignIn)challengeSignIn.addEventListener('click',openLoginExperience);if(challengeProfileAction)challengeProfileAction.addEventListener('click',openLoginExperience);if(challengeRefresh)challengeRefresh.addEventListener('click',refreshLeaderboardSection);
 shareBtn.addEventListener('click', shareCurrentProject);
 
 try {
@@ -487,8 +502,8 @@ try {
       activeProjectId = null; activeProjectTitle = '';
     }
     renderAuth();
+    refreshLeaderboardSection();
   }, (error) => showError(error));
-  ensureCompetitionButton();
   setStatus('Firebase initialized. Sign in to use cloud projects.');
   loadSharedProjectFromUrl();
 } catch (error) {

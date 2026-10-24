@@ -5,9 +5,9 @@ const parseSI=s=>{const m=/^\s*(\d*\.?\d+)\s*([pnuµmkKMG]?)/.exec(s);return m?+
 const fmtSI=(v,u)=>{const a=Math.abs(v),[k,p]=a>=1?[1,'']:a>=1e-3?[1e3,'m']:a>=1e-6?[1e6,'µ']:a>=1e-9?[1e9,'n']:[1e12,'p'];return +(v*k).toPrecision(3)+' '+p+u};
 const SIG=`<div class='sigcard'><svg viewBox='0 0 64 64' width='56' height='56'><defs><linearGradient id='sgd' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#22d3ee'/><stop offset='1' stop-color='#8b6cff'/></linearGradient></defs><circle cx='32' cy='32' r='29' fill='#0b1130' stroke='url(#sgd)' stroke-width='3'/><path d='M10 42H20L25 31H39L44 42H54' fill='none' stroke='url(#sgd)' stroke-width='1.5' stroke-opacity='.7'/><text x='32' y='37' text-anchor='middle' font-family='Space Grotesk,sans-serif' font-weight='700' font-size='19' fill='#fff'>ES</text></svg><div><small>Made by</small><b>Ebram Sameh</b><span>S’28 · Red Sea STEM</span></div></div>`;
 document.querySelectorAll('.sigslot').forEach(e=>e.innerHTML=SIG);
-const PAGES=['home','sim','parts','pi','ai','about'],mods={};
+const PAGES=['home','sim','parts','pi','ai','challenge','about'],mods={};
 function go(r){if(!PAGES.includes(r))r='home';if(r!='ai')camStop();document.body.dataset.r=r;document.querySelectorAll('#top .tl [data-go]').forEach(b=>b.classList.toggle('on',b.dataset.go==r));document.querySelectorAll('.pg').forEach(p=>p.classList.toggle('on',p.id=='p-'+r));try{history.replaceState(null,'','#'+r)}catch{}
- if(r=='sim')requestAnimationFrame(()=>{setVB();if(!go.f){go.f=1;fit()}});$('#pages').scrollTop=0;if(mods[r])mods[r]()}
+ if(r=='sim')requestAnimationFrame(()=>{setVB();if(!go.f){go.f=1;fit()}});if(r=='challenge'&&window.VOLTIXLeaderboardRefresh)window.VOLTIXLeaderboardRefresh();$('#pages').scrollTop=0;if(mods[r])mods[r]()}
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
 /* ===== MODULE 2: components catalog ===== */
 const SUPK={res:'Full',led:'Full',bat:'Full',cap:'Full',ind:'Full',dio:'Full',fuse:'Full',dmm:'Full',btn:'Full',sw:'Full'};let pcat='All';

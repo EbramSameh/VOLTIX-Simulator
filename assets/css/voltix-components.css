@@ -137,3 +137,16 @@ body.lc main{--lpw:0px!important}body.rc main{--rpw:0px!important}body.lc #pal,b
 #vx-cloud-modal .vx-login-dialog .vx-close{right:12px;top:12px}
 }
 @media(prefers-reduced-motion:reduce){.vx-google-login{transition:none}}
+
+/* VOLTIX Build Challenge leaderboard */
+#vx-leaderboard{margin-right:8px}
+#vx-cloud-modal .vx-rank-row{display:grid;grid-template-columns:34px 42px minmax(0,1fr) auto;align-items:center;gap:12px;padding:13px 12px;border:1px solid #252d59;border-radius:13px;background:linear-gradient(110deg,#111936,#0e142d);margin:8px 0}
+#vx-cloud-modal .vx-rank-row.vx-rank-top{border-color:#45437e;background:linear-gradient(110deg,#191d43,#11172f)}
+#vx-cloud-modal .vx-rank-number{font:700 13px 'Space Grotesk',sans-serif;color:#8993c3;text-align:center}
+#vx-cloud-modal .vx-rank-top .vx-rank-number{color:#8be8ff}
+#vx-cloud-modal .vx-rank-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#252d59;border:1px solid #48518b}
+#vx-cloud-modal .vx-rank-player{min-width:0}
+#vx-cloud-modal .vx-rank-name{font:600 12px Inter,sans-serif;color:#f0f1ff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#vx-cloud-modal .vx-rank-caption{font:10px Inter,sans-serif;color:#8f9ac8;margin-top:4px}
+#vx-cloud-modal .vx-rank-score{font:700 12px 'Space Grotesk',sans-serif;color:#80e7ff;white-space:nowrap}
+@media(max-width:520px){#vx-leaderboard{margin-right:4px}#vx-cloud-modal .vx-rank-row{grid-template-columns:25px 36px minmax(0,1fr) auto;gap:8px;padding:11px 8px}#vx-cloud-modal .vx-rank-avatar{width:34px;height:34px}}

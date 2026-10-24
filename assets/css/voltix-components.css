@@ -68,4 +68,19 @@ body.lc main{--lpw:0px!important}body.rc main{--rpw:0px!important}body.lc #pal,b
 #vx-cloud-modal .vx-danger{border-color:#80394f;color:#ffb3c4}
 #vx-cloud-modal .vx-empty{padding:20px;text-align:center;border:1px dashed #38428f;border-radius:10px;color:#9a9fd4}
 @media(max-width:850px){#vx-cloud-controls{width:100%;order:3}#top .mk{margin-left:auto}#vx-auth-label{max-width:none}}
-@media(max-width:560px){#vx-cloud-controls button{flex:1}#vx-auth-label{width:100%}#vx-cloud-modal .vx-dialog{padding:12px}#vx-cloud-modal .vx-cloud-item{align-items:flex-start;flex-direction:column}#vx-cloud-modal .vx-cloud-item-actions{justify-content:flex-start}}
+@media(max-width:560px){#vx-cloud-controls button{flex:1}#vx-auth-label{width:100%}#vx-cloud-modal .vx-dialog{padding:12px}#vx-cloud-modal .vx-cloud-item{align-items:flex-start;flex-direction:column}#vx-cloud-modal .vx-cloud-item-actions{justify-content:flex-start}}\n
+/* Polished sign-in experience */
+#vx-cloud-controls #vx-signin{background:linear-gradient(135deg,#a99aff,#7c6cff);color:#090d2b;border:1px solid #c6bbff;font-weight:700;padding:8px 15px}
+#vx-cloud-modal .vx-login-dialog{width:min(430px,100%);max-height:90vh;align-items:center;text-align:center;position:relative;padding:30px 28px 24px;gap:13px;background:radial-gradient(ellipse at 50% 0%,#24245c 0%,#0c1232 56%);border-color:#5652a6}
+#vx-cloud-modal .vx-login-dialog .vx-close{position:absolute;right:14px;top:12px}
+.vx-login-mark{width:58px;height:58px;display:grid;place-items:center;border-radius:18px;background:linear-gradient(135deg,#22d3ee,#8b6cff);color:#080d29;font:700 34px 'Space Grotesk',sans-serif;box-shadow:0 8px 28px #5b4ce955}
+.vx-login-eyebrow{font:700 10px Inter,sans-serif;letter-spacing:2px;color:#8cecff;margin:7px 0 0}
+#vx-cloud-modal .vx-login-dialog h2{font-size:27px;letter-spacing:-.8px}
+#vx-cloud-modal .vx-login-copy{font:13px/1.7 Inter,sans-serif;color:#b5bae8;max-width:330px;margin:0 auto 8px}
+.vx-google-login{width:100%;display:flex;align-items:center;justify-content:center;gap:11px;padding:12px 16px!important;background:#f7f7fb!important;color:#202033!important;border:1px solid #d8d8e5!important;border-radius:10px!important;font:600 13px Inter,sans-serif!important}
+.vx-google-login:hover{background:#fff!important;transform:translateY(-1px)}
+.vx-google-login:disabled{opacity:.7;cursor:wait}
+.vx-google-g{font:700 18px Arial,sans-serif;color:#4285f4;background:#fff;border-radius:50%;width:24px;height:24px;display:grid;place-items:center}
+.vx-login-note{font:10px/1.6 Inter,sans-serif;color:#8f96ca}
+#vx-cloud-modal .vx-login-dialog .vx-cloud-message{width:100%;border-top:1px solid #292f69;padding-top:12px;font-size:11px;white-space:normal}
+@media(max-width:560px){#vx-cloud-modal .vx-login-dialog{padding:28px 18px 20px}}

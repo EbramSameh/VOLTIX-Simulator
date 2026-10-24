@@ -181,11 +181,12 @@ function calculateBuilderStats(projectDocs){
  const unlocked=ACHIEVEMENTS.filter(a=>(base[a.metric]||0)>=a.goal).length;
  base.achievementPoints=unlocked;
  base.achievements=ACHIEVEMENTS.filter(a=>(base[a.metric]||0)>=a.goal).map(a=>a.id);
+ base.totalScore=base.projects*100+base.wires*2+base.codeLines+base.components*3+base.sensors*10+base.boards*50+base.complexProjects*100+base.achievementPoints*75;
  return base;
 }
 async function syncCompetitionProfile(user){
  const projects=await getDocs(collection(db,'users',user.uid,'projects')),stats=calculateBuilderStats(projects.docs),profileRef=doc(db,'leaderboard',user.uid),old=await getDoc(profileRef),previous=old.exists()?old.data():{};
- await setDoc(profileRef,{uid:user.uid,displayName:user.displayName||previous.displayName||'VOLTIX Builder',photoURL:user.photoURL||previous.photoURL||'',bio:String(previous.bio||'').slice(0,180),projectCount:stats.projects,wireScore:stats.wires,codeScore:stats.codeLines,componentScore:stats.components,sensorScore:stats.sensors,boardScore:stats.boards,prototypeScore:stats.complexProjects,achievementPoints:stats.achievementPoints,stats,achievements:stats.achievements,updatedAt:serverTimestamp()},{merge:true});
+ await setDoc(profileRef,{uid:user.uid,displayName:user.displayName||previous.displayName||'VOLTIX Builder',photoURL:user.photoURL||previous.photoURL||'',bio:String(previous.bio||'').slice(0,180),projectCount:stats.projects,wireScore:stats.wires,codeScore:stats.codeLines,componentScore:stats.components,sensorScore:stats.sensors,boardScore:stats.boards,prototypeScore:stats.complexProjects,achievementPoints:stats.achievementPoints,totalScore:stats.totalScore,stats,achievements:stats.achievements,updatedAt:serverTimestamp()},{merge:true});
  return stats;
 }
 
@@ -229,15 +230,14 @@ async function openProfileSettings(){
 
 async function refreshLeaderboardSection(selectedBoard){
  const list=$vx('vx-leaderboard-list'),status=$vx('vx-challenge-status'),profileEl=$vx('vx-challenge-profile');if(!list||!status||!profileEl||!db)return;
- if(selectedBoard)activeCompetitionBoard=selectedBoard;
- const board=COMPETITION_BOARDS.find(b=>b.id===activeCompetitionBoard)||COMPETITION_BOARDS[0];
- document.querySelectorAll('[data-competition-board]').forEach(btn=>{const active=btn.dataset.competitionBoard===board.id;btn.classList.toggle('is-active',active);btn.setAttribute('aria-pressed',String(active))});
- status.textContent='Loading '+board.label.toLowerCase()+' rankings…';list.innerHTML='<div class="vx-leaderboard-loading"><span class="vx-loader"></span> Loading live rankings…</div>';
+ activeCompetitionBoard='overall';
+ const board=COMPETITION_BOARDS[0];
+ status.textContent='Loading overall builder rankings…';list.innerHTML='<div class="vx-leaderboard-loading"><span class="vx-loader"></span> Loading live rankings…</div>';
  try{
   let own={},stats={};if(currentUser){const ownSnap=await getDoc(doc(db,'leaderboard',currentUser.uid));if(ownSnap.exists())own=ownSnap.data();stats=own.stats||{};
    profileEl.innerHTML='<div class="vx-profile-avatar"></div><div class="vx-profile-main"><b class="vx-profile-name"></b><span class="vx-profile-email"></span><small class="vx-profile-bio"></small><small class="vx-profile-score"></small><small class="vx-profile-badges"></small></div><button id="vx-profile-settings" type="button">Edit profile</button>';
    const avatar=profileEl.querySelector('.vx-profile-avatar');if(currentUser.photoURL){const img=document.createElement('img');img.src=currentUser.photoURL;img.alt='';img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();avatar.textContent=(currentUser.displayName||'V').trim().slice(0,1).toUpperCase()};avatar.appendChild(img)}else avatar.textContent=(currentUser.displayName||'V').trim().slice(0,1).toUpperCase();
-   profileEl.querySelector('.vx-profile-name').textContent=own.displayName||currentUser.displayName||'VOLTIX Builder';profileEl.querySelector('.vx-profile-email').textContent=currentUser.email||'Google account connected';profileEl.querySelector('.vx-profile-bio').textContent=own.bio||'Add a short bio in your profile settings.';profileEl.querySelector('.vx-profile-score').textContent=(stats.achievementPoints||0)+' achievement points · '+(stats.projects||0)+' projects';profileEl.querySelector('.vx-profile-badges').textContent=(own.achievements||[]).length+' achievements unlocked';$vx('vx-profile-settings').addEventListener('click',openProfileSettings);
+   profileEl.querySelector('.vx-profile-name').textContent=own.displayName||currentUser.displayName||'VOLTIX Builder';profileEl.querySelector('.vx-profile-email').textContent=currentUser.email||'Google account connected';profileEl.querySelector('.vx-profile-bio').textContent=own.bio||'Add a short bio in your profile settings.';profileEl.querySelector('.vx-profile-score').textContent=(stats.totalScore||0)+' builder points · '+(stats.projects||0)+' projects';profileEl.querySelector('.vx-profile-badges').textContent=(own.achievements||[]).length+' achievements unlocked';$vx('vx-profile-settings').addEventListener('click',openProfileSettings);
    const hero=$vx('vx-challenge-signin');if(hero){hero.textContent='Profile settings';hero.onclick=openProfileSettings}
   }else{
    profileEl.innerHTML='<div class="vx-profile-placeholder">V</div><div><b>Guest builder</b><span>Sign in to create your public profile and compete in the challenge boards.</span></div><button id="vx-challenge-profile-action" type="button">Sign in</button>';$vx('vx-challenge-profile-action').addEventListener('click',openLoginExperience);
@@ -252,16 +252,9 @@ async function refreshLeaderboardSection(selectedBoard){
  }catch(error){list.innerHTML='<div class="vx-leaderboard-empty"><b>Leaderboard temporarily unavailable</b><p></p></div>';list.querySelector('p').textContent=friendlyError(error);status.textContent='Could not load rankings.'}
 }
 const COMPETITION_BOARDS=[
-{id:'projects',label:'Project Builder',field:'projectCount',stat:'projects',unit:'projects'},
-{id:'wires',label:'Wiring Pro',field:'wireScore',stat:'wires',unit:'wire links'},
-{id:'coding',label:'Code Crafter',field:'codeScore',stat:'codeLines',unit:'code lines'},
-{id:'components',label:'Component Collector',field:'componentScore',stat:'components',unit:'components'},
-{id:'sensors',label:'Sensor Explorer',field:'sensorScore',stat:'sensors',unit:'sensors'},
-{id:'boards',label:'Multi-Board Maker',field:'boardScore',stat:'boards',unit:'board types'},
-{id:'complex',label:'Prototype Maker',field:'prototypeScore',stat:'complexProjects',unit:'prototypes'},
-{id:'achievements',label:'Achievement Hunter',field:'achievementPoints',stat:'achievementPoints',unit:'achievements'}
+{id:'overall',label:'Overall Builder',field:'totalScore',stat:'totalScore',unit:'builder points'}
 ];
-let activeCompetitionBoard='projects';
+let activeCompetitionBoard='overall';
 window.VOLTIXLeaderboardRefresh=refreshLeaderboardSection;
 
 async function saveCloudProject(options = {}) {
@@ -516,7 +509,7 @@ projectsBtn.addEventListener('click', openCloudProjects);
 const challengeNav=$vx('vx-open-leaderboard');if(challengeNav)challengeNav.addEventListener('click',()=>{if(window.VOLTIXLeaderboardRefresh)window.VOLTIXLeaderboardRefresh()});
 const challengeProfileAction=$vx('vx-challenge-profile-action'),challengeRefresh=$vx('vx-leaderboard-refresh');
 if(challengeProfileAction)challengeProfileAction.addEventListener('click',openLoginExperience);if(challengeRefresh)challengeRefresh.addEventListener('click',refreshLeaderboardSection);
-document.querySelectorAll('[data-competition-board]').forEach(btn=>btn.addEventListener('click',()=>refreshLeaderboardSection(btn.dataset.competitionBoard)));
+
 shareBtn.addEventListener('click', shareCurrentProject);
 
 try {

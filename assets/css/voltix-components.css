@@ -255,3 +255,13 @@ header{gap:7px}header .tb2{padding:6px 9px;font-size:12px;white-space:nowrap}
 
 /* Repeated project names are supported; explain the copy option clearly. */
 .vx-project-name-note{display:block;margin-top:-5px;color:#9da7dc;font-size:11px;line-height:1.45}
+
+
+/* Final component-material pass: keep these after all legacy component styles. */
+#pl .pb:not(.brd){fill:url(#component-body);stroke:#7584c7;stroke-opacity:.46;stroke-width:1.1}
+#pl .sh3d{filter:drop-shadow(0 1px 0 #050817) drop-shadow(0 3px 2px #0009) drop-shadow(0 7px 6px #0006)}
+#pl .pin{fill:url(#metal-surface);stroke:#d5def4;stroke-width:1.1;filter:drop-shadow(0 1px 1px #000a)}
+#pl .pin.p5,#pl .pin.p3{fill:#f4b2c0;stroke:#ff718d;stroke-width:1.5}
+#pl .pin.g{fill:#9be6ff;stroke:#4cb7e8;stroke-width:1.5}
+#pl .wire{stroke-width:3.8;stroke-linecap:round;stroke-linejoin:round;opacity:.98;filter:drop-shadow(0 1px 1px #000c)}
+#pl .wire:hover{stroke-width:5.4;opacity:1}

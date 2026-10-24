@@ -32,6 +32,19 @@
     ["url","Gateway URL","Enter a URL served by a simulated ESP web server."],["go","Go","Request the current URL from the simulated gateway."]
   ];
   let modal, search, list, currentCat="All";
+  function getAllActions(){
+    const byId=new Map(quickActions.map(a=>[a[0],a]));
+    document.querySelectorAll("button,select,input,textarea").forEach(el=>{
+      if(el.closest("#vx-guide-modal"))return;
+      const id=el.id||el.dataset.add||el.dataset.go;
+      if(!id||byId.has(id))return;
+      const label=(el.getAttribute("aria-label")||el.title||el.innerText||el.getAttribute("placeholder")||el.value||id.replace(/[-_]/g," ")).trim().replace(/\\s+/g," ").slice(0,90);
+      if(!label||label==="")return;
+      const desc=el.title||el.getAttribute("aria-label")|| (el.matches("input,textarea")?(el.placeholder||"Enter or adjust this value."): "Open or use this control to access the "+label.toLowerCase()+" function.");
+      byId.set(id,[id,label,desc]);
+    });
+    return [...byId.values()];
+  }
   const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   function init(){
     if($("#vx-guide-open")) return;
@@ -57,7 +70,7 @@
     const topics=["All",...new Set(guideData.map(g=>g.cat))];
     $(".vx-guide-cats",modal).innerHTML=topics.map(c=>`<button type="button" data-guide-topic="${esc(c)}" class="${currentCat===c?"active":""}>${esc(c)}<span>${c==="All"?guideData.length:guideData.filter(g=>g.cat===c).length}</span></button>`).join("");
     const matches=guideData.filter(g=>(currentCat==="All"||g.cat===currentCat)&&(!q||[g.cat,g.title,g.desc,...g.steps,g.tip].join(" ").toLowerCase().includes(q)));
-    const actions=quickActions.filter(a=>!q||a.join(" ").toLowerCase().includes(q));
+    const actions=getAllActions().filter(a=>!q||a.join(" ").toLowerCase().includes(q));
     const cards=matches.map((g,i)=>`<button type="button" class="vx-guide-card" data-guide-index="${guideData.indexOf(g)}"><span class="vx-guide-icon">${g.icon}</span><span><b>${esc(g.title)}</b><small>${esc(g.desc)}</small><em>${esc(g.cat)}</em></span><span class="vx-guide-arrow">›</span></button>`).join("");
     const tools=actions.length?`<div class="vx-guide-section-label">TOOL QUICK REFERENCE</div>`+actions.map(a=>`<div class="vx-guide-tool"><b>${esc(a[1])}</b><span>${esc(a[2])}</span></div>`).join(""):"";
     list.innerHTML=(matches.length?cards:"<p class='vx-guide-empty'>No topic matches yet. Try a shorter search.</p>")+tools;

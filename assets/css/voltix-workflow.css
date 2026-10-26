@@ -24,3 +24,9 @@
 @media(max-width:900px){.vx-workflow-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.vx-workflow-grid{grid-template-columns:1fr}.vx-workflow-step{min-height:0}}
 @media(prefers-reduced-motion:reduce){.vx-workflow-step{transition:none}.vx-workflow-step:hover{transform:none}}
+
+.vx-workflow-card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:4px;width:100%}
+.vx-workflow-card-actions button{padding:7px 9px;border-radius:9px;border:1px solid rgba(139,108,255,.38);background:rgba(139,108,255,.13);color:inherit;font-size:.78rem;cursor:pointer}
+.vx-workflow-card-actions button:last-child{background:transparent;border-color:rgba(164,174,221,.25)}
+.vx-workflow-card-actions button[aria-pressed=true]{border-color:#56d6c8;color:#8ef2df}
+.vx-workflow-card-actions button:focus-visible{outline:2px solid #67e8f9;outline-offset:2px}

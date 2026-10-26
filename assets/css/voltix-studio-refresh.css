@@ -1,0 +1,95 @@
+/* VOLTIX Studio refresh — visual layer only; simulator logic remains untouched. */
+:root{
+  --bg:#100b16;--panel:#19121f;--line:#49303e;--ink:#f8edf2;--mute:#c0a9b5;
+  --acc:#ff879b;--acc2:#ed365f;--rpw:340px;
+  --vx-surface:#211621;--vx-surface-2:#2c1b2a;--vx-glow:rgba(237,54,95,.22);
+}
+body{background:radial-gradient(900px 460px at 50% -20%,rgba(237,54,95,.19),transparent 70%),linear-gradient(145deg,#100b16,#0b1020 70%);letter-spacing:.005em}
+#top{position:relative;z-index:20;padding:10px 18px;gap:16px;background:rgba(13,10,20,.92);border-bottom:1px solid rgba(255,135,155,.2);backdrop-filter:blur(18px)}
+#top .tb{font-size:16px;letter-spacing:.12em;background:linear-gradient(110deg,#fff 10%,#ff879b 55%,#ed365f);-webkit-background-clip:text;background-clip:text}
+#top .tl{gap:5px}
+#top .tl button{color:#c0a9b5;padding:8px 11px;transition:background .18s,color .18s,transform .18s}
+#top .tl button:hover,#top .tl button.on{color:#fff;background:rgba(237,54,95,.14)}
+#top .mk{border-color:#583747;color:#f4dce5}
+#top .hand{color:#ff879b}
+header{background:rgba(25,18,31,.96);border-color:#49303e;padding:11px 14px;gap:9px}
+button,select,input,textarea{transition:border-color .16s,background-color .16s,box-shadow .16s}
+button,select,input,textarea{border-radius:10px}
+button{min-height:32px}
+button:hover{border-color:#ff879b;box-shadow:0 4px 18px rgba(237,54,95,.09)}
+button:active{transform:translateY(1px)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #ff879b;outline-offset:2px}
+.run{background:linear-gradient(135deg,#ff879b,#ed365f);color:#200b13;box-shadow:0 5px 20px rgba(237,54,95,.2)}
+#pal,#rp{background:rgba(25,18,31,.96);border-color:#49303e}
+#pal{border-right:1px solid #49303e}
+#rp{border-left:1px solid #49303e}
+#cvw{background:#0c101c}
+#cv{background:radial-gradient(ellipse at 50% 45%,rgba(43,33,61,.4),transparent 70%)}
+#guide,#toast,#prob,#camp{background:rgba(24,16,28,.94);border-color:#583747;box-shadow:0 10px 36px rgba(0,0,0,.25)}
+#guide{color:#ffb7c5}
+#prob{border-color:#f36c85}
+#wtb{border:1px solid #49303e;border-radius:12px;background:rgba(17,12,21,.92);padding:5px;backdrop-filter:blur(12px)}
+#wtb button{background:#251925}
+.tabs{gap:5px}
+.tabs button{border:1px solid transparent;color:#c0a9b5}
+.tabs .on{background:rgba(237,54,95,.18);border-color:#9f3b57;color:#fff}
+#ed{border-color:#49303e;background:#0d0d18}
+#code,#ser,#gwl{background:#0d0d18;border-color:#49303e;color:#f5dfe8}
+#ln{color:#8d6378}
+#top #vx-cloud-controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+#vx-cloud-controls button{font-size:12px}
+#vx-auth-label{font-size:11px;color:#c0a9b5;max-width:150px}
+.vx-live-dot{background:#5de0b1!important}
+#pages{background:radial-gradient(ellipse at 80% 0%,rgba(237,54,95,.12),transparent 40%),#100b16}
+.pg{max-width:1240px;padding:clamp(22px,4vw,52px) clamp(16px,3vw,36px) 72px}
+.pg h1{letter-spacing:-.055em;line-height:.98;background:linear-gradient(100deg,#fff 10%,#ff9caf 55%,#ed365f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pg h2{letter-spacing:-.025em}
+.pg p{color:#cbbac4}
+.pg article,.card{background:linear-gradient(145deg,rgba(39,26,40,.94),rgba(20,19,34,.96));border-color:#49303e;border-radius:18px;box-shadow:0 12px 34px rgba(0,0,0,.12);transition:transform .18s,border-color .18s,box-shadow .18s}
+.pg article:hover,.card:hover{transform:translateY(-2px);border-color:#9f3b57;box-shadow:0 18px 40px rgba(0,0,0,.22)}
+.pg article h3{color:#fff}
+.note{border-left-color:#ed365f;color:#c0a9b5}
+.pg th{color:#ff9caf}
+.pg th,.pg td{border-bottom-color:#352535}
+.card svg{background:#100d19}
+.chips button.on{background:#ed365f;border-color:#ff879b}
+#sb{background:#100b16;border-top:1px solid #49303e;color:#c0a9b5}
+#empty{border:1px dashed #604052;border-radius:18px;background:rgba(17,12,21,.7);padding:24px}
+#empty b{color:#ffb7c5}
+#empty span{color:#c0a9b5}
+#vx-studio-controls{display:flex;align-items:center;gap:6px;position:relative}
+#vx-studio-controls>button{border:1px solid #583747;background:linear-gradient(145deg,#261a2a,#17121f);color:#f8edf2;padding:7px 10px;font-size:12px}
+#vx-studio-panel{position:absolute;top:calc(100% + 10px);right:0;width:min(310px,calc(100vw - 28px));padding:16px;border:1px solid #694052;border-radius:16px;background:rgba(20,14,24,.98);box-shadow:0 22px 70px #0009;z-index:80;backdrop-filter:blur(18px)}
+#vx-studio-panel h3{margin:0 0 6px;font:700 16px 'Space Grotesk',sans-serif}
+#vx-studio-panel p{font-size:12px;color:#c0a9b5;margin:0 0 12px;line-height:1.5}
+#vx-studio-panel label{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #352535;font-size:12px;color:#ead9e1}
+#vx-studio-panel input[type=checkbox]{accent-color:#ed365f}
+#vx-studio-panel select{max-width:150px;background:#2a1b2a}
+#vx-studio-panel .vx-shortcut{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:#c0a9b5;padding:5px 0}
+#vx-studio-panel kbd{border:1px solid #694052;border-radius:5px;padding:2px 5px;color:#fff;background:#281a28;font:11px 'JetBrains Mono',monospace}
+body.vx-compact header{padding:6px 10px}
+body.vx-compact #top{padding:6px 12px}
+body.vx-compact #pal,body.vx-compact #rp{padding:7px}
+body.vx-compact .pg{padding-top:22px}
+body.vx-reduced-motion *,body.vx-reduced-motion *::before,body.vx-reduced-motion *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+body[data-vx-theme="teal"]{--acc:#77e7d0;--acc2:#16b8a6;--vx-glow:rgba(22,184,166,.2)}
+body[data-vx-theme="teal"]{background:radial-gradient(900px 460px at 50% -20%,rgba(22,184,166,.17),transparent 70%),linear-gradient(145deg,#091516,#0b1020 70%)}
+body[data-vx-theme="teal"] #top .tb,body[data-vx-theme="teal"] .pg h1{background-image:linear-gradient(100deg,#fff 10%,#77e7d0 55%,#16b8a6)}
+body[data-vx-theme="teal"] .run{background:linear-gradient(135deg,#77e7d0,#16b8a6);color:#06221f}
+body[data-vx-theme="teal"] #top .tl button:hover,body[data-vx-theme="teal"] #top .tl button.on,body[data-vx-theme="teal"] .tabs .on{background:rgba(22,184,166,.16);border-color:#167e77}
+body[data-vx-theme="teal"] button:hover{border-color:#77e7d0;box-shadow:0 4px 18px rgba(22,184,166,.09)}
+body[data-vx-theme="teal"] #guide{color:#a6fff0}
+body[data-vx-theme="teal"] #empty b,body[data-vx-theme="teal"] .pg th{color:#77e7d0}
+body[data-vx-theme="teal"] #vx-studio-panel input[type=checkbox]{accent-color:#16b8a6}
+body[data-vx-theme="violet"]{--acc:#c4b5fd;--acc2:#8b6cff;--vx-glow:rgba(139,108,255,.2)}
+body[data-vx-theme="violet"]{background:radial-gradient(900px 460px at 50% -20%,rgba(139,108,255,.18),transparent 70%),linear-gradient(145deg,#0b0b20,#10152b 70%)}
+body[data-vx-theme="violet"] #top .tb,body[data-vx-theme="violet"] .pg h1{background-image:linear-gradient(100deg,#fff 10%,#c4b5fd 55%,#8b6cff)}
+body[data-vx-theme="violet"] .run{background:linear-gradient(135deg,#c4b5fd,#8b6cff);color:#100d2b}
+body[data-vx-theme="violet"] #top .tl button:hover,body[data-vx-theme="violet"] #top .tl button.on,body[data-vx-theme="violet"] .tabs .on{background:rgba(139,108,255,.16);border-color:#6250b6}
+body[data-vx-theme="violet"] button:hover{border-color:#c4b5fd}
+body[data-vx-theme="violet"] #guide{color:#d9d0ff}
+body[data-vx-theme="violet"] #empty b,body[data-vx-theme="violet"] .pg th{color:#c4b5fd}
+body[data-vx-theme="violet"] #vx-studio-panel input[type=checkbox]{accent-color:#8b6cff}
+@media(max-width:1100px){#top{gap:8px}#top .mk{display:none}#top #vx-cloud-controls{width:100%}main{grid-template-columns:165px minmax(0,1fr) var(--rpw,320px)}}
+@media(max-width:820px){main{grid-template-columns:145px minmax(0,1fr)}#rp{grid-column:1/-1;min-height:360px;border-left:0;border-top:1px solid #49303e}#cvw{min-height:480px}#top .tl{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap}#top .tl button{white-space:nowrap}#vx-cloud-controls{order:4}}
+@media(max-width:560px){#top{padding:8px}#top .tb{font-size:14px}header{padding:8px;gap:6px}header .logo{width:100%;font-size:16px}main{grid-template-columns:1fr}#pal{max-height:180px;border-right:0;border-bottom:1px solid #49303e}#pal .gr{grid-template-columns:repeat(2,minmax(0,1fr))}#cvw{min-height:420px}#rp{min-height:380px}#top #vx-cloud-controls button{flex:1}#vx-auth-label{display:none}.pg{padding:24px 14px 48px}.two{grid-template-columns:1fr}}

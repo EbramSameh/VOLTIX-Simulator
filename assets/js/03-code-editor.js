@@ -25,14 +25,18 @@ window.hlu=()=>{const src=$('#code').value,vt=varTypes(src),dc=decl(src);
   if(id){const dm=/([A-Za-z_]\w*)\s*\.\s*$/.exec(src.slice(Math.max(0,off-40),off)),next=src[off+m.length]==='(';let c='';
    if(KW.has(id))c='hk';else if(MEM[id]||TYPES.includes(id))c='ht';else if(CONS.includes(id))c='hv';
    else if(dm){const T=vt[dm[1]],L=T&&MEM[T];c=L?(L.includes(id)?'hf':'he'):''}
-   else if(GLOB.includes(id))c='hf';else if(next&&!dc.has(id)&&!ALLM.has(id)&&/^[a-z]/.test(id))c='he';else if(next)c='hu';
+   else if(GLOB.includes(id))c='hf';else if(next)c='hu';
    return c?`<span class='${c}'>${id}</span>`:id}
   return esc2(ot)});$('#hl').scrollTop=$('#code').scrollTop;$('#hl').scrollLeft=$('#code').scrollLeft;lintUpd()};
-function lintUpd(){const src=$('#code').value,vt=varTypes(src),dc=decl(src),res=[];
- src.split('\n').forEach((ln,i)=>{const code=ln.replace(/\/\/.*$/,'');
-  code.replace(/([A-Za-z_]\w*)\s*\.\s*([A-Za-z_]\w*)/g,(m,o,mem,col)=>{const T=vt[o],L=T&&MEM[T];if(L&&!L.includes(mem))res.push({i,col:col+m.length-mem.length,bad:mem,sug:suggest(mem,L)})});
-  code.replace(/(?<![\w.])([a-z_]\w*)\s*\(/g,(m,id,col)=>{if(!KW.has(id)&&!GLOB.includes(id)&&!ALLM.has(id)&&!dc.has(id))res.push({i,col,bad:id,sug:suggest(id,GLOB)})})});
- $('#lint').innerHTML=res.length?res.slice(0,6).map(r=>`Line ${r.i+1}: '${esc2(r.bad)}' is not a command this simulator knows.${r.sug?` Did you mean '${r.sug}'? <button data-i='${r.i}' data-c='${r.col}' data-b='${esc2(r.bad)}' data-s='${r.sug}'>Fix</button>`:' It may be unsupported here.'}`).join('<br>')+(res.length>6?`<br>${res.length-6} more...`:''):`<span style='color:#86efac'>✔ No unknown commands found.</span>`}
+function lintUpd(){
+ const src=$('#code').value,vt=varTypes(src),res=[];
+ const lines=src.replace(/\/\*[\s\S]*?\*\//g,' ').replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g,'""').split('\n');
+ lines.forEach((line,i)=>{const code=line.replace(/\/\/.*$/,'').replace(/^\s*#.*$/,' ');
+  code.replace(/\b([A-Za-z_]\w*)\s*\.\s*([A-Za-z_]\w*)/g,(m,obj,method,col)=>{const T=vt[obj],list=T&&MEM[T];if(list&&!list.includes(method))res.push({i,col:col+m.length-method.length,bad:method,sug:suggest(method,list)})});
+ });
+ const shown=res.slice(0,6);
+ $('#lint').innerHTML=shown.length?shown.map(r=>{const msg='Line '+(r.i+1)+': possible unknown method &quot;'+esc2(r.bad)+'&quot;';return r.sug?msg+'. Did you mean &quot;'+esc2(r.sug)+'&quot;? <button data-i="'+r.i+'" data-c="'+r.col+'" data-b="'+esc2(r.bad)+'" data-s="'+r.sug+'">Fix</button>':msg+'. Check the selected library or spelling.'}).join('<br>'):'<span style="color:#86efac">✔ No known API-method issues detected. This is a lightweight check, not a compiler.</span>';
+}
 $('#lint').addEventListener('click',e=>{const d=e.target.dataset;if(d.s===undefined)return;const ta=$('#code'),L=ta.value.split('\n');let off=0;for(let k=0;k<+d.i;k++)off+=L[k].length+1;off+=+d.c;ta.setRangeText(d.s,off,off+d.b.length,'end');ta.dispatchEvent(new Event('input',{bubbles:true}))});
 const AC=$('#ac');let acItems=[],acSel=0,acAt=0;
 function acUpdate(){const ta=$('#code'),pos=ta.selectionStart,before=ta.value.slice(0,pos),m=/([A-Za-z_]\w*)\s*\.\s*(\w*)$/.exec(before),g=/(?:^|[^\w.])([A-Za-z_]\w*)$/.exec(before);let list=[],pre='',kind='function';

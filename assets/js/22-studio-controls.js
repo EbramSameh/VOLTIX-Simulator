@@ -4,7 +4,7 @@
  const get=(k,d)=>{try{return localStorage.getItem(k)||d}catch{return d}};
  const set=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
  const themes=['ember','ocean','violet'];
- const theme=t=>{if(!themes.includes(t))t='crimson';body.dataset.vxTheme=t;set('voltix-theme',t);const s=$('#vx-theme-select');if(s)s.value=t};
+ const theme=t=>{if(!themes.includes(t))t='ember';body.dataset.vxTheme=t;set('voltix-theme',t);const s=$('#vx-theme-select');if(s)s.value=t};
  const toggle=(key,cls,on)=>{body.classList.toggle(cls,on);set(key,on?'1':'0')};
  function mount(){
   const nav=$('#top .tl');if(!nav||$('#vx-studio-controls'))return;

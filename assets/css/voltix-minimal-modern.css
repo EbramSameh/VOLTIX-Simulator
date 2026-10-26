@@ -8,7 +8,7 @@
 }
 html{scroll-behavior:smooth}
 body{background:#0b0f17;color:var(--v2-text);font-family:Inter,system-ui,sans-serif;line-height:1.55}
-body:before{background:radial-gradient(ellipse at 12% -15%,rgba(166,243,107,.065),transparent 35%),radial-gradient(ellipse at 92% 8%,rgba(138,180,255,.055),transparent 30%)}
+body:before{background:none}
 #top{gap:18px;min-height:66px;padding:10px clamp(14px,3vw,38px);background:rgba(11,15,23,.94);border-bottom:1px solid #202a39}
 #top .tb{gap:9px;font-size:16px;letter-spacing:-.035em}
 #top .tb:before{width:30px;height:30px;border-radius:9px;background:var(--v2-primary);box-shadow:none}
@@ -41,7 +41,7 @@ main{background:#0b0f17}
 #cv .brd{fill:#1a2a20;stroke:#a6f36b}
 #cv g.sel>.pb{stroke:#a6f36b}
 #cv .pv{stroke:#a6f36b}
-#guide,#toast,#prob,#camp,#props,#wtb,#empty{box-shadow:0 12px 36px rgba(0,0,0,.22);border-color:#2b3749}
+#guide,#toast,#prob,#camp,#props,#wtb,#empty{box-shadow:0 6px 20px rgba(0,0,0,.16);border-color:#2b3749}
 #guide,#toast,#prob,#camp,#props,#empty{background:rgba(15,21,31,.97)}
 #wtb{background:rgba(15,21,31,.96)}
 #wtb button{border-radius:7px}
@@ -52,21 +52,21 @@ main{background:#0b0f17}
 #pages{background:transparent}
 .pg{max-width:1440px;margin-inline:auto;padding:clamp(28px,5vw,66px) clamp(16px,4vw,52px) 64px}
 .pg h1{max-width:950px;margin:0 0 16px;font-size:clamp(2.8rem,7.4vw,6.3rem);line-height:.98;letter-spacing:-.075em;font-weight:700}
-#p-home h1{background:linear-gradient(100deg,#f5f7fb 12%,#cbd6e7 57%,#a6f36b 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+#p-home h1{color:#f3f6fb;background:none;-webkit-text-fill-color:currentColor}
 .pg>p{max-width:780px;color:#aab6c8;line-height:1.8}
 .pg h2{letter-spacing:-.035em}
-.pg article,.card{border:1px solid #263142;border-radius:14px;background:#111722;box-shadow:none;transition:border-color .18s,transform .18s,background .18s}
-.pg article:hover,.card:hover{transform:translateY(-2px);border-color:#46546b;background:#141d29}
+.pg article,.card{border:1px solid #263142;border-radius:10px;background:#111722;box-shadow:none;transition:border-color .18s,background .18s}
+.pg article:hover,.card:hover{border-color:#46546b;background:#131b26}
 .pg article h3{letter-spacing:-.025em}
 .pg .cta{gap:9px}
 .pg button{border-radius:8px}
 .pg .note{border-left-color:var(--v2-primary)}
 .pg th,.pg td{border-color:#273142}
-.vx-workflow{margin:30px 0;padding:clamp(18px,3vw,28px);border-radius:16px;border:1px solid #273142;background:#101722}
+.vx-workflow{margin:28px 0;padding:clamp(18px,3vw,26px);border-radius:12px;border:1px solid #273142;background:#101722}
 .vx-workflow-kicker{color:var(--v2-primary);letter-spacing:.12em}
 .vx-workflow-count{border-color:#354532;color:#d7ffc4}
-.vx-workflow-step{border-radius:12px;background:#0d131d;border-color:#263142;min-height:170px}
-.vx-workflow-step:hover{transform:translateY(-2px);border-color:#536548;background:#141d29}
+.vx-workflow-step{border-radius:9px;background:#0d131d;border-color:#263142;min-height:160px}
+.vx-workflow-step:hover{border-color:#536548;background:#141d29}
 .vx-workflow-num{border-radius:9px;background:#1e2c1b;color:#caffac}
 .vx-workflow-step[aria-pressed=true] .vx-workflow-num{background:#1e3020;color:#caffac}
 .vx-workflow-reset,.vx-workflow-card-actions button{border-radius:8px}

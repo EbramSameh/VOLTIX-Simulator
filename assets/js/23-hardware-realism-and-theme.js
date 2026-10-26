@@ -31,6 +31,12 @@
    rfid:['RC522 RFID reader','Communication','','VCC GND SDA SCK MOSI MISO IRQ RST','vis']
   });
   if(typeof palBuild==='function')palBuild();
+  document.querySelectorAll('#pal [data-add]').forEach(button=>{
+   const key=button.dataset.add;
+   const working=(typeof SUPK!=='undefined'&&SUPK[key]==='Full')||(typeof PD!=='undefined'&&!!PD[key])||(typeof AN!=='undefined'&&!!AN[key]);
+   button.dataset.w=working?'w':'p';
+   if(!button.querySelector('.bdg'))button.insertAdjacentHTML('beforeend',`<em class="bdg ${working?'w':'p'}">${working?'works':'basic'}</em>`);
+  });
   if(typeof draw==='function')draw();
  }
  const body=document.body,themeOptions=['ember','ocean','violet'];

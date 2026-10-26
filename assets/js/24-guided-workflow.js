@@ -23,6 +23,8 @@
     panel.addEventListener('click',event=>{
       const stepButton=event.target.closest('[data-workflow-step]');
       if(stepButton){const i=Number(stepButton.dataset.workflowStep);if(!Number.isInteger(i)||!steps[i])return;const done=new Set(read());done.has(i)?done.delete(i):done.add(i);write([...done]);render();return;}
+      const goButton=event.target.closest('[data-workflow-go]');
+      if(goButton){const route=goButton.dataset.workflowGo;const nav=document.querySelector('[data-go="'+route+'"]');if(nav)nav.click();return;}
       if(event.target.closest('#vx-workflow-reset')){write([]);render();}
     });
     render();
@@ -30,7 +32,7 @@
   function render(){
     const grid=$('#vx-workflow-grid');if(!grid)return;
     const done=new Set(read());
-    grid.innerHTML=steps.map((s,i)=>'<button type="button" class="vx-workflow-step" data-workflow-step="'+i+'" aria-pressed="'+done.has(i)+'"><span class="vx-workflow-num">'+(done.has(i)?'✓':i+1)+'</span><b>'+escape(s.title)+'</b><small>'+escape(s.desc)+'</small><span class="vx-workflow-action">'+(done.has(i)?'Mark incomplete':'Mark complete')+' · '+escape(s.action)+'</span></button>').join('');
+    grid.innerHTML=steps.map((s,i)=>'<article class="vx-workflow-step"><span class="vx-workflow-num">'+(done.has(i)?'✓':i+1)+'</span><b>'+escape(s.title)+'</b><small>'+escape(s.desc)+'</small><div class="vx-workflow-card-actions"><button type="button" data-workflow-go="'+escape(s.route)+'">'+escape(s.action)+'</button><button type="button" data-workflow-step="'+i+'" aria-pressed="'+done.has(i)+'">'+(done.has(i)?'✓ Completed · undo':'Mark complete')+'</button></div></article>').join('');
     const count=done.size;
     const counter=$('#vx-workflow-count');if(counter)counter.textContent=count+' of '+steps.length+' complete';
     const hint=$('#vx-workflow-hint');if(hint)hint.textContent=count===steps.length?'Workflow complete — start another project or revisit any step.':count===0?'Start with your components. You can revisit any step at any time.':steps.find((_,i)=>!done.has(i)).title+' is your next suggested step.';

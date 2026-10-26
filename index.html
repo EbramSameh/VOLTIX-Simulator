@@ -1008,7 +1008,7 @@ $('#bd').onchange=e=>{stop();S.bt=e.target.value;layout();S.wires=S.wires.filter
 $('#ex').insertAdjacentHTML('beforeend',Object.entries(EXN).map(([k,n])=>`<option value="${k}">${n}</option>`).join(''));
 $('#ex').onchange=e=>{if(e.target.value)loadEx(e.target.value);e.target.value=''};
 function loadEx(k){const e=EX[k];if(!e){toast('That example is not available yet.',1);return}stop();S.bt=e.bt;S.parts=[];S.wires=[];S.n=0;S.sel=null;layout();
- e.P.split(',').filter(Boolean).forEach(s=>{const[t,x,y,v]=s.trim().split(/\\s+/);addPart(t,+x+110,+y+20);if(v&&S.parts.length)S.parts[S.parts.length-1].st.volt=+v});
+ e.P.split(',').filter(Boolean).forEach(s=>{const[t,x,y,v]=s.trim().split(/\s+/);addPart(t,+x+110,+y+20);if(v&&S.parts.length)S.parts[S.parts.length-1].st.volt=+v});
  e.W.split(',').filter(Boolean).forEach(s=>{const[a,b]=s.split('>');if(a&&b)S.wires.push({a,b,c:wc(a,b)})});
  $('#code').value=e.c||'void setup() {\\n}\\n\\nvoid loop() {\\n}\\n';$('#bd').value=S.bt;$('#code').dispatchEvent(new Event('input',{bubbles:true}));draw();tab('code');fit();toast('Loaded example: '+(EXN[k]||k))}
 const sharedExample=new URLSearchParams(location.search).get('example');if(sharedExample&&EX[sharedExample]){loadEx(sharedExample);go('sim')}

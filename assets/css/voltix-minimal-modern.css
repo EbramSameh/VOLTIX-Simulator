@@ -122,3 +122,128 @@ header select,header button{min-height:34px}
  #p-ai .two{grid-template-columns:minmax(0,1fr)}
  header .logo{width:100%}
 }
+
+
+/* VOLTIX Studio UI refinement: consistent hierarchy, restrained surfaces, clearer work areas */
+:root{
+ --v2-primary:#a9e86f;
+ --v2-primary-dark:#263b1d;
+ --v2-bg:#0a0e14;
+ --v2-card:#101720;
+ --v2-card2:#141e2a;
+ --v2-border:#263342;
+ --v2-text:#eef2f7;
+ --v2-muted:#9aa8b9;
+}
+body{background:#0a0e14;color:#eef2f7;font-size:14px;letter-spacing:0}
+#top{
+ position:sticky;top:0;z-index:100;
+ display:flex;gap:16px;align-items:center;
+ padding:9px 22px;min-height:62px;
+ background:rgba(10,14,20,.97);backdrop-filter:blur(12px);
+ border-bottom:1px solid #202b38;
+}
+#top .tb{flex:0 0 auto;gap:10px;font-size:15px;line-height:1.1}
+#top .tb span{display:flex;flex-direction:column;gap:3px}
+#top .tb small{font-size:9px;letter-spacing:.14em;color:#8592a3;font-weight:600}
+#top .tl{display:flex;align-items:center;gap:3px;min-width:0;flex:1;flex-wrap:wrap}
+#top .tl button{padding:7px 9px;border:1px solid transparent;border-radius:7px;font-size:12px;font-weight:550;white-space:nowrap}
+#top .tl button.on{background:#17221b;border-color:#2b3b2a;box-shadow:none;color:#eaf5e4}
+#top .tl button:hover{background:#18212b;border-color:#2b3949}
+.vx-board-shortcuts{display:inline-flex;gap:2px;padding:2px;margin:0 2px;background:#0c1219;border:1px solid #263342;border-radius:8px}
+#top .tl .vx-board-shortcuts button{font-size:11px;padding:6px 7px;border-radius:5px}
+#top .tl .vx-board-shortcuts button:hover{background:#1c2a1a;border-color:#33452b}
+#vx-cloud-controls{display:flex;align-items:center;gap:5px;flex-wrap:wrap;max-width:420px}
+#vx-cloud-controls button{padding:7px 9px;border-radius:7px;font-size:11px;white-space:nowrap}
+#vx-auth-label{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;color:#8492a4}
+#top .mk{flex:0 0 auto;max-width:155px;padding-left:12px;border-left:1px solid #263342}
+#top .mk-name{font-size:12px}
+#top .mk-affiliation{font-size:10px;color:#8492a4}
+header{
+ position:sticky;top:62px;z-index:50;
+ display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+ padding:9px 18px;background:#0e141d;border-bottom:1px solid #263342;
+}
+header .logo{margin-right:8px;font-size:12px;letter-spacing:.06em;font-weight:750}
+header .logo small{display:block;margin-top:2px;font-size:10px;letter-spacing:0;color:#8c9aab;font-weight:450}
+header select,header button{min-height:34px;font-size:12px}
+header select{max-width:190px}
+header .run,.run,#empty button{font-weight:650}
+main{gap:0;min-height:calc(100vh - 150px);background:#0a0e14}
+#pal,#rp{background:#0e141d;border-color:#263342}
+#pal{padding:12px;border-right:1px solid #263342}
+#pal input#q{height:36px;margin-bottom:10px;background:#0a1017;border:1px solid #293748}
+#pal h4{margin:16px 0 8px;color:#8d9bac;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+#pal .gr{gap:6px}
+#pal .gr button{min-height:70px;padding:7px 4px;gap:5px;font-size:10px;border-radius:8px;border-color:transparent;background:transparent}
+#pal .gr button svg{background:#151f2b;border-radius:7px;padding:3px}
+#pal .gr button:hover{background:#151f2b;border-color:#344354}
+#cvw{min-width:0;background-color:#0a0f16;background-image:radial-gradient(#263342 .7px,transparent .7px);background-size:22px 22px}
+#cvw #wtb{position:sticky;top:116px}
+#rp{padding:12px;min-width:0;border-left:1px solid #263342}
+#rp .tabs{display:flex;flex-wrap:wrap;gap:3px;padding:4px;margin-bottom:10px;background:#0a1017;border:1px solid #263342;border-radius:8px}
+#rp .tabs button{flex:1 1 auto;padding:7px 8px;font-size:11px;border-radius:6px}
+#rp .tabs button.on{background:#1b281d;border-color:#344832;color:#dff5d3}
+#ed{border:1px solid #263342;border-radius:9px;background:#080d13}
+#code{font:12px/1.65 "JetBrains Mono",ui-monospace,monospace;padding:12px}
+#ln{font-size:12px;line-height:1.65;padding:12px 7px;color:#657487}
+#lint{margin-top:9px;padding:8px 10px;border-radius:7px;background:#0b1118;color:#9eacbd}
+#ser,#gwl,#meas,#diag{border:1px solid #263342;border-radius:8px;background:#090e14;padding:11px;font-size:12px}
+#sb{display:flex;gap:14px;align-items:center;padding:9px 16px;background:#0d131b;border-top:1px solid #263342;color:#8e9caf;font-size:11px}
+.pg{padding:clamp(28px,4vw,54px) clamp(16px,4vw,48px) 58px;max-width:1500px}
+.pg h1{font-size:clamp(2.5rem,5.8vw,5.3rem);line-height:1.02;letter-spacing:-.065em;font-weight:720}
+.pg h2{font-size:clamp(1.25rem,2.1vw,1.75rem);line-height:1.2;letter-spacing:-.04em}
+.pg h3{font-size:1rem;line-height:1.35}
+.pg>p{font-size:15px;max-width:760px;color:#a5b1c1;line-height:1.75}
+.pg .cta{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.pg button,.pg select,.pg input,.pg textarea{font-size:13px}
+.pg article,.pg .card,.pg .vx-ai-bridge{border:1px solid #263342;border-radius:10px;background:#101720;box-shadow:none}
+.pg article{padding:18px}
+.pg article:hover,.pg .card:hover{background:#121b25;border-color:#344354}
+#p-home .vx-workflow{margin-top:30px}
+#p-home .vx-workflow h2{font-size:1.2rem}
+#p-ai .two{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);align-items:start;gap:16px;margin-top:22px}
+#p-ai .two>div{min-width:0;padding:18px;border:1px solid #263342;border-radius:11px;background:#101720}
+#p-ai .two>div>h2{margin:0 0 14px;padding-bottom:11px;border-bottom:1px solid #263342;font-size:1rem;letter-spacing:-.02em}
+#p-ai .vid{position:relative;min-height:200px;display:grid;place-items:center;background:#080d13;border:1px solid #263342;border-radius:9px;overflow:hidden}
+#p-ai .vid video,#p-ai .vid canvas{max-width:100%;height:auto}
+#p-ai .cta{margin:10px 0}
+#p-ai .cta button,#p-ai .cta select,#p-ai .cta input:not([type=range]):not([type=color]){min-height:35px}
+#p-ai .vx-ai-bridge{margin-top:16px!important;padding:15px!important;background:#0c131b!important}
+#p-ai .vx-ai-bridge h3{margin:0 0 7px;font-size:14px}
+#p-ai .vx-ai-bridge p{margin:0 0 12px;line-height:1.65;color:#9eacbd}
+#p-ai .cmd{margin-top:10px;border:1px solid #263342;border-radius:8px;background:#080d13;padding:12px;color:#c6d2df;font-size:12px;line-height:1.65}
+#p-ai .rec{padding:6px 9px;border:1px solid #263342;border-radius:7px;background:#0b1118}
+#p-ai table{width:100%;border-collapse:collapse}
+#p-ai th,#p-ai td{padding:9px 10px;text-align:left;border-bottom:1px solid #263342}
+:where(button,select,input,textarea):focus-visible{outline:2px solid #a9e86f;outline-offset:2px}
+button:disabled{opacity:.48;cursor:not-allowed}
+@media(max-width:1350px){
+ #top{gap:10px;padding-inline:14px}
+ #top .mk{display:none}
+ #vx-cloud-controls{max-width:none}
+}
+@media(max-width:1050px){
+ #top{position:relative;flex-wrap:wrap}
+ #top .tl{order:3;flex:1 1 100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}
+ #vx-cloud-controls{margin-left:auto}
+ header{top:0}
+ #p-ai .two{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:760px){
+ #top{padding:10px}
+ #top .tb{margin-right:auto}
+ #vx-cloud-controls{flex:1 1 100%}
+ #vx-cloud-controls button{flex:1}
+ #top .tl{gap:4px}
+ #top .tl button{flex:0 0 auto}
+ header{position:relative;padding:10px;top:auto}
+ header .logo{flex:1 1 100%}
+ header select{flex:1 1 140px;max-width:none}
+ main{min-height:70vh}
+ #rp{max-height:none}
+ #sb{flex-wrap:wrap;gap:8px}
+ .pg{padding:28px 14px 44px}
+ #p-ai .two>div{padding:13px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}

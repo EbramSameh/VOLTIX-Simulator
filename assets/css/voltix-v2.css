@@ -423,3 +423,22 @@ body[data-vx-theme="ocean"] button:focus-visible,body[data-vx-theme="ocean"] sel
 body[data-vx-theme="violet"] button:focus-visible,body[data-vx-theme="violet"] select:focus-visible{outline:2px solid #b6a0ff!important;outline-offset:2px}
 body.vx-compact #wtb button{min-width:22px!important;min-height:21px!important;height:21px!important;padding:2px 4px!important}
 @media(max-width:720px){#wtb{bottom:7px!important;max-width:calc(100% - 14px)!important;gap:1px!important}#wtb button{min-width:22px!important;padding:3px!important;font-size:8px!important}#wtb span{font-size:8px!important}}
+
+/* Editor overlay alignment: highlighted text and editable text share metrics. */
+#ed #cw{position:relative;min-width:0;min-height:0;flex:1}
+#ed #hl,#ed #cw #code{box-sizing:border-box;inset:0;margin:0;padding:12px!important;font:12px/1.65 'JetBrains Mono',monospace!important;letter-spacing:0!important;tab-size:2;white-space:pre;word-break:normal;overflow-wrap:normal}
+#ed #hl{z-index:0;overflow:hidden;pointer-events:none;color:#d8e9ee}
+#ed #cw #code{z-index:1;background:transparent!important;color:transparent!important;-webkit-text-fill-color:transparent;caret-color:#f5f1ff;resize:none}
+#ed #cw #code::selection{background:rgba(166,139,255,.28);-webkit-text-fill-color:transparent}
+#ed #ln{padding:12px 8px 12px 10px!important;font:12px/1.65 'JetBrains Mono',monospace!important}
+#hl .he{color:#fca5a5}#hl .hu{color:#c4b5fd}#hl .hc{color:#7d899a}#hl .hs{color:#a5e0b4}#hl .hp{color:#f0abfc}#hl .hn{color:#fbbf74}#hl .hk{color:#82cfff}#hl .ht{color:#b7a5ff}#hl .hv{color:#ffd580}#hl .hf{color:#82e5cf}
+body[data-vx-theme="violet"] #top .mk{background:linear-gradient(135deg,#29213e,#1b1a2b)!important;border-color:#5e4c83!important}
+body[data-vx-theme="violet"] #top .mk:hover{background:linear-gradient(135deg,#35264e,#25203b)!important;border-color:#b6a0ff!important}
+body[data-vx-theme="violet"] #top .mk-label{color:#c5b2ff!important}
+body[data-vx-theme="violet"] #top .mk-name{color:#f5efff!important}
+body[data-vx-theme="violet"] #top .tb img{filter:hue-rotate(92deg) saturate(.8)}
+body[data-vx-theme="ocean"] #top .mk{background:linear-gradient(135deg,#1c2b3d,#17202c)!important;border-color:#385675!important}
+body[data-vx-theme="ocean"] #top .mk:hover{border-color:#70b9ff!important}
+body[data-vx-theme="ocean"] #top .mk-name{color:#eef7ff!important}
+body[data-vx-theme="ocean"] #top .tb img{filter:hue-rotate(170deg) saturate(.75)}
+@media(max-width:720px){#ed{min-height:180px}#ed #hl,#ed #cw #code{font-size:11px!important}}

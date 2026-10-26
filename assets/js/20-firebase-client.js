@@ -107,20 +107,53 @@ function startPresence(user) {
   });
 }
 function renderAuth() {
+  let profileChip = $vx('vx-user-profile');
+  if (!profileChip && cloudControls) {
+    profileChip = document.createElement('button');
+    profileChip.id = 'vx-user-profile';
+    profileChip.type = 'button';
+    profileChip.className = 'vx-user-profile';
+    profileChip.hidden = true;
+    profileChip.setAttribute('aria-label', 'Google account profile');
+    profileChip.innerHTML = '<span class="vx-user-avatar" aria-hidden="true"></span><span class="vx-user-name"></span><span class="vx-user-chevron" aria-hidden="true">⌄</span>';
+    profileChip.addEventListener('click', () => {
+      if (currentUser && typeof openProfileSettings === 'function') openProfileSettings();
+    });
+    const shareControl = $vx('vx-share-cloud');
+    if (shareControl) shareControl.insertAdjacentElement('afterend', profileChip);
+    else cloudControls.appendChild(profileChip);
+  }
   if (currentUser) {
     const label = currentUser.displayName || currentUser.email || 'Signed in';
     signInBtn.textContent = 'Sign out';
     signInBtn.title = `Signed in as ${label}. Click to sign out.`;
     authLabel.textContent = `Signed in: ${label}`;
     authLabel.classList.remove('bad');
+    if (profileChip) {
+      profileChip.hidden = false;
+      profileChip.title = `Google account: ${label}`;
+      const avatar = profileChip.querySelector('.vx-user-avatar');
+      avatar.replaceChildren();
+      if (currentUser.photoURL) {
+        const image = document.createElement('img');
+        image.src = currentUser.photoURL;
+        image.alt = '';
+        image.referrerPolicy = 'no-referrer';
+        image.onerror = () => { avatar.replaceChildren(); avatar.textContent = (currentUser.displayName || currentUser.email || 'V').trim().slice(0,1).toUpperCase(); };
+        avatar.appendChild(image);
+      } else {
+        avatar.textContent = (currentUser.displayName || currentUser.email || 'V').trim().slice(0,1).toUpperCase();
+      }
+      profileChip.querySelector('.vx-user-name').textContent = currentUser.displayName || 'My profile';
+    }
   } else {
-    signInBtn.textContent = 'Sign in';
+    signInBtn.textContent = 'Sign in with Google';
     signInBtn.title = 'Sign in securely with Google to save and share projects';
     authLabel.textContent = 'Not signed in';
     authLabel.classList.remove('bad');
+    if (profileChip) profileChip.hidden = true;
   }
-}
-async function signIn() {
+}async function signIn() {
   if (currentUser) return currentUser;
   try {
     const provider = new GoogleAuthProvider();

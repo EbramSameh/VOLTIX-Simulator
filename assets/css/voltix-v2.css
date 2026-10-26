@@ -360,3 +360,46 @@ body[data-vx-theme="violet"] .run,body[data-vx-theme="violet"] header .run{backg
 @media(max-width:1180px){#top{gap:8px}#top .tl button{padding:7px 7px;font-size:10px}}
 @media(max-width:900px){#vx-studio-panel{right:auto!important;left:0!important;top:calc(100% + 8px)!important}}
 @media(max-width:580px){#vx-studio-panel{position:fixed!important;top:80px!important;left:12px!important;right:12px!important;width:auto!important;max-width:none!important;max-height:calc(100vh - 100px)!important}}
+
+
+/* VOLTIX brand and account identity */
+#top .tb{display:inline-flex;align-items:center;gap:9px;text-decoration:none;min-width:178px;color:#f8f6f4;line-height:1.05}
+#top .tb:before{display:none!important;content:none!important}
+#top .tb img{display:block;flex:0 0 38px;width:38px;height:38px;border-radius:11px;box-shadow:0 3px 16px #ff866b18}
+#top .tb>span{display:flex;flex-direction:column;gap:2px;font:700 13px 'Space Grotesk',sans-serif;letter-spacing:-.045em}
+#top .tb b{color:#ff9b83;font-weight:700}
+#top .tb small{margin-top:2px;color:#9da7b9;font:600 8px Inter,sans-serif;letter-spacing:.15em}
+#top .mk{display:flex!important;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;order:4;flex:0 0 auto;min-width:148px;min-height:42px;margin-left:0;padding:6px 11px;border:1px solid #493b43;border-radius:10px;background:linear-gradient(135deg,#2b2028,#1a1e29);text-align:left;line-height:1.2}
+#top .mk:hover{background:linear-gradient(135deg,#3a252b,#252535);border-color:#ff866b}
+#top .mk-label{color:#ff9b83;font:700 8px Inter,sans-serif;letter-spacing:.17em}
+#top .mk-name{color:#fff4ef;font:700 13px 'Space Grotesk',sans-serif;letter-spacing:-.025em}
+#top .mk-affiliation{color:#a5adbf;font:500 9px Inter,sans-serif;white-space:nowrap}
+#vx-cloud-controls{gap:6px}
+#vx-user-profile{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:4px 9px 4px 5px;border:1px solid #454052;border-radius:999px;background:#1b1f2c;color:#f5f1f6;max-width:185px}
+#vx-user-profile:hover{background:#292536;border-color:#ff866b}
+#vx-user-profile[hidden]{display:none!important}
+#vx-user-profile .vx-user-avatar{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;overflow:hidden;border-radius:50%;background:#ff866b;color:#241512;font:700 12px 'Space Grotesk',sans-serif}
+#vx-user-profile .vx-user-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+#vx-user-profile .vx-user-name{overflow:hidden;max-width:105px;text-overflow:ellipsis;white-space:nowrap;font-size:10px;font-weight:600}
+#vx-user-profile .vx-user-chevron{color:#a5adbf;font-size:13px}
+@media(max-width:1300px){
+ #top{gap:9px}
+ #top .tb{min-width:150px}
+ #top .mk{min-width:135px}
+ #top .mk-affiliation{font-size:8px}
+ #vx-auth-label{display:none}
+}
+@media(max-width:900px){
+ #top .mk{order:4;min-width:130px;margin-left:0}
+ #vx-cloud-controls{order:5}
+}
+@media(max-width:580px){
+ #top .tb{min-width:0}
+ #top .tb img{width:32px;height:32px;flex-basis:32px}
+ #top .tb>span{font-size:11px}
+ #top .tb small{font-size:7px}
+ #top .mk{min-width:0;flex:1 1 100%;order:4}
+ #top .mk-affiliation{white-space:normal}
+ #vx-user-profile{flex:1 1 auto;justify-content:center}
+ #vx-user-profile .vx-user-name{max-width:95px}
+}

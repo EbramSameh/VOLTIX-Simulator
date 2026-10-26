@@ -1,23 +1,23 @@
 /* VOLTIX guided workflow — additive styles, keeps the existing studio intact. */
-.vx-workflow{margin:30px 0;padding:clamp(18px,3vw,30px);border:1px solid rgba(139,108,255,.32);border-radius:22px;background:linear-gradient(135deg,rgba(34,211,238,.07),rgba(139,108,255,.10));}
+.vx-workflow{margin:30px 0;padding:clamp(18px,3vw,30px);border:1px solid #273142;border-radius:12px;background:#101722;}
 .vx-workflow-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-.vx-workflow-kicker{display:block;color:#79e5f4;font-size:.72rem;font-weight:800;letter-spacing:.14em;margin-bottom:8px}
+.vx-workflow-kicker{display:block;color:#a6f36b;font-size:.72rem;font-weight:700;letter-spacing:.1em;margin-bottom:8px}
 .vx-workflow h2{margin:0 0 7px;font-size:clamp(1.35rem,3vw,2rem)}
 .vx-workflow p{margin:0;max-width:720px;line-height:1.6;color:var(--muted,#b9bfdc)}
-.vx-workflow-count{white-space:nowrap;padding:8px 11px;border:1px solid rgba(139,108,255,.4);border-radius:999px;font-size:.82rem;color:#e6e0ff}
+.vx-workflow-count{white-space:nowrap;padding:8px 11px;border:1px solid #354532;border-radius:8px;font-size:.82rem;color:#d7ffc4}
 .vx-workflow-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.vx-workflow-step{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-height:180px;padding:16px;border:1px solid rgba(164,174,221,.18);border-radius:15px;background:rgba(8,13,40,.58);color:inherit;text-align:left;cursor:pointer;transition:border-color .18s,transform .18s,background .18s}
-.vx-workflow-step:hover{transform:translateY(-2px);border-color:rgba(34,211,238,.65);background:rgba(17,26,67,.9)}
-.vx-workflow-step:focus-visible,.vx-workflow-reset:focus-visible{outline:2px solid #67e8f9;outline-offset:3px}
-.vx-workflow-step[aria-pressed=true]{border-color:#56d6c8}
-.vx-workflow-num{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:rgba(139,108,255,.2);color:#d9d1ff;font-weight:800}
-.vx-workflow-step[aria-pressed=true] .vx-workflow-num{background:rgba(86,214,200,.18);color:#8ef2df}
+.vx-workflow-step{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-height:180px;padding:16px;border:1px solid #263142;border-radius:9px;background:#0d131d;color:inherit;text-align:left;cursor:pointer;transition:border-color .18s,background .18s}
+.vx-workflow-step:hover{border-color:#536548;background:#141d29}
+.vx-workflow-step:focus-visible,.vx-workflow-reset:focus-visible{outline:2px solid #a6f36b;outline-offset:3px}
+.vx-workflow-step[aria-pressed=true]{border-color:#a6f36b}
+.vx-workflow-num{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:#1e2c1b;color:#caffac;font-weight:800}
+.vx-workflow-step[aria-pressed=true] .vx-workflow-num{background:#1e3020;color:#caffac}
 .vx-workflow-step b{font-size:1rem}
 .vx-workflow-step small{font-size:.84rem;line-height:1.5;color:var(--muted,#b9bfdc)}
 .vx-workflow-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}
 .vx-workflow-bottom span{font-size:.84rem;color:var(--muted,#b9bfdc)}
-.vx-workflow-reset{padding:8px 12px;border:1px solid rgba(164,174,221,.28);border-radius:10px;background:transparent;color:inherit;cursor:pointer}
-.vx-ai-path{margin-top:16px;padding:18px;border-radius:16px;border:1px solid rgba(34,211,238,.2);background:rgba(8,13,40,.42)}
+.vx-workflow-reset{padding:8px 12px;border:1px solid #354052;border-radius:8px;background:transparent;color:inherit;cursor:pointer}
+.vx-ai-path{margin-top:16px;padding:18px;border-radius:16px;border:1px solid #273142;background:#0d131d}
 .vx-ai-path h3{margin:0 0 7px}.vx-ai-path p{margin-bottom:12px}
 .vx-ai-path-actions{display:flex;gap:10px;flex-wrap:wrap}
 .vx-ai-path-actions button{cursor:pointer}
@@ -26,7 +26,7 @@
 @media(prefers-reduced-motion:reduce){.vx-workflow-step{transition:none}.vx-workflow-step:hover{transform:none}}
 
 .vx-workflow-card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:4px;width:100%}
-.vx-workflow-card-actions button{padding:7px 9px;border-radius:9px;border:1px solid rgba(139,108,255,.38);background:rgba(139,108,255,.13);color:inherit;font-size:.78rem;cursor:pointer}
-.vx-workflow-card-actions button:last-child{background:transparent;border-color:rgba(164,174,221,.25)}
-.vx-workflow-card-actions button[aria-pressed=true]{border-color:#56d6c8;color:#8ef2df}
+.vx-workflow-card-actions button{padding:7px 9px;border-radius:9px;border:1px solid #354052;background:#17202c;color:inherit;font-size:.78rem;cursor:pointer}
+.vx-workflow-card-actions button:last-child{background:transparent;border-color:#354052}
+.vx-workflow-card-actions button[aria-pressed=true]{border-color:#a6f36b;color:#caffac}
 .vx-workflow-card-actions button:focus-visible{outline:2px solid #67e8f9;outline-offset:2px}

@@ -19,7 +19,7 @@
   else if(k=='bat'){g.add(bx(.7,.5,.4,'#111827',0,.26,0));g.add(bx(.7,.12,.4,'#f59e0b',0,.56,0))}
   else if(k=='disp'){g.add(bx(1.5,.1,.9,'#1b2166',0,.06,0));g.add(bx(1.2,.03,.62,p.t=='lcd'?'#a8e063':'#02040f',0,.13,-.02,{emissive:p.t=='lcd'?'#3b5a1a':'#06202a',emissiveIntensity:.8}))}
   else if(window.P3X&&window.P3X(p,g,K,M,bx,cy)){}else{const W=Math.max(1.1,PT[p.t][3].split(' ').length*12/K+.4);g.add(bx(W,.07,.95,MC(p.t),0,.06,.1));g.add(bx(.45,.09,.35,'#111827',0,.13,0));if(k=='hb')g.add(bx(.7,.35,.4,'#374151',0,.25,0))}
-  const n=PT[p.t][3].split(' ').length,cx=k=='piboard'?150:88,cy0=k=='piboard'?110:52;for(let i=0;i<n;i++){const q=pinPos(p,i);g.add(bx(.06,.22,.06,'#e8c26a',(q[0]-cx)/K,.11,(q[1]-cy0)/K))}
+  const n=((PT[p.t]&&PT[p.t][3])||'').trim().split(/\\s+/).filter(Boolean).length,cx=k=='piboard'?150:88,cy0=k=='piboard'?110:52;for(let i=0;i<n;i++){const q=pinPos(p,i);g.add(bx(.06,.22,.06,'#e8c26a',(q[0]-cx)/K,.11,(q[1]-cy0)/K))}
   g.userData=Object.assign(ud,{p});return g}
  function board3(){
  const g=new THREE.Group(),W=S.bw/K,H=S.bh/K,uno=S.bt==='uno'||S.bt==='unor4',col={uno:'#087f86',unor4:'#087f86',mega:'#0a7c86',leo:'#0a7c86',nano:'#1f5fbf',pro:'#b3262f',pico:'#0b7a3d',esp32:'#176b52',cam:'#176b52'}[S.bt]||'#171b26';
@@ -61,7 +61,8 @@
 }
 function wire3(w){const r=wroute(w);let pts=r.map((p,j)=>new THREE.Vector3(p.x/K,j==0||j==r.length-1?.3:.45,p.y/K));if(!(w.pts&&w.pts.length)){const a=pts[0],b=pts[pts.length-1],d=a.distanceTo(b);pts=[a,new THREE.Vector3((a.x+b.x)/2,.3+Math.min(.5,d*.07),(a.z+b.z)/2),b]}
   const m=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),48,.034,10,false),M(w.c,{roughness:.35}));m.castShadow=true;return m}
- function build(){grp.clear();grp.add(board3());S.parts.forEach(p=>{try{grp.add(part3(p))}catch(e){}});S.wires.forEach(w=>{try{grp.add(wire3(w))}catch(e){}})}
+ function disposeTree(root){root.traverse(o=>{if(o.geometry&&typeof o.geometry.dispose==='function')o.geometry.dispose();if(o.material){const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(m=>{if(m&&typeof m.dispose==='function')m.dispose()})}})}
+ function build(){grp.children.slice().forEach(o=>{disposeTree(o);grp.remove(o)});grp.add(board3());S.parts.forEach(p=>{try{grp.add(part3(p))}catch(e){const g=new THREE.Group();g.position.set((p.x+88)/K,.08,(p.y+52)/K);g.add(bx(.9,.16,.7,'#64748b',0,0,0));g.userData={p};grp.add(g);console.warn('[VOLTIX 3D] Fallback geometry for '+(p.t||'component'),e)}});S.wires.forEach(w=>{try{grp.add(wire3(w))}catch(e){console.warn('[VOLTIX 3D] Could not render wire',w,e)}})}
  function cam3(){cm.position.set(tg.x+dist*Math.cos(el)*Math.sin(az),tg.y+dist*Math.sin(el),tg.z+dist*Math.cos(el)*Math.cos(az));cm.lookAt(tg)}
  function init(){if(rn)return;rn=new THREE.WebGLRenderer({antialias:true});rn.setPixelRatio(Math.min(devicePixelRatio,2));rn.shadowMap.enabled=true;rn.shadowMap.type=THREE.PCFSoftShadowMap;box.appendChild(rn.domElement);sc=new THREE.Scene();sc.fog=new THREE.Fog(0x03051a,28,70);cm=new THREE.PerspectiveCamera(45,1,.1,200);tg=new THREE.Vector3();grp=new THREE.Group();sc.add(grp);
   sc.add(new THREE.HemisphereLight(0xbcd0ff,0x0b1130,.75));const dl=new THREE.DirectionalLight(0xffffff,1.1);dl.position.set(8,14,6);dl.castShadow=true;dl.shadow.mapSize.set(2048,2048);Object.assign(dl.shadow.camera,{left:-25,right:25,top:25,bottom:-25,near:1,far:60});sc.add(dl);

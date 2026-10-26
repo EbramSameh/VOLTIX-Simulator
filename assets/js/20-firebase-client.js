@@ -108,7 +108,7 @@ function startPresence(user) {
 }
 function renderAuth() {
   let profileChip = $vx('vx-user-profile');
-  if (!profileChip && cloudControls) {
+  if (!profileChip && $vx('vx-cloud-controls')) {
     profileChip = document.createElement('button');
     profileChip.id = 'vx-user-profile';
     profileChip.type = 'button';
@@ -121,7 +121,7 @@ function renderAuth() {
     });
     const shareControl = $vx('vx-share-cloud');
     if (shareControl) shareControl.insertAdjacentElement('afterend', profileChip);
-    else cloudControls.appendChild(profileChip);
+    else $vx('vx-cloud-controls').appendChild(profileChip);
   }
   if (currentUser) {
     const label = currentUser.displayName || currentUser.email || 'Signed in';

@@ -1,13 +1,28 @@
-/* VOLTIX minimal modern skin — visual-only overrides; preserves existing IDs and simulator behavior. */
+/* VOLTIX visual layer — presentation-only overrides; preserve existing IDs and app behavior. */
+/* Shared design tokens: warm graphite surfaces, one copper accent, state-only colors. */
 :root{
-  --bg:#0b0f17;--panel:#111722;--line:#263142;--ink:#f3f6fb;--mute:#9aa7bb;
-  --acc:#a6f36b;--acc2:#7ddc43;--rpw:340px;
-  --v2-bg:#0b0f17;--v2-card:#111722;--v2-card2:#151d2a;--v2-border:#273142;
-  --v2-text:#f3f6fb;--v2-muted:#9aa7bb;--v2-primary:#a6f36b;--v2-primary-dark:#23391a;
-  --v2-blue:#8ab4ff;--v2-warn:#ffd166;--v2-danger:#ff7b88;
+  color-scheme:dark;
+  --bg:#0f1114;--surface:#171a1f;--surface-2:#1f2329;--line:#2a2f37;
+  --text:#f1ece4;--text-dim:#b3aca1;--text-faint:#7d776e;
+  --accent:#ff7a45;--accent-ink:#1a0e08;
+  --ok:#5fd38d;--warn:#f5b83d;--bad:#ff5c5c;--signal:#5ec8ff;
+  --radius-s:8px;--radius-m:14px;--radius-l:22px;
+  --shadow-1:0 1px 0 rgba(255,255,255,.04) inset,0 6px 24px rgba(0,0,0,.35);
+  --font-display:'Space Grotesk','Inter',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+  --font-hand:'Caveat',cursive;
+  --rpw:340px;
+  /* Compatibility aliases keep older presentation rules working during the staged redesign. */
+  --panel:var(--surface);--ink:var(--text);--mute:var(--text-dim);
+  --acc:var(--accent);--acc2:var(--accent);
+  --v2-bg:var(--bg);--v2-card:var(--surface);--v2-card2:var(--surface-2);
+  --v2-border:var(--line);--v2-text:var(--text);--v2-muted:var(--text-dim);
+  --v2-primary:var(--accent);--v2-primary-dark:var(--accent-ink);
+  --v2-blue:var(--signal);--v2-warn:var(--warn);--v2-danger:var(--bad);
 }
 html{scroll-behavior:smooth}
-body{background:#0b0f17;color:var(--v2-text);font-family:Inter,system-ui,sans-serif;line-height:1.55}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:clamp(16px,1vw + 12px,18px);line-height:1.6}
 body:before{background:none}
 #top{gap:18px;min-height:66px;padding:10px clamp(14px,3vw,38px);background:rgba(11,15,23,.94);border-bottom:1px solid #202a39}
 #top .tb{gap:9px;font-size:16px;letter-spacing:-.035em}

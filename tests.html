@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VOLTIX Engine Tests</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0d10;--panel:#12161b;--line:#26303a;--text:#e6edf3;--muted:#8b98a5;--ok:#27e0a3;--bad:#ff5c6c;--warn:#ffb020}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif;padding:24px}main{max-width:980px;margin:auto}h1{margin:0 0 8px}p{color:var(--muted)}.note{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:14px;margin:18px 0}.actions{display:flex;gap:10px;flex-wrap:wrap}button{background:#1a2027;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:9px 13px;cursor:pointer}table{width:100%;border-collapse:collapse;margin-top:18px;background:var(--panel)}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-size:12px;text-transform:uppercase}code{font-family:ui-monospace,monospace}.status{font-weight:700}.pass{color:var(--ok)}.fail{color:var(--bad)}.blocked{color:var(--warn)}#summary{font-weight:700;margin-top:16px}
+</style>
+</head>
+<body>
+<main>
+<h1>VOLTIX Engine Tests</h1>
+<p>Browser-side analytic reference checks for the solver upgrade.</p>
+<div class="note"><strong>Baseline honesty note</strong><br>
+These first tests verify the expected analytic reference values and test runner only. They do <em>not</em> claim that the current simulator solver passes them. Engine integration tests are deliberately marked BLOCKED until the solver is extracted behind a testable module API in the next phase.</div>
+<div class="actions"><button id="run" type="button">Run reference checks</button><button id="showAll" type="button">Show planned engine checks</button></div>
+<table><thead><tr><th>Test</th><th>Expected / reference</th><th>Observed</th><th>Result</th></tr></thead><tbody id="results"></tbody></table>
+<div id="summary" role="status" aria-live="polite"></div>
+</main>
+<script>
+const rows=[];
+const near=(actual,expected,tolerance)=>Math.abs(actual-expected)<=tolerance;
+function add(name,expected,actual,ok,detail=''){rows.push({name,expected,actual,ok,detail})}
+function runReferences(){
+ rows.length=0;
+ const divider=5*1000/(1000+1000);
+ add('5 V, 1k + 1k divider','2.500 V ± 1 mV',divider.toFixed(6)+' V',near(divider,2.5,.001));
+ const led=(5-1.9)/220;
+ add('5 V, 220 Ω, red LED','about 14 mA',(led*1000).toFixed(3)+' mA',near(led,.014,.002));
+ const rc=5*(1-Math.exp(-.1/(1000*100e-6)));
+ add('RC charge at t = RC','3.161 V ± 1%',rc.toFixed(4)+' V',near(rc,5*(1-Math.exp(-1)),.03161));
+ const tauL=.01/100;
+ const rl=(5/100)*(1-Math.exp(-.0001/tauL));
+ add('RL step at t = L/R','31.6 mA ± 1%',(rl*1000).toFixed(4)+' mA',near(rl,.0316,.000316));
+ const fc=1/(2*Math.PI*1000*100e-6);
+ add('RC low-pass corner','1.592 Hz for 1kΩ and 100µF',fc.toFixed(4)+' Hz',near(fc,1/(2*Math.PI*1000*100e-6),.02*fc));
+ render();
+}
+function render(){
+ const body=document.querySelector('#results');
+ body.innerHTML=rows.map(r=>'<tr><td>'+r.name+'</td><td>'+r.expected+'</td><td><code>'+r.actual+'</code><br>'+r.detail+'</td><td class="status '+(r.ok?'pass':'fail')+'">'+(r.ok?'PASS':'FAIL')+'</td></tr>').join('');
+ const pass=rows.filter(r=>r.ok).length,fail=rows.length-pass;
+ document.querySelector('#summary').textContent=pass+' reference checks passed; '+fail+' failed. These are formula-oracle checks, not simulator-engine integration tests.';
+}
+function showPlanned(){
+ const planned=[
+ ['NMOS low-side switch','Vds < 0.2 V in triode','BLOCKED: no extracted MOSFET solver API'],
+ ['Op-amp inverting gain -10','Vout = -10 Vin until rail clipping','BLOCKED: no op-amp MNA model'],
+ ['Floating node diagnostics','Named floating node; no crash','BLOCKED: current solver does not report named floating nodes'],
+ ['Arduino Blink','D13 toggles every 500 simulated ms','BLOCKED: current runner uses wall-clock async delay'],
+ ['analogRead at 2.5 V / 5 V','approximately 512','BLOCKED: current API reads the simplified board pin value'],
+ ['200 resistor-network KCL fuzz cases','node current residual < 1e-9 A','BLOCKED: no public netlist/solver test API']
+ ];
+ const body=document.querySelector('#results');
+ body.innerHTML+=planned.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td><code>'+r[2]+'</code></td><td class="status blocked">BLOCKED</td></tr>').join('');
+}
+document.querySelector('#run').addEventListener('click',runReferences);
+document.querySelector('#showAll').addEventListener('click',showPlanned);
+runReferences();
+</script>
+</body>
+</html>

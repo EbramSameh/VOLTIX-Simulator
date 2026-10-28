@@ -3,7 +3,7 @@
 :root{
   color-scheme:dark;
   --bg:#0f1114;--surface:#171a1f;--surface-2:#1f2329;--line:#2a2f37;
-  --text:#f1ece4;--text-dim:#b3aca1;--text-faint:#7d776e;
+  --text:#f1ece4;--text-dim:#b3aca1;--text-faint:#918a80; /* lifted slightly to meet AA on graphite */
   --accent:#ff7a45;--accent-ink:#1a0e08;
   --ok:#5fd38d;--warn:#f5b83d;--bad:#ff5c5c;--signal:#5ec8ff;
   --radius-s:8px;--radius-m:14px;--radius-l:22px;

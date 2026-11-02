@@ -4,6 +4,8 @@ This document accompanies the **CorroBot — ESP32-CAM rust-detection robot** ci
 
 ## Load the circuit
 
+Direct launch: [Open CorroBot in VOLTIX](https://ebramsameh.github.io/VOLTIX-Simulator/?example=corrobot). The preset is also available in the **Load an example** selector.
+
 1. Open [VOLTIX Simulator](https://ebramsameh.github.io/VOLTIX-Simulator/).
 2. Open **Load an example** and choose **CorroBot — ESP32-CAM rust-detection robot**.
 3. The circuit is placed on the **ESP32-CAM** board profile.

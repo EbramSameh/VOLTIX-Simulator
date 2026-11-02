@@ -1,6 +1,13 @@
 /* CorroBot research-project preset. Uses VOLTIX's existing component and wire models. */
 (function () {
   EXN.corrobot = 'CorroBot — ESP32-CAM rust-detection robot';
+  const exampleSelect = document.getElementById('ex');
+  if (exampleSelect && !exampleSelect.querySelector('option[value="corrobot"]')) {
+    const option = document.createElement('option');
+    option.value = 'corrobot';
+    option.textContent = EXN.corrobot;
+    exampleSelect.appendChild(option);
+  }
   EX.corrobot = {
     bt: 'cam',
     P: 'bat 170 80 11.1,lm2596 410 70,l298 720 90,mot 1040 190,mot 1040 430,servo 430 370,dht11 180 390',

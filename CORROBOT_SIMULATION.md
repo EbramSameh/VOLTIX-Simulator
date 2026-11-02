@@ -140,7 +140,7 @@ The described tracking behavior is: stop when no valid detection is available or
 - [ ] Verify DHT11 VCC is 3.3 V.
 - [ ] Verify every ground is on one common ground net.
 - [ ] Verify the four motor-control GPIO assignments against the firmware table.
-- [ ] Verify OUT1/OUT2 and OUT3/OUT4 each feed a separate motor.
+- [ ] Verify OUT1/OUT2 and OUT3/OUT4 each feed a separate motor.\n- [ ] Pump remains unconnected until its real voltage/current rating, driver, and control signal are confirmed.
 - [ ] Check LM2596 current capability against ESP32-CAM peak demand plus servo current spikes. A module rating alone is not proof that the rail is adequate.
 - [ ] Check the motor current, L298N dissipation, wiring, connectors, and battery protection against the actual hardware datasheets before building.
 
@@ -156,4 +156,4 @@ The described tracking behavior is: stop when no valid detection is available or
 
 ## Current VOLTIX implementation boundary
 
-The preset creates a real VOLTIX circuit graph using the existing board, component and wire systems. The current engine does not yet provide a dedicated 3S battery component, a physical jumper-state model for the L298N, a complete ESP32-CAM camera pin schematic, a hardware-accurate LM2596 current/thermal model, or a CorroBot-specific firmware/AI runtime. A rendered component must not be interpreted as proof that its full physical behavior is simulated.
+The preset creates a real VOLTIX circuit graph using the existing board, component and wire systems. The current engine does not yet provide a dedicated 3S battery component, a physical jumper-state model for the L298N, a complete ESP32-CAM camera pin schematic, a hardware-accurate LM2596 current/thermal model, or a CorroBot-specific firmware/AI runtime, or a pump driver/control circuit. A rendered component must not be interpreted as proof that its full physical behavior is simulated.

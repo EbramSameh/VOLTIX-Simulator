@@ -13,6 +13,8 @@
       'p1:+>p3:VS',
       'p1:->p3:GND',
       'p2:OUT+>p3:5V',
+      'p2:OUT+>p3:ENA',
+      'p2:OUT+>p3:ENB',
       'p2:OUT+>b:5V',
       'p2:OUT->b:GND',
       'p2:OUT+>p6:VCC',

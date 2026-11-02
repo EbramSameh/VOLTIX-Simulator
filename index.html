@@ -515,6 +515,20 @@ void loop() {
 }`};
 EXN.pi_guardian='Smart Lab Guardian (Raspberry Pi Pico)';
 
+
+/* CorroBot research-project wiring preset. Firmware source is intentionally not fabricated. */
+EX.corrobot={
+ bt:'cam',
+ P:'bat 170 80,lm2596 410 70,l298 720 90,servo 430 370,dht11 180 390,mot 1040 190,mot 1040 430',
+ W:'p1:+>p2:IN+,p1:+>p3:VS,p1:->p2:IN-,p1:->p3:GND,p2:OUT+>p3:5V,p2:OUT->p3:GND,b:5V>p3:5V,b:GND>p3:GND,b:G13>p3:IN1,b:G12>p3:IN2,b:G15>p3:IN3,b:G14>p3:IN4,b:G3>p4:SIG,p4:VCC>p3:5V,p4:GND>p3:GND,b:3V3>p5:VCC,b:G2>p5:DATA,p5:GND>b:GND,p3:OUT1>p6:+,p3:OUT2>p6:-,p3:OUT3>p7:+,p3:OUT4>p7:-',
+ c:'// CorroBot — AI Thinker ESP32-CAM
+// This workspace contains the hardware wiring reference.
+// The exact project firmware was not attached to this request, so no substitute firmware is generated.
+// Firmware mapping: IN1=GPIO13, IN2=GPIO12, IN3=GPIO15, IN4=GPIO14, SERVO=GPIO3, DHT11=GPIO2.
+// Camera signals are onboard and reserved; GPIO4 is the onboard flash LED.
+// Wi-Fi AP: CorroBot. Add the supplied firmware here when it is available.'
+};
+EXN.corrobot='CorroBot — ESP32-CAM rust-detection robot';
 const S={bt:'uno',parts:[],wires:[],bx:30,by:40,n:0,sel:null,pend:null,bp:[],bh:0};
 const H={pm:{},pv:{},tn:{},sv:{},scr:{},sg:{},rq:[],inb:[],neo:{},fl:[],tok:0,sp:1,t0:0,run:0};
 const GW={ssid:'WES-Private',pw:'wes12345',on:true,rssi:-48};

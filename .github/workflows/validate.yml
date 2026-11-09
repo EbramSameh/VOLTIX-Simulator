@@ -50,6 +50,7 @@ jobs:
           import re
           html = Path("index.html").read_text(encoding="utf-8")
           refs = re.findall(r'(?:src|href)="(assets/(?:js|css)/[^"]+)"', html)
+          refs = [ref.split("?", 1)[0].split("#", 1)[0] for ref in refs]
           missing = [ref for ref in refs if not Path(ref).is_file()]
           if missing:
               raise SystemExit("Missing asset files: " + ", ".join(missing))

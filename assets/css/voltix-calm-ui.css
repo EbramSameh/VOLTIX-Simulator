@@ -1,0 +1,354 @@
+/* VOLTIX Calm UI — final presentation layer.
+   A quieter hierarchy for navigation, workspace controls and responsive layouts.
+   Existing control IDs and application behavior are intentionally preserved. */
+
+:root{
+  --calm-bg:#101310;
+  --calm-panel:#171c18;
+  --calm-panel-soft:#1c231d;
+  --calm-panel-hover:#242d25;
+  --calm-border:#303a31;
+  --calm-border-soft:#273028;
+  --calm-text:#e7ece5;
+  --calm-muted:#a2ada1;
+  --calm-faint:#7f8b7e;
+  --calm-accent:#a8c98a;
+  --calm-accent-soft:#263526;
+  --calm-radius:10px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--calm-bg);color:var(--calm-text);font-family:var(--font-body,Inter,system-ui,sans-serif)}
+button,select,input,textarea{font:inherit}
+button,select{transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+button:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--calm-accent);outline-offset:3px}
+
+/* Main navigation: five clear destinations, with secondary actions in quiet menus. */
+#top{
+  position:sticky;top:0;z-index:100;
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;gap:clamp(14px,2.2vw,32px);
+  min-height:68px;padding:10px clamp(16px,3vw,38px);
+  background:rgba(16,19,16,.96);
+  border:0;border-bottom:1px solid var(--calm-border-soft);
+  box-shadow:0 5px 24px rgba(0,0,0,.12);
+  backdrop-filter:blur(16px);
+}
+#top .tb{
+  display:flex;align-items:center;gap:10px;min-width:0;
+  color:var(--calm-text);font-size:14px;letter-spacing:-.025em;
+  text-decoration:none;white-space:nowrap;
+}
+#top .tb:before{display:none}
+#top .tb img{width:34px;height:34px;object-fit:contain}
+#top .tb>span{display:flex;flex-direction:column;gap:2px;line-height:1.15}
+#top .tb b{font-weight:650;color:var(--calm-accent)}
+#top .tb small{font-size:9px;letter-spacing:.13em;color:var(--calm-faint);font-weight:500}
+#top .tl{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  min-width:0;flex:1;flex-wrap:nowrap;
+}
+#top .tl>button{
+  flex:0 0 auto;padding:9px 12px;border:1px solid transparent;border-radius:8px;
+  background:transparent;color:var(--calm-muted);font-size:12px;font-weight:500;
+  white-space:nowrap;
+}
+#top .tl>button:hover{background:var(--calm-panel);color:var(--calm-text);border-color:var(--calm-border-soft)}
+#top .tl>button.on,#top .tl>button.vx-primary-link.on{
+  background:var(--calm-accent-soft);color:#e4f0dc;border-color:#3c5138;
+  box-shadow:none;
+}
+#top .vx-nav-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-width:0}
+#top details{position:relative}
+#top details>summary{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  min-height:36px;padding:7px 11px;border:1px solid var(--calm-border);
+  border-radius:9px;background:var(--calm-panel);color:var(--calm-muted);
+  cursor:pointer;list-style:none;font-size:12px;white-space:nowrap;
+  user-select:none;
+}
+#top details>summary::-webkit-details-marker{display:none}
+#top details>summary:hover,#top details[open]>summary{
+  background:var(--calm-panel-hover);border-color:#465447;color:var(--calm-text);
+}
+#top .vx-project-icon{color:var(--calm-accent);font-size:15px}
+#top .vx-nav-more>summary{min-height:34px;padding-inline:10px}
+#top .vx-nav-popover,#top .vx-project-popover{
+  position:absolute;top:calc(100% + 9px);right:0;z-index:200;
+  display:flex;flex-direction:column;gap:5px;
+  width:230px;padding:10px;border:1px solid var(--calm-border);
+  border-radius:12px;background:#1a201b;
+  box-shadow:0 18px 48px rgba(0,0,0,.38);
+}
+#top .vx-nav-popover{left:0;right:auto;width:220px}
+#top .vx-nav-popover button,#top .vx-project-popover>button{
+  display:flex;align-items:center;justify-content:flex-start;
+  width:100%;min-height:36px;padding:8px 10px;border:1px solid transparent;
+  border-radius:7px;background:transparent;color:var(--calm-text);
+  text-align:left;font-size:12px;
+}
+#top .vx-nav-popover button:hover,#top .vx-project-popover>button:hover{
+  background:var(--calm-panel-hover);border-color:var(--calm-border);
+}
+#top .vx-nav-divider{height:1px;margin:4px 0;background:var(--calm-border-soft)}
+#top .vx-nav-caption,.vx-project-heading{
+  padding:4px 8px;color:var(--calm-faint);font-size:10px;
+  letter-spacing:.08em;text-transform:uppercase;
+}
+#top .vx-board-shortcuts{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:0;
+  border:0;background:transparent;
+}
+#top .vx-board-shortcuts button{justify-content:center!important;text-align:center!important}
+#top .vx-project-popover #vx-auth-label{
+  display:block;max-width:none;padding:7px 8px;overflow-wrap:anywhere;
+  color:var(--calm-faint);font-size:10px;white-space:normal;
+}
+#top .vx-live-counter{
+  display:flex;align-items:center;gap:7px;padding:8px;
+  border-top:1px solid var(--calm-border-soft);color:var(--calm-muted);font-size:10px;
+}
+#top .vx-live-counter strong{margin-left:auto;color:var(--calm-text);font-variant-numeric:tabular-nums}
+#top .vx-live-dot{width:7px;height:7px;border-radius:50%;background:#83b98b;box-shadow:0 0 0 3px rgba(131,185,139,.12)}
+#top .mk{
+  display:flex;align-items:center;gap:8px;max-width:none;padding:0;
+  border:0;background:transparent;text-align:left;
+}
+#top .mk:hover{background:transparent}
+#top .mk-avatar{
+  display:grid;place-items:center;width:32px;height:32px;border:1px solid #465447;
+  border-radius:50%;background:var(--calm-panel-soft);color:var(--calm-accent);
+  font-size:12px;font-weight:650;
+}
+#top .mk-copy{display:flex;flex-direction:column;gap:2px}
+#top .mk-name{color:var(--calm-text);font-size:11px;font-weight:550}
+#top .mk-affiliation{color:var(--calm-faint);font-size:9px}
+
+/* Simulator command bar: board, example and run are the only always-visible actions. */
+body[data-r="sim"]>header.vx-workbar{
+  position:relative;top:auto;z-index:60;
+  display:grid;grid-template-columns:minmax(230px,1fr) minmax(200px,1fr) auto auto;
+  align-items:center;gap:12px;
+  min-height:66px;padding:10px clamp(14px,2vw,24px);
+  background:#151a16;border:0;border-bottom:1px solid var(--calm-border-soft);
+}
+.vx-workbar-brand,.vx-workbar-example,.vx-run-controls{display:flex;align-items:center;gap:8px;min-width:0}
+.vx-workbar-brand .logo{flex:0 0 auto;margin:0 5px 0 0;color:var(--calm-text);font-size:12px;letter-spacing:.02em}
+.vx-workbar-brand .logo small{display:block;margin-top:2px;color:var(--calm-faint);font-size:10px;letter-spacing:0;font-weight:400}
+.vx-workbar select{
+  min-width:0;min-height:36px;max-width:100%;padding:7px 30px 7px 10px;
+  border:1px solid var(--calm-border);border-radius:8px;
+  background:#101510;color:var(--calm-text);font-size:11px;
+}
+.vx-workbar-brand #bd{flex:1 1 130px;width:130px}
+.vx-workbar-example #ex{flex:1 1 170px;width:170px}
+.vx-workbar button{
+  min-height:35px;padding:7px 11px;border:1px solid var(--calm-border);
+  border-radius:8px;background:var(--calm-panel-soft);color:var(--calm-muted);
+  font-size:11px;font-weight:550;white-space:nowrap;
+}
+.vx-workbar button:hover{background:var(--calm-panel-hover);border-color:#4a584b;color:var(--calm-text)}
+.vx-workbar .run{
+  min-width:78px;background:var(--calm-accent);border-color:var(--calm-accent);
+  color:#172016;font-weight:650;
+}
+.vx-workbar .run:hover{background:#bad5a4;border-color:#bad5a4;color:#172016}
+.vx-workbar #stop{min-width:68px}
+.vx-tools-menu{position:relative;justify-self:end}
+.vx-tools-menu>summary{
+  display:flex;align-items:center;gap:10px;min-height:36px;padding:7px 12px;
+  border:1px solid var(--calm-border);border-radius:8px;
+  background:transparent;color:var(--calm-muted);font-size:11px;
+  cursor:pointer;list-style:none;white-space:nowrap;
+}
+.vx-tools-menu>summary::-webkit-details-marker{display:none}
+.vx-tools-menu>summary:hover,.vx-tools-menu[open]>summary{
+  background:var(--calm-panel-soft);color:var(--calm-text);border-color:#4a584b;
+}
+.vx-tools-chevron{color:var(--calm-accent)}
+.vx-tools-menu[open] .vx-tools-chevron{transform:rotate(180deg)}
+.vx-tools-popover{
+  position:absolute;top:calc(100% + 9px);right:0;z-index:150;
+  display:grid;grid-template-columns:1fr;gap:10px;
+  width:245px;padding:12px;border:1px solid var(--calm-border);
+  border-radius:12px;background:#1a201b;box-shadow:0 18px 48px rgba(0,0,0,.4);
+}
+.vx-tools-group{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.vx-tools-label{grid-column:1/-1;padding:2px 3px;color:var(--calm-faint);font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.vx-tools-group button,.vx-tools-group label{
+  display:flex;align-items:center;gap:7px;min-width:0;min-height:33px;
+  padding:6px 8px;border:1px solid var(--calm-border-soft);border-radius:7px;
+  background:#151b16;color:var(--calm-muted);font-size:10px;
+}
+.vx-tools-group label{grid-column:1/-1;justify-content:space-between}
+.vx-tools-group label select{min-height:28px;max-width:120px}
+.vx-tools-group input[type=checkbox]{width:14px;height:14px;margin:0;accent-color:var(--calm-accent)}
+.vx-tools-group button:hover{background:var(--calm-panel-hover);color:var(--calm-text)}
+.vx-workbar-example #vx-new-circuit{background:transparent}
+.vx-workbar .vx-run-controls{gap:6px}
+
+/* Calm surfaces and more generous workspace spacing. */
+body[data-r="sim"]>main{background:#111611}
+body[data-r="sim"]>main>#pal,body[data-r="sim"]>main>#rp{
+  background:#171d18;border-color:var(--calm-border-soft)
+}
+body[data-r="sim"]>main>#pal{padding:14px}
+body[data-r="sim"]>main>#rp{padding:13px}
+body[data-r="sim"] #pal input#q{
+  min-height:37px;padding:8px 10px;border:1px solid var(--calm-border);
+  border-radius:8px;background:#111711;color:var(--calm-text);font-size:11px;
+}
+body[data-r="sim"] #pal h4{margin:17px 0 8px;color:var(--calm-faint);font-size:9px;letter-spacing:.1em}
+body[data-r="sim"] #pal .gr{gap:5px}
+body[data-r="sim"] #pal .gr button{
+  min-height:64px;border:1px solid transparent;border-radius:8px;
+  background:transparent;color:var(--calm-muted);font-size:10px;
+}
+body[data-r="sim"] #pal .gr button:hover{
+  background:var(--calm-panel-soft);border-color:var(--calm-border);color:var(--calm-text)
+}
+body[data-r="sim"] #pal .gr button svg{background:#202820;border-radius:7px}
+body[data-r="sim"] #cvw{
+  background-color:#111711;
+  background-image:radial-gradient(rgba(151,171,145,.18) .65px,transparent .65px);
+  background-size:24px 24px;
+}
+body[data-r="sim"] #cv>rect:first-of-type{fill:#111711!important}
+body[data-r="sim"] #cv>rect:nth-of-type(2){fill:#151d16!important}
+body[data-r="sim"] #cv>rect:nth-of-type(4){stroke:#465546!important}
+body[data-r="sim"] #cv>path{stroke:var(--calm-accent)!important;opacity:.35}
+body[data-r="sim"] #cv .pv{stroke:var(--calm-accent)}
+body[data-r="sim"] #wtb{
+  border:1px solid var(--calm-border-soft)!important;border-radius:9px!important;
+  background:rgba(25,32,26,.96)!important;box-shadow:0 8px 26px rgba(0,0,0,.18)!important;
+}
+body[data-r="sim"] #wtb button{
+  min-width:30px!important;min-height:30px!important;
+  border:1px solid transparent!important;border-radius:7px!important;
+  background:transparent!important;color:var(--calm-muted)!important;
+}
+body[data-r="sim"] #wtb button:hover{
+  background:var(--calm-panel-hover)!important;border-color:var(--calm-border)!important;color:var(--calm-text)!important;
+}
+body[data-r="sim"] #wtb span{color:var(--calm-muted)}
+body[data-r="sim"] #rp .tabs{
+  display:flex;flex-wrap:wrap;gap:3px;padding:4px;margin-bottom:10px;
+  border:1px solid var(--calm-border-soft);border-radius:9px;background:#111711;
+}
+body[data-r="sim"] #rp .tabs button{
+  flex:1 1 auto;min-width:0;padding:7px 8px;border:1px solid transparent;
+  border-radius:7px;background:transparent;color:var(--calm-faint);font-size:10px;
+}
+body[data-r="sim"] #rp .tabs button.on{
+  background:var(--calm-accent-soft);border-color:#3c5138;color:#e2eddb;
+}
+body[data-r="sim"] #ed,body[data-r="sim"] #ser,body[data-r="sim"] #gwl,
+body[data-r="sim"] #meas,body[data-r="sim"] #diag{
+  border:1px solid var(--calm-border-soft);border-radius:9px;background:#101510;
+}
+body[data-r="sim"] #code{font:12px/1.7 var(--font-mono,monospace);padding:13px;color:#dbe5d8}
+body[data-r="sim"] #ln{font-size:11px;line-height:1.7;color:#788677}
+body[data-r="sim"] #lint{margin-top:9px;padding:9px 10px;border-radius:8px;background:#111711;color:var(--calm-muted);font-size:10px}
+body[data-r="sim"] #guide,body[data-r="sim"] #toast,body[data-r="sim"] #prob,
+body[data-r="sim"] #camp,body[data-r="sim"] #props,body[data-r="sim"] #empty{
+  border:1px solid var(--calm-border);border-radius:10px;
+  background:rgba(25,32,26,.97);box-shadow:0 10px 28px rgba(0,0,0,.22);
+}
+body[data-r="sim"] #empty{padding:20px}
+body[data-r="sim"] #empty button{background:var(--calm-accent);border-color:var(--calm-accent);color:#172016}
+body[data-r="sim"]>#sb{
+  min-height:30px;padding:6px 14px;background:#151a16;
+  border-top:1px solid var(--calm-border-soft);color:var(--calm-faint);font-size:10px;
+}
+
+/* Other pages use the same quiet surface and typography system. */
+#pages{background:var(--calm-bg)}
+.pg{max-width:1400px;padding:clamp(30px,4.5vw,58px) clamp(16px,4vw,52px) 64px}
+.pg h1{color:var(--calm-text);font-weight:650;letter-spacing:-.06em}
+#p-home h1{background:none;-webkit-text-fill-color:currentColor}
+.pg>p{color:var(--calm-muted);line-height:1.8}
+.pg article,.pg .card,.pg .vx-ai-bridge{
+  border:1px solid var(--calm-border-soft);border-radius:12px;
+  background:var(--calm-panel);box-shadow:none;
+}
+.pg article:hover,.pg .card:hover{background:var(--calm-panel-soft);border-color:var(--calm-border)}
+.pg button{border-radius:8px}
+.pg .run,.pg .cta .run{background:var(--calm-accent);border-color:var(--calm-accent);color:#172016}
+.pg .note{border-left-color:var(--calm-accent)}
+#sb{color:var(--calm-faint)}
+
+/* Responsive navigation and workbar. */
+@media(max-width:1180px){
+  #top{gap:14px;padding-inline:16px}
+  #top .mk-copy{display:none}
+  #top .tl{justify-content:flex-start;overflow-x:auto;scrollbar-width:thin}
+  #top .tl>button{padding-inline:9px}
+  body[data-r="sim"]>header.vx-workbar{
+    grid-template-columns:minmax(200px,1fr) minmax(190px,1fr) auto auto;gap:8px
+  }
+  .vx-workbar-brand .logo{display:none}
+}
+@media(max-width:850px){
+  #top{grid-template-columns:auto minmax(0,1fr);gap:8px 14px;min-height:unset}
+  #top .nav-brand{grid-column:1}
+  #top .tl{grid-column:1/-1;grid-row:2;order:3;overflow-x:auto;justify-content:flex-start;padding:2px 0 4px}
+  #top .vx-nav-actions{grid-column:2;grid-row:1}
+  #top .mk{display:none}
+  body[data-r="sim"]>header.vx-workbar{
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:9px;padding:10px 12px;
+  }
+  .vx-workbar-brand{grid-column:1}
+  .vx-workbar-example{grid-column:1}
+  .vx-run-controls{grid-column:2;grid-row:1/3;align-self:center}
+  .vx-tools-menu{grid-column:2;grid-row:3;justify-self:end}
+}
+@media(max-width:560px){
+  #top{padding:9px 11px}
+  #top .tb img{width:30px;height:30px}
+  #top .tb{font-size:12px}
+  #top .tb small{font-size:8px}
+  #top .tl{gap:2px}
+  #top .tl>button{padding:7px 9px;font-size:11px}
+  #top .vx-nav-actions{gap:5px}
+  #top details>summary{min-height:33px;padding:6px 9px;font-size:11px}
+  #top .vx-project-popover{right:0;width:min(230px,calc(100vw - 22px))}
+  #top .vx-nav-popover{left:0;width:min(220px,calc(100vw - 22px))}
+  body[data-r="sim"]>header.vx-workbar{
+    grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:9px 10px
+  }
+  .vx-workbar-brand{grid-column:1/-1}
+  .vx-workbar-brand #bd{width:100%;flex:1}
+  .vx-workbar-example{grid-column:1/-1}
+  .vx-workbar-example #ex{width:100%;flex:1}
+  .vx-run-controls{grid-column:1;grid-row:auto}
+  .vx-run-controls button{flex:1}
+  .vx-tools-menu{grid-column:2;grid-row:3}
+  .vx-tools-popover{right:0;width:min(245px,calc(100vw - 20px))}
+  body[data-r="sim"]>main{
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto minmax(390px,58vh) minmax(400px,auto)
+  }
+  body[data-r="sim"]>main>#pal{max-height:185px}
+  body[data-r="sim"]>main>#cvw{min-height:390px;height:58vh}
+  body[data-r="sim"]>main>#rp{min-height:400px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+
+/* The previous compatibility layer scopes some layout rules to the simulator body. */
+body[data-r="sim"]>#top{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  flex-wrap:initial;
+  gap:clamp(14px,2.2vw,32px);
+}
+@media(max-width:850px){
+  body[data-r="sim"]>#top{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr);
+    gap:8px 14px;
+  }
+}

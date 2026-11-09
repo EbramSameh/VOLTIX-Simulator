@@ -1,0 +1,302 @@
+/* VOLTIX simulator layout repair — isolated presentation layer.
+   Keeps the existing DOM IDs, controls, engine and feature scripts intact. */
+
+body[data-r="sim"]{
+  display:grid;
+  grid-template-rows:auto auto minmax(0,1fr) auto;
+  width:100%;
+  height:100vh;
+  height:100dvh;
+  min-height:0;
+  overflow:hidden;
+}
+
+body[data-r="sim"]>#top,
+body[data-r="sim"]>header,
+body[data-r="sim"]>main,
+body[data-r="sim"]>#sb{min-width:0;width:100%;}
+
+body[data-r="sim"]>#top{
+  position:relative;
+  z-index:30;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px 16px;
+  padding:8px clamp(12px,2vw,24px);
+}
+
+#top .tb{flex:0 0 auto;min-width:0;}
+#top .tl{
+  display:flex;
+  align-items:center;
+  flex:1 1 420px;
+  min-width:0;
+  flex-wrap:wrap;
+  gap:4px;
+}
+#top .tl button{flex:0 0 auto;white-space:nowrap;}
+#top .tl .vx-board-shortcuts{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:2px;
+}
+#vx-cloud-controls{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex:1 1 320px;
+  min-width:0;
+  flex-wrap:wrap;
+  gap:6px;
+}
+#vx-cloud-controls button{flex:0 0 auto;white-space:nowrap;}
+#vx-auth-label{min-width:0;overflow-wrap:anywhere;font-size:11px;}
+
+body[data-r="sim"]>header{
+  position:relative;
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  flex-wrap:wrap;
+  gap:7px;
+  padding:8px clamp(10px,1.6vw,20px);
+  min-height:48px;
+}
+body[data-r="sim"]>header .logo{
+  flex:0 0 auto;
+  min-width:145px;
+  margin:0 8px 0 0;
+}
+body[data-r="sim"]>header select{
+  flex:0 1 170px;
+  min-width:110px;
+  max-width:190px;
+}
+body[data-r="sim"]>header button{
+  flex:0 0 auto;
+  min-height:34px;
+  white-space:nowrap;
+}
+body[data-r="sim"]>header label{
+  flex:0 0 auto;
+  min-height:32px;
+  white-space:nowrap;
+  font-size:12px;
+}
+body[data-r="sim"]>header input[type="checkbox"]{width:15px;height:15px;}
+
+body[data-r="sim"]>main{
+  display:grid;
+  grid-template-columns:minmax(175px,clamp(185px,18vw,245px)) minmax(0,1fr) minmax(285px,clamp(300px,27vw,390px));
+  grid-template-rows:minmax(0,1fr);
+  min-height:0;
+  height:100%;
+  overflow:hidden;
+  gap:0;
+}
+body[data-r="sim"]>main>#pal,
+body[data-r="sim"]>main>#cvw,
+body[data-r="sim"]>main>#rp{min-width:0;min-height:0;height:100%;}
+body[data-r="sim"]>main>#pal{
+  grid-column:1;
+  grid-row:1;
+  overflow:auto;
+  overscroll-behavior:contain;
+}
+body[data-r="sim"]>main>#cvw{
+  grid-column:2;
+  grid-row:1;
+  position:relative;
+  overflow:hidden;
+}
+body[data-r="sim"]>main>#rp{
+  grid-column:3;
+  grid-row:1;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+#rp .tabs{flex:0 0 auto;min-width:0;}
+#rp #ed{flex:1 1 auto;min-height:150px;min-width:0;}
+#rp #gw,#rp .pn{min-height:0;min-width:0;}
+#rp #rz{z-index:12;}
+
+body[data-r="sim"] #cvw #wtb{
+  position:absolute!important;
+  top:auto!important;
+  right:auto!important;
+  bottom:12px!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+  z-index:15!important;
+  display:flex!important;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap!important;
+  width:max-content!important;
+  max-width:calc(100% - 24px)!important;
+  gap:5px!important;
+  padding:6px!important;
+}
+body[data-r="sim"] #wtb button{
+  flex:0 0 auto;
+  min-width:30px!important;
+  min-height:30px!important;
+  height:auto!important;
+  padding:5px 8px!important;
+  font-size:11px!important;
+  line-height:1.2!important;
+}
+body[data-r="sim"] #wtb span{font-size:11px!important;}
+body[data-r="sim"] #props{
+  z-index:12;
+  max-width:calc(100% - 24px);
+  max-height:calc(100% - 100px);
+  overflow:auto;
+}
+body[data-r="sim"] #camp{
+  z-index:10;
+  bottom:76px;
+  width:min(230px,calc(100% - 24px));
+  max-height:42%;
+  overflow:auto;
+}
+body[data-r="sim"] #guide{z-index:8;max-width:min(420px,calc(100% - 24px));}
+body[data-r="sim"] #toast{z-index:25;max-width:calc(100% - 24px);}
+
+body[data-r="sim"]>#sb{
+  display:flex;
+  align-items:center;
+  gap:8px 16px;
+  min-height:28px;
+  padding:5px 12px;
+  overflow:hidden;
+}
+body[data-r="sim"]>#sb span{min-width:0;}
+body[data-r="sim"]>#sb span:last-child{margin-left:auto;}
+
+/* Tablet: keep the circuit visible and move the code/tools below it. */
+@media(max-width:980px){
+  body[data-r="sim"]{
+    height:auto;
+    min-height:100vh;
+    min-height:100dvh;
+    overflow:auto;
+    display:flex;
+    flex-direction:column;
+  }
+  body[data-r="sim"]>#top,
+  body[data-r="sim"]>header{flex:0 0 auto;}
+  body[data-r="sim"]>#top .tl{flex:1 1 100%;order:3;}
+  body[data-r="sim"]>#vx-cloud-controls{flex:1 1 100%;justify-content:flex-start;}
+  body[data-r="sim"]>main{
+    flex:1 0 auto;
+    height:auto;
+    overflow:visible;
+    grid-template-columns:minmax(155px,205px) minmax(0,1fr);
+    grid-template-rows:minmax(440px,62vh) minmax(360px,auto);
+  }
+  body[data-r="sim"]>main>#pal{
+    grid-column:1;
+    grid-row:1;
+    max-height:none;
+  }
+  body[data-r="sim"]>main>#cvw{
+    grid-column:2;
+    grid-row:1;
+    min-height:440px;
+  }
+  body[data-r="sim"]>main>#rp{
+    grid-column:1/-1;
+    grid-row:2;
+    height:auto;
+    min-height:360px;
+    overflow:visible;
+    border-top:1px solid var(--line);
+  }
+  body[data-r="sim"] #rp #ed{min-height:240px;}
+  body[data-r="sim"]>#sb{flex:0 0 auto;flex-wrap:wrap;}
+}
+
+/* Phone: stack the library, circuit and editor without shrinking controls into each other. */
+@media(max-width:640px){
+  body[data-r="sim"]>#top{gap:8px;padding:9px 10px;}
+  body[data-r="sim"]>#top .tb{flex:1 1 100%;}
+  body[data-r="sim"]>#top .tl{flex:1 1 100%;gap:3px;}
+  body[data-r="sim"]>#top .tl button{padding:6px 7px;font-size:11px;}
+  body[data-r="sim"]>#vx-cloud-controls{justify-content:flex-start;}
+  body[data-r="sim"]>#vx-cloud-controls button{font-size:11px;padding:6px 8px;}
+  body[data-r="sim"]>header{gap:6px;padding:8px 10px;}
+  body[data-r="sim"]>header .logo{flex:1 1 100%;font-size:14px;}
+  body[data-r="sim"]>header select{flex:1 1 125px;max-width:none;min-width:0;}
+  body[data-r="sim"]>header button{flex:1 1 auto;min-height:34px;padding:6px 8px;font-size:11px;}
+  body[data-r="sim"]>header label{flex:1 1 auto;font-size:11px;}
+  body[data-r="sim"]>main{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto minmax(390px,58vh) minmax(400px,auto);
+    overflow:visible;
+  }
+  body[data-r="sim"]>main>#pal{
+    grid-column:1;
+    grid-row:1;
+    width:100%;
+    max-height:185px;
+    border-right:0;
+    border-bottom:1px solid var(--line);
+  }
+  body[data-r="sim"]>main>#pal .gr{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(112px,1fr));
+    gap:5px;
+  }
+  body[data-r="sim"]>main>#pal .gr button{
+    min-width:0;
+    min-height:42px;
+    display:flex;
+    flex-direction:row;
+    justify-content:flex-start;
+    gap:7px;
+    padding:5px 7px;
+    font-size:11px;
+  }
+  body[data-r="sim"]>main>#cvw{
+    grid-column:1;
+    grid-row:2;
+    min-height:390px;
+    height:58vh;
+    max-height:620px;
+  }
+  body[data-r="sim"]>main>#rp{
+    grid-column:1;
+    grid-row:3;
+    min-height:400px;
+    height:auto;
+    padding:10px;
+    border-left:0;
+    border-top:1px solid var(--line);
+  }
+  body[data-r="sim"] #rp .tabs button{flex:1 1 28%;min-width:0;font-size:11px;}
+  body[data-r="sim"] #rp #ed{min-height:230px;}
+  body[data-r="sim"] #cvw #wtb{
+    bottom:8px!important;
+    max-width:calc(100% - 14px)!important;
+    gap:3px!important;
+    padding:4px!important;
+  }
+  body[data-r="sim"] #wtb button{min-width:27px!important;min-height:27px!important;padding:4px 6px!important;}
+  body[data-r="sim"] #guide{max-width:calc(100% - 16px);font-size:11px;}
+  body[data-r="sim"]>#sb{gap:5px 10px;font-size:10px;}
+  body[data-r="sim"]>#sb span:last-child{margin-left:0;}
+}
+
+/* Reduced motion and keyboard focus remain predictable. */
+@media(prefers-reduced-motion:reduce){
+  body[data-r="sim"] *,
+  body[data-r="sim"] *:before,
+  body[data-r="sim"] *:after{scroll-behavior:auto!important;transition:none!important;}
+}

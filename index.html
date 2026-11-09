@@ -16,16 +16,91 @@
 <link rel="stylesheet" href="assets/css/voltix-v2.css?v=20261026-editor-fix">
 <link rel="stylesheet" href="assets/css/voltix-workflow.css?v=20261026-guided-workflow">
 <link rel="stylesheet" href="assets/css/voltix-minimal-modern.css?v=20261028-warm-tokens">
+<link rel="stylesheet" href="assets/css/voltix-layout-repair.css?v=20261109-layout-repair">
+<link rel="stylesheet" href="assets/css/voltix-calm-ui.css?v=20261109-calm-ui">
 </head><body data-r="home">
-<nav id="top"><a class="tb" href="#" data-go="home" aria-label="VOLTIX Simulator home"><img src="assets/voltix-brand.svg?v=20261026-brand" alt="" width="38" height="38"><span>VOLTIX <b>SIMULATOR</b><small>ENGINEERING STUDIO</small></span></a><div class="tl"><button data-go="home">Home</button><button data-go="sim">Simulator</button><button data-go="parts">Components</button><span class="vx-board-shortcuts" aria-label="Quick board selection"><button type="button" data-board-shortcut="uno">Arduino</button><button type="button" data-board-shortcut="esp32">ESP32</button><button type="button" data-board-shortcut="pico">Pico</button><button type="button" data-board-shortcut="nodemcu">ESP8266</button></span><button data-go="pi">Raspberry Pi</button><button data-go="ai">AI Lab</button><button data-go="about">About</button><button id="vx-open-leaderboard" type="button" class="vx-nav-competition" data-go="challenge">Build Challenge</button></div><div id="vx-cloud-controls" aria-label="Cloud projects"><button id="vx-signin" type="button">Sign in with Google</button><button id="vx-save-cloud" type="button">Save to cloud</button><button id="vx-my-projects" type="button">My projects</button><button id="vx-share-cloud" type="button">Share</button><span id="vx-auth-label" role="status" aria-live="polite">Starting cloud tools…</span><span class="vx-live-counter" title="Signed-in builders currently active"><span class="vx-live-dot"></span><span>Live</span><strong id="vx-live-users-count" aria-live="polite">—</strong></span></div><button class="mk" data-go="about" aria-label="About the creator"><span class="mk-label">CREATED BY</span><span class="mk-name">Ebram Sameh</span><span class="mk-affiliation">Red Sea STEM · VOLTIX founder</span></button></nav>
-<header>
-<div class="logo">VOLTIX SIMULATOR<small>Wire it. Run it. See it work.</small></div>
-<select id="bd" title="Board"></select>
-<select id="ex"><option value="">Load an example</option></select><button id="vx-new-circuit" type="button" title="Start a fresh Arduino Uno circuit">＋ New circuit</button>
-<button class="run" id="run">▶ Run</button><button id="stop">■ Stop</button>
-<select id="sp" title="Simulation speed"><option value="1">Normal speed</option><option value="5">5× turbo</option><option value="20">20× turbo</option></select>
-<button id="v3">3D view</button><button id="und">Undo</button><button id="del">Delete part</button><button id="clr">Clear</button><button id="lib">Libraries</button><button id="bom">Parts list</button>
-<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="fx" checked style="padding:0">Failure effects</label><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="bm" checked style="padding:0">Beginner help</label>
+<nav id="top" aria-label="Main navigation">
+  <a class="tb" href="#" data-go="home" aria-label="VOLTIX Simulator home">
+    <img src="assets/voltix-brand.svg?v=20261026-brand" alt="" width="34" height="34">
+    <span>VOLTIX <b>SIMULATOR</b><small>ENGINEERING STUDIO</small></span>
+  </a>
+  <div class="tl" aria-label="Main sections">
+    <button type="button" data-go="sim" class="vx-primary-link">Simulator</button>
+    <button type="button" data-go="parts">Components</button>
+    <button type="button" data-go="ai">AI Lab</button>
+    <button type="button" data-go="pi">Raspberry Pi</button>
+    <button type="button" data-go="challenge">Challenges</button>
+    <details class="vx-nav-more">
+      <summary>More</summary>
+      <div class="vx-nav-popover">
+        <button type="button" data-go="home">Home</button>
+        <button type="button" data-go="about">About VOLTIX</button>
+        <div class="vx-nav-divider"></div>
+        <span class="vx-nav-caption">Quick board selection</span>
+        <div class="vx-board-shortcuts" aria-label="Quick board selection">
+          <button type="button" data-board-shortcut="uno">Arduino</button>
+          <button type="button" data-board-shortcut="esp32">ESP32</button>
+          <button type="button" data-board-shortcut="pico">Pico</button>
+          <button type="button" data-board-shortcut="nodemcu">ESP8266</button>
+        </div>
+      </div>
+    </details>
+  </div>
+  <div id="vx-cloud-controls" class="vx-nav-actions">
+    <details class="vx-project-menu">
+      <summary><span class="vx-project-icon">↗</span><span>Projects</span></summary>
+      <div class="vx-project-popover">
+        <div class="vx-project-heading">Your workspace</div>
+        <button id="vx-signin" type="button">Sign in with Google</button>
+        <button id="vx-save-cloud" type="button">Save to cloud</button>
+        <button id="vx-my-projects" type="button">My projects</button>
+        <button id="vx-share-cloud" type="button">Share project</button>
+        <div id="vx-auth-label" role="status" aria-live="polite">Starting cloud tools…</div>
+        <div class="vx-live-counter" title="Signed-in builders currently active"><span class="vx-live-dot"></span><span>Builders online</span><strong id="vx-live-users-count" aria-live="polite">—</strong></div>
+      </div>
+    </details>
+    <button class="mk" type="button" data-go="about" aria-label="About the creator">
+      <span class="mk-avatar">E</span>
+      <span class="mk-copy"><span class="mk-name">Made by Ebram</span><span class="mk-affiliation">Red Sea STEM</span></span>
+    </button>
+  </div>
+</nav>
+<header class="vx-workbar" aria-label="Simulator controls">
+  <div class="vx-workbar-brand">
+    <div class="logo">Workspace<small>Build and test your circuit</small></div>
+    <select id="bd" title="Board" aria-label="Select board"></select>
+  </div>
+  <div class="vx-workbar-example">
+    <select id="ex" title="Load an example" aria-label="Load an example"><option value="">Start with an example…</option></select>
+    <button id="vx-new-circuit" type="button" title="Start a fresh Arduino Uno circuit">＋ New</button>
+  </div>
+  <div class="vx-run-controls">
+    <button class="run" id="run" type="button">▶ Run</button>
+    <button id="stop" type="button">■ Stop</button>
+  </div>
+  <details class="vx-tools-menu">
+    <summary><span>Tools</span><span class="vx-tools-chevron">⌄</span></summary>
+    <div class="vx-tools-popover">
+      <div class="vx-tools-group">
+        <span class="vx-tools-label">View</span>
+        <button id="v3" type="button">3D view</button>
+        <button id="lib" type="button">Libraries</button>
+        <button id="bom" type="button">Parts list</button>
+      </div>
+      <div class="vx-tools-group">
+        <span class="vx-tools-label">Edit</span>
+        <button id="und" type="button">Undo</button>
+        <button id="del" type="button">Delete part</button>
+        <button id="clr" type="button">Clear workspace</button>
+      </div>
+      <div class="vx-tools-group">
+        <span class="vx-tools-label">Simulation</span>
+        <label>Speed <select id="sp" title="Simulation speed"><option value="1">Normal</option><option value="5">5× turbo</option><option value="20">20× turbo</option></select></label>
+        <label><input type="checkbox" id="fx" checked> Failure effects</label>
+        <label><input type="checkbox" id="bm" checked> Beginner help</label>
+      </div>
+    </div>
+  </details>
 </header>
 <main>
 <aside id="pal"><input id="q" placeholder="Search parts" style="width:100%"></aside>

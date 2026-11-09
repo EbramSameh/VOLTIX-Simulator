@@ -1,15 +1,15 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="dark">
-<title>VOLTIX SIMULATOR | Online electronics, Arduino, ESP32 and Raspberry Pi circuit simulator</title>
+<title>VOLTIX — Electronics Lab Simulator</title>
 <meta name="description" content="VOLTIX SIMULATOR is an online circuit simulator for Arduino, ESP32 and Raspberry Pi projects. Wire resistors, LEDs, capacitors, inductors, motors, drivers and dozens of sensors, write code with autocomplete, view it in 3D, and check Raspberry Pi AI models before you buy.">
 <meta name="keywords" content="circuit simulator, electronics simulator, Arduino simulator, ESP32 simulator, ESP32-CAM, Raspberry Pi simulator, Raspberry Pi AI, Wokwi alternative, Tinkercad alternative, online breadboard, sensor simulator, stepper motor simulator">
-<meta property="og:title" content="VOLTIX SIMULATOR: online electronics, Arduino, ESP32 and Raspberry Pi simulator">
+<meta property="og:title" content="VOLTIX — Electronics Lab Simulator">
 <meta property="og:description" content="Build circuits, run Arduino-style code, add sensors and motor drivers, view in 3D, and prepare Raspberry Pi vision models.">
 <meta property="og:type" content="website">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"VOLTIX SIMULATOR","applicationCategory":"EducationalApplication","operatingSystem":"Any (web browser)","description":"Online circuit and embedded-systems simulator for Arduino, ESP32 and Raspberry Pi projects with a component library, sensor models, code editor and 3D view.","creator":{"@type":"Person","name":"Ebram Sameh","affiliation":"Red Sea STEM"}}</script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono&family=Caveat:wght@600&display=swap" rel="stylesheet">
 
-<link rel="icon" type="image/svg+xml" href="assets/voltix-brand.svg?v=20261026-brand">
+<link rel="icon" type="image/svg+xml" href="assets/voltix-brand.svg?v=20261109-teal-mark">
 <link rel="stylesheet" href="assets/css/voltix-core.css?v=20261024-final-polish">
 <link rel="stylesheet" href="assets/css/voltix-components.css?v=20261024-guide-polish">
 <link rel="stylesheet" href="assets/css/voltix-studio-refresh.css?v=20261026-studio-refresh">
@@ -17,11 +17,11 @@
 <link rel="stylesheet" href="assets/css/voltix-workflow.css?v=20261026-guided-workflow">
 <link rel="stylesheet" href="assets/css/voltix-minimal-modern.css?v=20261028-warm-tokens">
 <link rel="stylesheet" href="assets/css/voltix-layout-repair.css?v=20261109-layout-repair">
-<link rel="stylesheet" href="assets/css/voltix-calm-ui.css?v=20261109-calm-ui">
+<link rel="stylesheet" href="assets/css/voltix-calm-ui.css?v=20261109-hardware-faults">
 </head><body data-r="home">
 <nav id="top" aria-label="Main navigation">
   <a class="tb" href="#" data-go="home" aria-label="VOLTIX Simulator home">
-    <img src="assets/voltix-brand.svg?v=20261026-brand" alt="" width="34" height="34">
+    <img src="assets/voltix-brand.svg?v=20261109-teal-mark" alt="" width="34" height="34">
     <span>VOLTIX <b>SIMULATOR</b><small>ENGINEERING STUDIO</small></span>
   </a>
   <div class="tl" aria-label="Main sections">
@@ -59,10 +59,6 @@
         <div class="vx-live-counter" title="Signed-in builders currently active"><span class="vx-live-dot"></span><span>Builders online</span><strong id="vx-live-users-count" aria-live="polite">—</strong></div>
       </div>
     </details>
-    <button class="mk" type="button" data-go="about" aria-label="About the creator">
-      <span class="mk-avatar">E</span>
-      <span class="mk-copy"><span class="mk-name">Made by Ebram</span><span class="mk-affiliation">Red Sea STEM</span></span>
-    </button>
   </div>
 </nav>
 <header class="vx-workbar" aria-label="Simulator controls">
@@ -592,7 +588,7 @@ EXN.pi_guardian='Smart Lab Guardian (Raspberry Pi Pico)';
 
 
 const S={bt:'uno',parts:[],wires:[],bx:30,by:40,n:0,sel:null,pend:null,bp:[],bh:0};
-const H={pm:{},pv:{},tn:{},sv:{},scr:{},sg:{},rq:[],inb:[],neo:{},fl:[],tok:0,sp:1,t0:0,run:0};
+const H={pm:{},pv:{},tn:{},sv:{},scr:{},sg:{},rq:[],inb:[],neo:{},fl:[],tok:0,sp:1,t0:0,run:0,boardBurnt:null};
 const GW={ssid:'WES-Private',pw:'wes12345',on:true,rssi:-48};
 let SO={V:{},W:{},bad:[],D:{},f:x=>x},lastPR='',D=null,tt;
 const pinsOf=p=>PT[p.t][3].split(' '),part=id=>S.parts.find(p=>p.id==id),vv=r=>SO.V[SO.f(r)];
@@ -714,7 +710,7 @@ const zoomBy=k=>{const cx=VB.x+VB.w/2,cy=VB.y+VB.h/2;VB.w*=k;VB.x=cx-VB.w*.5;VB.
 new ResizeObserver(()=>setVB()).observe(svg);
 $('#diag').addEventListener('click',e=>{const a=e.target.closest('[data-loc]');if(!a)return;e.preventDefault();const p=part(a.dataset.loc);if(!p)return;S.sel=p.id;VB.x=p.x+(p.w||132)/2-VB.w/2;VB.y=p.y+(p.h||116)/2-VB.h/2;setVB();draw()});
 $('#rz').addEventListener('pointerdown',e=>{e.preventDefault();const mv=ev=>document.documentElement.style.setProperty('--rpw',Math.min(720,Math.max(260,innerWidth-ev.clientX))+'px'),up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up)};addEventListener('pointermove',mv);addEventListener('pointerup',up)});
-$('#diag').addEventListener('click',e=>{if(e.target.id=='rstf'){S.parts.forEach(p=>{p.st.burnt=0;p.st.heat=0;p.st.fx=0});toast('Damaged parts reset.')}});
+$('#diag').addEventListener('click',e=>{if(e.target.id=='rstf'){S.parts.forEach(p=>{p.st.burnt=0;p.st.heat=0;p.st.fx=0});H.boardBurnt=null;H.fl=[];$('#g-b')?.classList.remove('board-burnt');$('#g-b .vx-board-fault')?.remove();toast('Damaged parts and microcontroller reset.')}});
 $('#ohm').onchange=e=>{const p=S.sel&&part(S.sel);if(!p)return;if(p.k=='res'){const v=parseOhm(e.target.value);if(!(v>0))return toast('Enter a value like 220, 4.7k or 1M.',1);p.st.ohm=v}else{const v=parseFloat(e.target.value);if(!(v>0&&v<=60))return toast('Enter a voltage from 0.1 to 60.',1);p.st.volt=v}H.po=null;draw()};
 const dly=ms=>{const t=H.tok;return new Promise((r,j)=>setTimeout(()=>H.tok==t?r():j('stop'),ms/H.sp))};
 function pulse(n){const q=S.bp.find(q=>q.n===n&&q.k=='io'),net=q&&SO.f('b:'+q.l);if(!net)return;S.parts.forEach(p=>{if(SO.f(p.id+':STEP')!=net)return;const dr=vv(p.id+':DIR'),en=vv(p.id+':EN');if(en>2)return;if(p.k=='a4988'&&pwr(p))p.st.ang+=(dr>2?1:-1)*1.8;if(p.k=='sd'&&vv(p.id+':VMOT')>=4)p.st.ph=((p.st.ph||0)+(dr>2?1:3))%4})}
@@ -743,7 +739,7 @@ function solve(){const B=BD[S.bt],vcc=B[1],par={};
  S.wires.forEach(w=>u(w.a,w.b));
  S.parts.forEach(p=>{if((p.k=='btn'||p.k=='sw')&&p.st.on){const q=pinsOf(p);u(p.id+':'+q[0],p.id+':'+q[1])}if(p.k=='relay')u(p.id+':COM',p.id+(p.st.on?':NO':':NC'))});
  const run=ss=>{const Dr={},V={},W={},bad=[],add=(r,v,l,pin)=>{(Dr[f(r)]=Dr[f(r)]||[]).push({v,l,pin})};
-  S.bp.forEach(q=>{const r='b:'+q.l;if(q.k=='p5')add(r,5,'5V');else if(q.k=='p3')add(r,3.3,'3V3');else if(q.k=='g')add(r,0,'GND');else if(H.pm[q.n]===1)add(r,vcc*(H.pv[q.n]||0),'pin '+q.l,1)});
+  S.bp.forEach(q=>{const r='b:'+q.l;if(q.k=='p5')add(r,5,'5V');else if(q.k=='p3')add(r,3.3,'3V3');else if(q.k=='g')add(r,0,'GND');else if(!H.boardBurnt&&H.pm[q.n]===1)add(r,vcc*(H.pv[q.n]||0),'pin '+q.l,1)});
   S.parts.forEach(p=>{if(p.k!='piboard')return;[1,17].forEach(n=>add(p.id+':P'+n,3.3,'Pi 3V3'));[2,4].forEach(n=>add(p.id+':P'+n,5,'Pi 5V'));[6,9,14,20,25,30,34,39].forEach(n=>add(p.id+':P'+n,0,'Pi GND'));Object.entries(PI_GPIO_PHYS).forEach(([gpio,physical])=>{const value=p.st.gpio&&p.st.gpio[gpio];if(value!==undefined)add(p.id+':P'+physical,3.3*Math.max(0,Math.min(1,+value||0)),'Pi GPIO'+gpio,1)})});
   S.parts.forEach(p=>{if(p.k=='bat'){add(p.id+':+',p.st.volt||5,'battery +');add(p.id+':-',0,'battery -')}});
   if(ss)S.parts.forEach(p=>{const dr=p.k=='hb'&&DRV[p.t];if(!dr)return;const vs=ss.V[f(p.id+':'+dr[0])],g=ss.V[f(p.id+':GND')],rd=n=>{const x=ss.V[f(p.id+':'+n)];return x!=null&&x>vcc/2?1:0};if(!(vs>=2.5&&g!=null&&g<.6)||(p.t=='tb6612'&&!rd('STBY')))return;
@@ -756,7 +752,7 @@ function solve(){const B=BD[S.bt],vcc=B[1],par={};
   for(let i=0;i<4;i++)S.parts.forEach(p=>{if(p.k!='res')return;const a=f(p.id+':A'),b=f(p.id+':B');if(V[a]==null&&V[b]!=null){V[a]=V[b];W[a]=1}else if(V[b]==null&&V[a]!=null){V[b]=V[a];W[b]=1}});
   return{V,W,bad,D:Dr}};
  SO={...run(run(null)),f}}
-const rd=n=>{const q=S.bp.find(q=>q.n===n&&q.k=='io');if(!q)return 0;const x=vv('b:'+q.l);return x==null?(H.pm[n]==2?BD[S.bt][1]:0):x};
+const rd=n=>{if(H.boardBurnt)return 0;const q=S.bp.find(q=>q.n===n&&q.k=='io');if(!q)return 0;const x=vv('b:'+q.l);return x==null?(H.pm[n]==2?BD[S.bt][1]:0):x};
 const fmt=x=>typeof x=='number'&&!Number.isInteger(x)?x.toFixed(2):x;
 const out=s=>{const e=$('#ser');e.textContent+=s;if(e.textContent.length>20000)e.textContent=e.textContent.slice(-10000);e.scrollTop=1e9};
 const Serial={begin(){},print(x){out(fmt(x))},println(x=''){out(fmt(x)+'\n')},write(x){out(String(x))},flush(){},setTimeout(){},available:()=>H.inb.length,read:()=>H.inb.length?H.inb.shift().charCodeAt(0):-1,
@@ -915,7 +911,7 @@ async function cam(on){const p=$('#camp'),v=$('#vid');
  p.hidden=false;$('#cmsg').textContent='';
  try{v.srcObject=await navigator.mediaDevices.getUserMedia({video:true})}catch(e){$('#cmsg').textContent='Camera unavailable ('+e.name+'). Allow camera access for this page, or open W.E.S in its own tab.'}}
 function stop(){H.tok++;H.run=0;H.pm={};H.pv={};H.tn={};H.wf=null;cam(0);try{H.os&&H.os.stop()}catch{}H.os=null;H.gn=null;$('#run').textContent='▶ Run'}
-async function runSim(){stop();const t=++H.tok;H.run=1;H.sp=+$('#sp').value;H.t0=performance.now();H.sv={};H.scr={};H.sg={};H.rq=[];H.inb=[];H.neo={};H.fl=[];H.srv=0;H.ap=null;H.last=null;S.parts.forEach(p=>p.st.burnt=0);
+async function runSim(){stop();if(H.boardBurnt){toast('This microcontroller is damaged. Reset damaged parts or select a new board before running code.',1);return}const t=++H.tok;H.run=1;H.sp=+$('#sp').value;H.t0=performance.now();H.sv={};H.scr={};H.sg={};H.rq=[];H.inb=[];H.neo={};H.fl=[];H.srv=0;H.ap=null;H.last=null;S.parts.forEach(p=>p.st.burnt=0);
  $('#ser').textContent='';tab('ser');$('#run').textContent='↻ Restart';
  if(BD[S.bt][8]){cam(1);out('[cam] ESP32-CAM ready. Showing your webcam.\n')}
  try{H.ac=H.ac||new AudioContext();H.os=H.ac.createOscillator();H.gn=H.ac.createGain();H.gn.gain.value=0;H.os.connect(H.gn);H.gn.connect(H.ac.destination);H.os.start();H.ac.resume()}catch{}
@@ -972,7 +968,7 @@ function tick(now){const dt=Math.min(.05,(now-(tick.l||now))/1000);tick.l=now;so
    if(p.key!==key){p.key=key;$('#sc-'+id).setAttribute('fill',on?(L?'#a8e063':'#02040f'):(L?'#3a5a2e':'#02040f'));
     $('#dt-'+id).innerHTML=!on?'':rows?rows.map((r,i)=>`<tspan x="46" y="${L?58+i*22:44+i*11}">${esc(r.slice(0,L?16:21))}</tspan>`).join(''):L?'<tspan x="46" y="58">VOLTIX LCD</tspan><tspan x="46" y="80">ready</tspan>':'<tspan x="46" y="62" font-size="18" font-weight="700">VOLTIX</tspan><tspan x="46" y="84">OLED ready</tspan>'}}});
  if(H.gn){H.gn.gain.value=H.run&&fr?.04:0;if(fr)H.os.frequency.value=fr}
- const ws=wst();if(ws!==H.ws){H.ws=ws;const g=m=>$('#gwl').textContent+=m+'\n';
+ if(!H.boardBurnt){const q=S.bp.find(q=>q.k=='io'&&vv('b:'+q.l)!=null&&(vv('b:'+q.l)>vcc+.35||vv('b:'+q.l)<-.3));const conflict=SO.bad.find(b=>/\bpin\s/i.test(b.m)||/(5V|3V3).*GND|GND.*(5V|3V3)|(?:5V|3V3).*battery \+|battery \+.*(?:5V|3V3)/i.test(b.m));if(q||conflict){const pin=q?q.l:((conflict.m.match(/pin\s+([A-Z0-9]+)/i)||[])[1]||'GPIO');const voltage=q?vv('b:'+q.l):null;const reason=q?(voltage>vcc+.35?voltage.toFixed(2)+' V exceeds the '+vcc+' V GPIO limit':'negative voltage '+voltage.toFixed(2)+' V on a GPIO pin'):'power rail conflict or GPIO short circuit detected';H.boardBurnt={pin,voltage,reason};H.fl.push({t:((performance.now()-H.t0)*H.sp/1000).toFixed(2),name:BD[S.bt][0],id:'board',msg:reason+' at '+pin,tip:'Disconnect the fault, then use Reset damaged parts to replace the virtual microcontroller.'});out('\n[hardware fault] '+BD[S.bt][0]+' damaged at '+pin+': '+reason+'.\n');H.run=0;H.tok++;$('#run').textContent='▶ Run';toast('Microcontroller damaged: '+reason,1)}}const boardGroup=$('#g-b');if(boardGroup){boardGroup.classList.toggle('board-burnt',!!H.boardBurnt);if(H.boardBurnt&&!boardGroup.querySelector('.vx-board-fault'))boardGroup.insertAdjacentHTML('beforeend','<g class="vx-board-fault" pointer-events="none"><rect x="12" y="85" width="276" height="50" rx="7" fill="#111814" fill-opacity=".94" stroke="#d97757" stroke-width="1.5"/><text x="150" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="#ffd2c2">MICROCONTROLLER DAMAGED</text><text x="150" y="121" text-anchor="middle" font-size="9" fill="#e5b5a5">Disconnect fault · reset hardware</text></g>')}if(H.boardBurnt)pr.push('Microcontroller damaged at '+H.boardBurnt.pin+'. Disconnect the fault and use Reset damaged parts.');const ws=wst();if(ws!==H.ws){H.ws=ws;const g=m=>$('#gwl').textContent+=m+'\n';
   if(ws==3){g(`${B[0]} joined “${GW.ssid}” as 192.168.4.2`);$('#gwd').textContent=`1 device: ${B[0]} at 192.168.4.2`;out('[wifi] connected\n')}
   else{$('#gwd').textContent='No devices connected';if(ws==1)g('Network not found. Check the network name.');if(ws==6)g('Wrong password.')}}
  S.bp.forEach(q=>{if(q.k!='io')return;const e=document.querySelector(`[data-pin="b:${q.l}"]`),v=vv('b:'+q.l),hi=v!=null&&v>vcc/2;if(e){e.style.stroke=hi?'#86efac':'';e.style.strokeWidth=hi?'3.5':''}});
@@ -1031,10 +1027,10 @@ function tab(t){['code','ser','gw','sig','meas','diag'].forEach(x=>$('#'+(x=='co
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
 $('#ss').oninput=e=>GW.ssid=e.target.value;$('#pw').oninput=e=>GW.pw=e.target.value;$('#code').oninput=save;
 $('#bd').innerHTML=Object.entries(BD).map(([k,b])=>`<option value="${k}">${b[0]}</option>`).join('');
-$('#bd').onchange=e=>{stop();S.bt=e.target.value;layout();S.wires=S.wires.filter(w=>[w.a,w.b].every(r=>r[0]!='b'||S.bp.some(q=>'b:'+q.l==r)));draw();toast('Board changed to '+BD[S.bt][0])};
+$('#bd').onchange=e=>{stop();H.boardBurnt=null;H.fl=H.fl.filter(x=>x.id!=='board');S.bt=e.target.value;layout();S.wires=S.wires.filter(w=>[w.a,w.b].every(r=>r[0]!='b'||S.bp.some(q=>'b:'+q.l==r)));draw();toast('Board changed to '+BD[S.bt][0])};
 $('#ex').insertAdjacentHTML('beforeend',Object.entries(EXN).map(([k,n])=>`<option value="${k}">${n}</option>`).join(''));
 $('#ex').onchange=e=>{if(e.target.value)loadEx(e.target.value);e.target.value=''};
-function loadEx(k){const e=EX[k];if(!e){toast('That example is not available yet.',1);return}stop();S.bt=e.bt;S.parts=[];S.wires=[];S.n=0;S.sel=null;layout();
+function loadEx(k){const e=EX[k];if(!e){toast('That example is not available yet.',1);return}stop();H.boardBurnt=null;H.fl=H.fl.filter(x=>x.id!=='board');S.bt=e.bt;S.parts=[];S.wires=[];S.n=0;S.sel=null;layout();
  e.P.split(',').filter(Boolean).forEach(s=>{const[t,x,y,v]=s.trim().split(/\s+/);addPart(t,+x+110,+y+20);if(v&&S.parts.length)S.parts[S.parts.length-1].st.volt=+v});
  e.W.split(',').filter(Boolean).forEach(s=>{const[a,b]=s.split('>');if(a&&b)S.wires.push({a,b,c:wc(a,b)})});
  $('#code').value=e.c||'void setup() {} void loop() {}';$('#bd').value=S.bt;$('#code').dispatchEvent(new Event('input',{bubbles:true}));draw();tab('code');fit();toast('Loaded example: '+(EXN[k]||k))}
@@ -1059,7 +1055,7 @@ layout();S.bt='uno';$('#bd').value='uno';S.parts=[];S.wires=[];S.n=0;S.sel=null;
 
 <script src="assets/js/10-circuit-diagnostics.js"></script>
 
-<script src="assets/js/11-wiring-assistant.js"></script>
+<script src="assets/js/11-wiring-assistant.js?v=20261109-clean-schematic"></script>
 
 <script src="assets/js/12-model-knowledge-base.js"></script>
 

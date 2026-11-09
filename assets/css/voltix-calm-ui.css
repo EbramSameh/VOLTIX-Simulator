@@ -352,3 +352,85 @@ body[data-r="sim"]>#top{
     gap:8px 14px;
   }
 }
+
+
+/* Engineering schematic viewer: clean paper, readable metadata and a compact action bar. */
+#sch{
+  background:rgba(8,13,10,.78);
+  backdrop-filter:blur(8px);
+  padding:clamp(8px,2vw,22px);
+}
+#sch .box{
+  width:min(1240px,96vw);
+  height:min(92vh,980px);
+  border:1px solid #354237;
+  border-radius:14px;
+  background:#f8fafc;
+  box-shadow:0 24px 80px rgba(0,0,0,.48);
+}
+#sch .bar{
+  min-height:62px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:11px 14px;
+  background:#171e18;
+  border-bottom:1px solid #344035;
+  color:#e7ece5;
+}
+#sch .vx-sch-heading{display:flex;flex:1 1 220px;flex-direction:column;gap:3px;min-width:150px}
+#sch .vx-sch-heading b{font-size:13px;font-weight:650;color:#e7ece5}
+#sch .vx-sch-heading small{font-size:10px;color:#9eaa9d}
+#sch .bar button{
+  min-height:33px;
+  padding:7px 10px;
+  border:1px solid #3b493c;
+  border-radius:7px;
+  background:#202920;
+  color:#dce5d9;
+  font-size:10px;
+  white-space:nowrap;
+}
+#sch .bar button:hover{background:#2a382b;border-color:#71836e;color:#fff}
+#sch #sv4{background:#303a31;color:#f0f3ed}
+#sch .vw{
+  flex:1;
+  min-height:0;
+  overflow:auto;
+  padding:20px;
+  background:#eef2f5;
+  scrollbar-color:#aab5aa #e3e9e5;
+}
+#sch svg{
+  display:block;
+  width:auto;
+  max-width:none;
+  height:auto;
+  margin:0 auto;
+  background:#fff;
+  box-shadow:0 3px 16px rgba(22,34,26,.12);
+}
+#sch .vw svg text{font-family:Inter,Arial,sans-serif}
+#sch .vw svg text[font-family="monospace"]{font-family:"JetBrains Mono",monospace}
+#sch .vw svg path{stroke-linecap:round;stroke-linejoin:round}
+#sch .vw svg circle{vector-effect:non-scaling-stroke}
+#sch .vw svg rect{shape-rendering:geometricPrecision}
+#sch .vw::-webkit-scrollbar{width:10px;height:10px}
+#sch .vw::-webkit-scrollbar-thumb{background:#b9c4b9;border:2px solid #eef2f5;border-radius:8px}
+#sch .vw::-webkit-scrollbar-track{background:#e7ece8}
+#sch .bar button:focus-visible{outline:2px solid #a8c98a;outline-offset:2px}
+
+/* Board-level electrical damage is visually distinct from ordinary component failures. */
+#g-b.board-burnt{filter:grayscale(1) brightness(.48)}
+#g-b.board-burnt .pb{stroke:#d97757!important;stroke-width:2.5!important}
+.vx-board-fault text{font-family:Inter,Arial,sans-serif;letter-spacing:.02em}
+#diag #rstf{margin-top:10px;padding:8px 11px;border:1px solid #52664f;border-radius:8px;background:#263526;color:#e4efdf}
+#diag #rstf:hover{background:#314531}
+@media(max-width:640px){
+  #sch{padding:0}
+  #sch .box{width:100vw;height:100dvh;border-radius:0}
+  #sch .bar{gap:5px;padding:9px;position:relative}
+  #sch .vx-sch-heading{flex-basis:100%;padding:2px 3px 5px}
+  #sch .bar button{flex:1 1 auto;min-width:0;padding:7px 6px;font-size:9px}
+  #sch .vw{padding:10px}
+}

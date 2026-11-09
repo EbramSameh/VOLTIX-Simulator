@@ -336,3 +336,19 @@ body[data-r="sim"]>#sb{
   html{scroll-behavior:auto}
   *,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+/* The previous compatibility layer scopes some layout rules to the simulator body. */
+body[data-r="sim"]>#top{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  flex-wrap:initial;
+  gap:clamp(14px,2.2vw,32px);
+}
+@media(max-width:850px){
+  body[data-r="sim"]>#top{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr);
+    gap:8px 14px;
+  }
+}

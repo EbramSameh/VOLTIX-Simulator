@@ -1,0 +1,79 @@
+/* VOLTIX visual refinement — cool graphite, slate and restrained cyan. */
+:root{
+ --vx-bg:#0b1119;--vx-surface:#111b27;--vx-surface-2:#172434;--vx-surface-3:#1d2d40;
+ --vx-line:#293b50;--vx-text:#eaf2fa;--vx-muted:#9aadc0;--vx-accent:#64d8e6;
+ --vx-accent-soft:rgba(100,216,230,.12);--vx-good:#65d6a2;--vx-warn:#f0bd69;--vx-danger:#ef8188;
+}
+html,body{background:var(--vx-bg);color:var(--vx-text)}
+button,select,input,textarea{color:var(--vx-text);background:var(--vx-surface-2);border-color:var(--vx-line)}
+button:hover{background:var(--vx-surface-3);border-color:#46627d}
+:focus-visible{outline:2px solid var(--vx-accent);outline-offset:2px}
+
+/* Restore the complete top navigation while the simulator is open. */
+body[data-r="sim"]>#top{display:flex!important;visibility:visible!important;opacity:1!important;min-height:62px;flex-wrap:wrap;gap:8px 14px;background:#101a27;border-bottom:1px solid var(--vx-line)}
+body[data-r="sim"]>#top .tb{display:flex!important;visibility:visible!important}
+body[data-r="sim"]>#top .tl{display:flex!important;visibility:visible!important;flex:1 1 430px;gap:4px;align-items:center;flex-wrap:wrap}
+body[data-r="sim"]>#top .tl button{display:inline-flex!important;align-items:center;min-height:34px;padding:7px 10px;color:#b7c8d9;border:1px solid transparent;border-radius:8px;background:transparent;font-size:12px}
+body[data-r="sim"]>#top .tl button:hover,body[data-r="sim"]>#top .tl button.on{background:var(--vx-accent-soft);border-color:#315a69;color:#d9fbff}
+body[data-r="sim"]>#top .vx-nav-more{display:block!important}
+body[data-r="sim"]>#top #vx-cloud-controls{display:flex!important;visibility:visible!important;flex:0 1 auto;max-width:100%;margin-left:auto}
+body[data-r="sim"]>#top #vx-cloud-controls .vx-project-menu>summary{background:var(--vx-surface-2);border-color:var(--vx-line);color:var(--vx-text)}
+
+/* Simulator toolbar: clear groups, visible board/example selectors and run controls. */
+body[data-r="sim"]>header.vx-workbar{display:flex!important;visibility:visible!important;align-items:center;gap:8px 12px;padding:9px 14px;background:#142131;border-bottom:1px solid var(--vx-line)}
+body[data-r="sim"] .vx-workbar-brand,body[data-r="sim"] .vx-workbar-example,body[data-r="sim"] .vx-run-controls{display:flex;align-items:center;gap:8px;min-width:0}
+body[data-r="sim"] .vx-workbar .logo{color:var(--vx-text)}
+body[data-r="sim"] .vx-workbar .logo small{color:var(--vx-muted)}
+body[data-r="sim"] .vx-workbar select{background:#0d1723;border-color:#344a60;color:var(--vx-text)}
+body[data-r="sim"] .vx-workbar button{border-color:#344a60;background:#1a2a3c;color:#dce9f5}
+body[data-r="sim"] .vx-workbar .run{background:#4fc5d5;border-color:#4fc5d5;color:#08212a;font-weight:750}
+body[data-r="sim"] .vx-workbar .run:hover{background:#78e1eb;border-color:#78e1eb}
+body[data-r="sim"] .vx-workbar #stop{background:#2b2028;border-color:#573744;color:#f1c4cb}
+body[data-r="sim"] .vx-tools-menu>summary{background:#1a2a3c;border-color:#344a60;color:#dce9f5}
+
+/* Cohesive workbench surfaces and canvas. */
+body[data-r="sim"]>main{background:#0d1621}
+body[data-r="sim"]>main>#pal,body[data-r="sim"]>main>#rp{background:#111c29;border-color:var(--vx-line)}
+body[data-r="sim"]>main>#cvw{background-color:#0c1520;background-image:radial-gradient(#30445a .75px,transparent .75px);background-size:22px 22px}
+body[data-r="sim"] #cv>rect:first-of-type{fill:#0b1420!important}
+body[data-r="sim"] #cv>rect:nth-of-type(2){fill:#101d2b!important}
+body[data-r="sim"] #cv>rect:nth-of-type(4){stroke:#38546b!important}
+body[data-r="sim"] #cv>path{stroke:var(--vx-accent)!important;opacity:.42}
+body[data-r="sim"] #cv .pv{stroke:var(--vx-accent)}
+body[data-r="sim"] #pal h4{color:#8fa7bc}
+body[data-r="sim"] #pal .gr button{color:#c1d0df}
+body[data-r="sim"] #pal .gr button:hover{background:#1b2d40;border-color:#36536c;color:#f3f8fc}
+body[data-r="sim"] #pal .gr button svg{background:#17283a}
+body[data-r="sim"] #rp .tabs{background:#0d1723;border-color:var(--vx-line)}
+body[data-r="sim"] #rp .tabs button{color:#9eb1c4}
+body[data-r="sim"] #rp .tabs button.on{background:#173b46;border-color:#286070;color:#d9fbff}
+body[data-r="sim"] #ed,body[data-r="sim"] #code,body[data-r="sim"] #ser,body[data-r="sim"] #gwl{background:#0a131e;border-color:#293e53;color:#dce9f5}
+body[data-r="sim"] #wtb{background:rgba(17,29,42,.97)!important;border-color:#344a60!important}
+body[data-r="sim"] #wtb button{background:#1b2d40!important;border-color:#344d64!important;color:#d6e5f2!important}
+body[data-r="sim"] #wtb button:hover{background:#28445c!important}
+body[data-r="sim"] #guide,body[data-r="sim"] #toast,body[data-r="sim"] #prob,body[data-r="sim"] #camp,body[data-r="sim"] #props,body[data-r="sim"] #empty{background:rgba(17,29,42,.98);border-color:#344a60;color:var(--vx-text)}
+body[data-r="sim"] #empty button{background:var(--vx-accent);border-color:var(--vx-accent);color:#08212a}
+body[data-r="sim"]>#sb{background:#111c29;border-color:var(--vx-line);color:var(--vx-muted)}
+
+/* The general pages share the same palette without affecting the simulator grid. */
+body:not([data-r="sim"]){background:var(--vx-bg);color:var(--vx-text)}
+body:not([data-r="sim"]) #top.vx-pages-top{background:#101a27;border-color:var(--vx-line)}
+body:not([data-r="sim"]) #pages{background:var(--vx-bg)}
+body:not([data-r="sim"]) .pg>h1,body:not([data-r="sim"]) .pg h2,body:not([data-r="sim"]) .pg article h3{color:#edf5fc}
+body:not([data-r="sim"]) .pg>p,body:not([data-r="sim"]) .pg article p{color:#a7bacd}
+body:not([data-r="sim"]) .pg article,body:not([data-r="sim"]) .pg .card{background:#121e2c;border-color:#293e53}
+body:not([data-r="sim"]) .pg article:hover,body:not([data-r="sim"]) .pg .card:hover{background:#17283a;border-color:#3c6078}
+body:not([data-r="sim"]) .pg button.cta,body:not([data-r="sim"]) .pg .cta button{border-radius:9px}
+body:not([data-r="sim"]) .pg a{color:#8fe5ed}
+body:not([data-r="sim"]) #p-home:before{color:var(--vx-accent)}
+@media(max-width:980px){
+ body[data-r="sim"]>#top .tl{flex:1 1 100%}
+ body[data-r="sim"]>#top #vx-cloud-controls{margin-left:0}
+ body[data-r="sim"]>header.vx-workbar{flex-wrap:wrap}
+}
+@media(max-width:640px){
+ body[data-r="sim"]>#top .tb{flex:1 1 100%}
+ body[data-r="sim"]>#top .tl{flex:1 1 100%;gap:3px}
+ body[data-r="sim"]>#top .tl button{padding:6px 7px;font-size:11px}
+ body[data-r="sim"]>header.vx-workbar{gap:7px}
+}

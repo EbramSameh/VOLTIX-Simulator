@@ -1,0 +1,10 @@
+/* VOLTIX hardware component library finish */
+#pal [data-add] svg{width:42px!important;height:34px!important;filter:drop-shadow(0 3px 3px #0008)}
+#pal [data-add]{border:1px solid #344454!important;background:linear-gradient(145deg,#1b2733,#101820)!important;border-radius:9px!important}
+#pal [data-add]:hover{border-color:#54d9d0!important;background:linear-gradient(145deg,#243847,#14212b)!important;transform:translateY(-1px)}
+#pcards .card svg{filter:drop-shadow(0 5px 5px #0008)}
+#pcards .card{border:1px solid #344454}
+#pl .vx-hardware-part{transition:filter .15s ease}
+#pl .vx-hardware-part.sel .pb{stroke:#5de4dc;stroke-width:2}
+#pl .pin{transition:filter .12s ease,stroke-width .12s ease}
+#pl .pin.hint{fill:#fff!important;stroke:#5de4dc!important;stroke-width:3!important;filter:drop-shadow(0 0 7px #5de4dc)}

@@ -35,6 +35,7 @@
     panel.classList.add('open');
     const controls=(PR[p.t]||[]).filter(c=>['rng','num','sel','ohm','si'].includes(c.t));
     const fallback=[];
+    if((p.k==='an'||p.k==='sx'||p.k==='vis')&&!AN[p.t]){if(p.st.val==null)p.st.val=50;AN[p.t]=(st,supply)=>supply*(Number(st.val||0)/100)}
     if(!controls.length){
       if(p.k==='dig'||p.k==='sw')fallback.push({k:'on',l:'Sensor state',t:'sel',o:['0 · inactive','1 · active']});
       else if(p.k==='an'||p.k==='sx'||p.k==='vis')fallback.push({k:'val',l:'Sensor level (%)',t:'rng',min:0,max:100,step:1});

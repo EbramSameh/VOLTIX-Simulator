@@ -45,7 +45,7 @@
     host.innerHTML='<div class="vx-sensor-note">'+PT[p.t][0]+' · '+(SUP[p.t]||'Interactive stimulus controls')+'</div>'+list.map(c=>{
       const defaults={val:50,v:p.k==='us'?100:25,v2:50,on:0};const val=p.st[c.k]??(c.d??defaults[c.k]??c.min??0),num=typeof val==='number'?val:0;
       if(c.t==='sel')return '<label>'+c.l+'</label><select data-sensor-key="'+c.k+'">'+c.o.map(o=>'<option '+(String(val)===String(o)||String(val)===String(o).split(' · ')[0]?'selected':'')+'>'+o+'</option>').join('')+'</select>';
-      const min=c.min??0,max=c.max??100,step=c.step??(max-min)/200||1;
+      const min=c.min??0,max=c.max??100,step=c.step??((max-min)/200||1);
       return '<label>'+c.l+' <span class="vx-sensor-value" data-value="'+c.k+'">'+num+'</span></label><input type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+Math.min(max,Math.max(min,num))+'" data-sensor-key="'+c.k+'">';
     }).join('')+(list.length?'':'<p>No editable stimulus is configured for this part yet.</p>');
     host.querySelectorAll('[data-sensor-key]').forEach(el=>el.addEventListener('input',()=>{

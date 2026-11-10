@@ -38,11 +38,12 @@
     if(!controls.length){
       if(p.k==='dig'||p.k==='sw')fallback.push({k:'on',l:'Sensor state',t:'sel',o:['0 · inactive','1 · active']});
       else if(p.k==='an'||p.k==='sx'||p.k==='vis')fallback.push({k:'val',l:'Sensor level (%)',t:'rng',min:0,max:100,step:1});
-      else if(p.t==='us')fallback.push({k:'v',l:'Distance (cm)',t:'rng',min:2,max:400,step:1});
+      else if(p.k==='dht')fallback.push({k:'v',l:'Temperature (°C)',t:'rng',min:0,max:60,step:1},{k:'v2',l:'Humidity (%)',t:'rng',min:0,max:100,step:1});
+      else if(p.k==='us')fallback.push({k:'v',l:'Distance (cm)',t:'rng',min:2,max:400,step:1});
     }
     const list=controls.length?controls:fallback;
     host.innerHTML='<div class="vx-sensor-note">'+PT[p.t][0]+' · '+(SUP[p.t]||'Interactive stimulus controls')+'</div>'+list.map(c=>{
-      const val=p.st[c.k]??(c.d??c.min??0),num=typeof val==='number'?val:0;
+      const defaults={val:50,v:p.k==='us'?100:25,v2:50,on:0};const val=p.st[c.k]??(c.d??defaults[c.k]??c.min??0),num=typeof val==='number'?val:0;
       if(c.t==='sel')return '<label>'+c.l+'</label><select data-sensor-key="'+c.k+'">'+c.o.map(o=>'<option '+(String(val)===String(o)||String(val)===String(o).split(' · ')[0]?'selected':'')+'>'+o+'</option>').join('')+'</select>';
       const min=c.min??0,max=c.max??100,step=c.step??(max-min)/200||1;
       return '<label>'+c.l+' <span class="vx-sensor-value" data-value="'+c.k+'">'+num+'</span></label><input type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+Math.min(max,Math.max(min,num))+'" data-sensor-key="'+c.k+'">';
@@ -52,10 +53,9 @@
       const c=list.find(x=>x.k===key);if(c&&c.t!=='sel')value=Number(value);
       if(c&&c.t==='sel'&&key==='on')value=Number(value.split(' · ')[0]);
       p.st[key]=value;
+      if((p.k==='an'||p.k==='sx'||p.k==='vis')&&key==='val'&&!AN[p.t])AN[p.t]=(st,supply)=>supply*(Number(st.val||0)/100);
       const out=host.querySelector('[data-value="'+key+'"]');if(out)out.textContent=value;
-      if(p.t in AN&&key==='val'){} 
-      if(typeof draw==='function')draw();
-      if(typeof solve==='function')try{solve()}catch(e){}
+      if(typeof save==='function')try{save()}catch(e){}
     }));
   }
   $('#vx-sensor-close').onclick=()=>panel.classList.remove('open');

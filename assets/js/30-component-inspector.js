@@ -51,7 +51,8 @@
   }
   const observer=new MutationObserver(render);
   observer.observe(pc,{childList:true,subtree:true});
-  observer.observe(root,{attributes:true,attributeFilter:['hidden']});
+  // Do not observe the inspector's own hidden attribute: render() updates it,
+  // which would retrigger this observer repeatedly and freeze the simulator.
   canvas.addEventListener('pointerdown',()=>requestAnimationFrame(render));
   window.addEventListener('pointerup',()=>requestAnimationFrame(render));
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!root.hidden){if(typeof S!=='undefined')S.sel=null;render()}});

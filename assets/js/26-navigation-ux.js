@@ -1,42 +1,44 @@
-/* VOLTIX new application navigation. Additive: existing go(), pages and simulator controls remain authoritative. */
+/* VOLTIX navigation — keeps the circuit workspace's original DOM and layout intact. */
 (()=> {
  const $=s=>document.querySelector(s),body=document.body,top=$('#top');
  if(!top||$('#vx-app-sidebar'))return;
- const destinations=[
-  {id:'home',label:'Overview',icon:'⌂',group:'BUILD'},
-  {id:'sim',label:'Circuit workspace',icon:'▦',group:'BUILD'},
-  {id:'parts',label:'Component library',icon:'▤',group:'DESIGN'},
-  {id:'ai',label:'AI Lab',icon:'⌘',group:'DESIGN'},
-  {id:'pi',label:'Raspberry Pi',icon:'◫',group:'PLATFORM'},
-  {id:'challenge',label:'Challenges',icon:'◇',group:'PLATFORM'},
-  {id:'about',label:'About VOLTIX',icon:'ⓘ',group:'OTHER'}
+ const links=[
+  ['home','Overview','⌂','START'],
+  ['sim','Circuit simulator','▦','BUILD'],
+  ['parts','Component library','▤','BUILD'],
+  ['ai','AI Lab','⌘','EXPLORE'],
+  ['pi','Raspberry Pi','◫','EXPLORE'],
+  ['challenge','Challenges','◇','EXPLORE'],
+  ['about','About VOLTIX','ⓘ','MORE']
  ];
- const side=document.createElement('aside');side.id='vx-app-sidebar';side.setAttribute('aria-label','Application navigation');
- side.innerHTML=`<a class="vx-side-brand" href="#home"><img src="assets/voltix-brand.svg" alt=""><span>VOLTIX<small>ENGINEERING STUDIO</small></span></a><div class="vx-side-label">Workspace</div><nav class="vx-side-nav" id="vx-primary-nav"></nav><div class="vx-side-bottom"><div class="vx-side-label" style="padding-top:8px">Account</div><div id="vx-account-slot"></div><div class="vx-side-foot">VOLTIX Simulator<br>Build · Test · Learn</div></div>`;
- const nav=$('#vx-primary-nav');let group='';
- destinations.forEach(item=>{
-  if(item.group!==group){group=item.group;const label=document.createElement('div');label.className='vx-side-label';label.textContent=group;nav.append(label)}
-  const b=document.createElement('button');b.type='button';b.dataset.route=item.id;b.innerHTML=`<span class="vx-nav-icon" aria-hidden="true">${item.icon}</span><span>${item.label}</span>`;b.addEventListener('click',()=>{if(typeof window.go==='function')window.go(item.id);else document.querySelector('[data-go="'+item.id+'"]')?.click();body.classList.remove('vx-nav-open')});nav.append(b);
+ const sidebar=document.createElement('aside');sidebar.id='vx-app-sidebar';sidebar.setAttribute('aria-label','VOLTIX navigation');
+ sidebar.innerHTML='<a class="vx-brand" href="#home"><img src="assets/voltix-brand.svg" alt=""><span><strong>VOLTIX</strong><small>ENGINEERING STUDIO</small></span></a><nav class="vx-page-nav" aria-label="Main sections"></nav><div class="vx-side-account"><div class="vx-nav-caption" style="padding:0 10px 9px">Your account</div><div id="vx-account-slot"></div><div class="vx-side-footer">Build. Test. Understand.<br>Engineering tools in your browser.</div></div>';
+ const nav=sidebar.querySelector('nav');let group='';
+ links.forEach(([id,label,icon,section])=>{
+  if(section!==group){group=section;const cap=document.createElement('div');cap.className='vx-nav-caption';cap.textContent=section;nav.append(cap)}
+  const button=document.createElement('button');button.type='button';button.dataset.route=id;button.innerHTML='<span class="vx-nav-icon" aria-hidden="true">'+icon+'</span><span>'+label+'</span>';
+  button.addEventListener('click',()=>{if(typeof window.go==='function')window.go(id);body.classList.remove('vx-nav-open')});nav.append(button);
  });
- document.body.insertBefore(side,top);
- side.querySelector('.vx-side-brand').addEventListener('click',e=>{e.preventDefault();window.go?.('home');body.classList.remove('vx-nav-open')});
- const cloud=$('#vx-cloud-controls');if(cloud)$('#vx-account-slot').append(cloud);
- top.classList.add('vx-new-top');
- const mobile=document.createElement('button');mobile.className='vx-mobile-menu';mobile.type='button';mobile.setAttribute('aria-label','Open navigation');mobile.setAttribute('aria-expanded','false');mobile.textContent='☰';top.prepend(mobile);
- mobile.addEventListener('click',()=>{const open=body.classList.toggle('vx-nav-open');mobile.setAttribute('aria-expanded',String(open))});
- const context=document.createElement('div');context.className='vx-top-context';context.innerHTML='<strong id="vx-current-section">Overview</strong><span class="vx-top-divider"></span><span id="vx-current-description">Your engineering workspace</span>';
- top.append(context);
- const home=document.createElement('button');home.type='button';home.className='vx-top-home';home.textContent='＋ New circuit';home.addEventListener('click',()=>{if(body.dataset.r!=='sim')window.go?.('sim');$('#vx-new-circuit')?.click()});
- top.append(home);
- const desc={home:'Your engineering workspace',sim:'Design, wire and simulate circuits',parts:'Explore supported hardware and components',ai:'Experiment with browser-based vision and models',pi:'Explore Raspberry Pi boards and GPIO',challenge:'Practice engineering through challenges',about:'Learn about the VOLTIX project'};
- const title={home:'Overview',sim:'Circuit workspace',parts:'Component library',ai:'AI Lab',pi:'Raspberry Pi',challenge:'Challenges',about:'About VOLTIX'};
- const sync=()=>{
-  const route=body.dataset.r||'home';
-  nav.querySelectorAll('[data-route]').forEach(b=>{const active=b.dataset.route===route;b.classList.toggle('active',active);b.setAttribute('aria-current',active?'page':'false')});
-  const t=$('#vx-current-section'),d=$('#vx-current-description');if(t)t.textContent=title[route]||'VOLTIX';if(d)d.textContent=desc[route]||'Engineering workspace';
- };
- const observer=new MutationObserver(sync);observer.observe(body,{attributes:true,attributeFilter:['data-r']});sync();
- document.addEventListener('click',e=>{if(!e.target.closest('#vx-app-sidebar,.vx-mobile-menu')&&body.classList.contains('vx-nav-open')){body.classList.remove('vx-nav-open');mobile.setAttribute('aria-expanded','false')}});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'){body.classList.remove('vx-nav-open');mobile.setAttribute('aria-expanded','false')}});
- const projectMenu=$('.vx-project-menu');if(projectMenu){projectMenu.addEventListener('toggle',()=>{if(projectMenu.open){document.addEventListener('click',function close(e){if(!projectMenu.contains(e.target)){projectMenu.open=false;document.removeEventListener('click',close)}},{once:false})}})}
+ body.insertBefore(sidebar,top);
+ const backdrop=document.createElement('div');backdrop.id='vx-nav-backdrop';backdrop.addEventListener('click',()=>body.classList.remove('vx-nav-open'));body.append(backdrop);
+ const toggle=document.createElement('button');toggle.type='button';toggle.className='vx-mobile-nav-toggle';toggle.setAttribute('aria-label','Open navigation');toggle.setAttribute('aria-expanded','false');toggle.textContent='☰';
+ toggle.addEventListener('click',()=>{const open=body.classList.toggle('vx-nav-open');toggle.setAttribute('aria-expanded',String(open))});top.prepend(toggle);
+ const heading=document.createElement('div');heading.className='vx-page-heading';heading.innerHTML='<span id="vx-page-title">Overview</span><small id="vx-page-subtitle">Your engineering workspace</small>';
+ top.append(heading);
+ const account=$('#vx-cloud-controls'),accountSlot=$('#vx-account-slot');
+ const names={home:['Overview','Your engineering workspace'],sim:['Circuit simulator','Design, wire and test a circuit'],parts:['Component library','Find parts and check simulation support'],ai:['AI Lab','Explore browser vision and model workflows'],pi:['Raspberry Pi','Boards, GPIO and camera reference'],challenge:['Challenges','Practice with guided engineering tasks'],about:['About VOLTIX','Project information and scope']};
+ function sync(){
+  const route=body.dataset.r||'home',isSim=route==='sim';
+  body.classList.toggle('vx-in-simulator',isSim);
+  sidebar.hidden=isSim;backdrop.hidden=isSim;toggle.hidden=isSim;heading.hidden=isSim;
+  top.classList.toggle('vx-pages-top',!isSim);
+  if(account){if(isSim){if(account.parentElement!==top)top.append(account)}else if(account.parentElement!==accountSlot)accountSlot.append(account)}
+  nav.querySelectorAll('[data-route]').forEach(b=>{const active=b.dataset.route===route;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  const data=names[route]||names.home;$('#vx-page-title').textContent=data[0];$('#vx-page-subtitle').textContent=data[1];
+  body.classList.remove('vx-nav-open');toggle.setAttribute('aria-expanded','false');
+ }
+ const observer=new MutationObserver(sync);observer.observe(body,{attributes:true,attributeFilter:['data-r']});
+ sidebar.querySelector('.vx-brand').addEventListener('click',e=>{e.preventDefault();window.go?.('home')});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){body.classList.remove('vx-nav-open');toggle.setAttribute('aria-expanded','false')}});
+ sync();
 })();

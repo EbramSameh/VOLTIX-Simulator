@@ -1,0 +1,12 @@
+/* VOLTIX component workspace: physical hardware finish and sensor controls */
+#pl .vx-hardware-part .pb{fill:url(#vx-pcb-gradient,#20303c);stroke:#8293a2;stroke-width:1.4}
+#pl .vx-hardware-part .pl{font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:-.15px}
+#pl .vx-hardware-part .pin{stroke:#f6d58b;stroke-width:1.7;fill:#c8a96b}
+#pl .vx-hardware-part .pin:hover{filter:drop-shadow(0 0 5px #5ce7dd)}
+#pl .vx-hardware-part .vx-hw-finish{opacity:.92}
+#pl .vx-hardware-part .vx-hw-finish rect{stroke:#c8d8cb;stroke-opacity:.35}
+#pl .vx-hardware-part .vx-hw-finish path{stroke:#8bd2b0;stroke-opacity:.3}
+#pl .wire{stroke-linecap:round;stroke-linejoin:round;stroke-width:3.3;filter:drop-shadow(0 1px 1px #0008)}
+#pl .wire:hover{stroke-width:5}
+#pl .pin.act{stroke:#fff;stroke-width:3;filter:drop-shadow(0 0 7px #56e4d9)}
+#vx-builder-dock,#vx-sensor-panel{font-family:Inter,sans-serif}

@@ -19,14 +19,15 @@
   const b=document.createElement('button');b.type='button';b.dataset.route=item.id;b.innerHTML=`<span class="vx-nav-icon" aria-hidden="true">${item.icon}</span><span>${item.label}</span>`;b.addEventListener('click',()=>{if(typeof window.go==='function')window.go(item.id);else document.querySelector('[data-go="'+item.id+'"]')?.click();body.classList.remove('vx-nav-open')});nav.append(b);
  });
  document.body.insertBefore(side,top);
+ side.querySelector('.vx-side-brand').addEventListener('click',e=>{e.preventDefault();window.go?.('home');body.classList.remove('vx-nav-open')});
  const cloud=$('#vx-cloud-controls');if(cloud)$('#vx-account-slot').append(cloud);
  top.classList.add('vx-new-top');
  const mobile=document.createElement('button');mobile.className='vx-mobile-menu';mobile.type='button';mobile.setAttribute('aria-label','Open navigation');mobile.setAttribute('aria-expanded','false');mobile.textContent='☰';top.prepend(mobile);
  mobile.addEventListener('click',()=>{const open=body.classList.toggle('vx-nav-open');mobile.setAttribute('aria-expanded',String(open))});
  const context=document.createElement('div');context.className='vx-top-context';context.innerHTML='<strong id="vx-current-section">Overview</strong><span class="vx-top-divider"></span><span id="vx-current-description">Your engineering workspace</span>';
- top.insertBefore(context,cloud||null);
+ top.append(context);
  const home=document.createElement('button');home.type='button';home.className='vx-top-home';home.textContent='＋ New circuit';home.addEventListener('click',()=>{if(body.dataset.r!=='sim')window.go?.('sim');$('#vx-new-circuit')?.click()});
- top.insertBefore(home,cloud||null);
+ top.append(home);
  const desc={home:'Your engineering workspace',sim:'Design, wire and simulate circuits',parts:'Explore supported hardware and components',ai:'Experiment with browser-based vision and models',pi:'Explore Raspberry Pi boards and GPIO',challenge:'Practice engineering through challenges',about:'Learn about the VOLTIX project'};
  const title={home:'Overview',sim:'Circuit workspace',parts:'Component library',ai:'AI Lab',pi:'Raspberry Pi',challenge:'Challenges',about:'About VOLTIX'};
  const sync=()=>{

@@ -14,6 +14,10 @@
 .vx-side-nav button.active .vx-nav-icon{color:var(--vx-accent)}
 .vx-side-bottom{margin-top:auto;padding-top:14px;border-top:1px solid #263632}
 .vx-side-bottom button{width:100%;justify-content:flex-start}
+.vx-side-bottom #vx-cloud-controls{display:block;width:100%;margin:0;min-width:0}
+.vx-side-bottom #vx-cloud-controls .vx-project-menu{width:100%}
+.vx-side-bottom #vx-cloud-controls .vx-project-menu>summary{justify-content:flex-start;width:100%;min-height:38px;border:1px solid #2d4038;border-radius:8px;background:#14211b;color:#b9c9c0;font-size:11px}
+.vx-side-bottom #vx-cloud-controls .vx-project-popover{left:0;right:auto;bottom:calc(100% + 8px);top:auto;width:min(250px,calc(100vw - 30px))}
 .vx-side-foot{padding:12px 10px 0;color:#647a72;font-size:9px;line-height:1.6}
 #top.vx-new-top{position:relative;z-index:100;min-height:66px;display:flex;align-items:center;gap:16px;padding:10px clamp(16px,2.2vw,30px);background:#101a17;border-bottom:1px solid #293a35;box-shadow:0 6px 22px rgba(0,0,0,.15)}
 #top.vx-new-top .tb{display:none}

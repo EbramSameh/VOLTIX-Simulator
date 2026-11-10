@@ -62,6 +62,16 @@
     #pl .vx-hw-finish{opacity:.85}
   `;
   document.head.appendChild(style);
-  window.VOLTIXHardwareRenderer={version:'1.0',pinLayouts:Object.keys(sideMap),rendered:true};
+  function refreshHardwareLibrary(){
+    document.querySelectorAll('#pal [data-add], #pcards .card').forEach(el=>{
+      const key=el.matches('[data-add]')?el.dataset.add:el.querySelector('[data-add]')?.dataset.add;
+      const spec=key&&PT[key],art=el.querySelector('svg');
+      if(!spec||!art)return;
+      art.setAttribute('viewBox','52 20 72 66');
+      art.innerHTML=window.shape(key,spec[4],null,spec);
+    });
+  }
+  window.VOLTIXHardwareRenderer={version:'1.1',pinLayouts:Object.keys(sideMap),rendered:true,refreshLibrary:refreshHardwareLibrary};
+  refreshHardwareLibrary();
   if(typeof draw==='function')draw();
 })();

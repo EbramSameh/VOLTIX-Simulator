@@ -23,13 +23,25 @@
   }
   pinPos=function(p,i){return geometry(p,i,p.w||Math.max(132,pinsOf(p).length*12+24),p.h||136)};
   const screw=(x,y)=>`<g pointer-events="none"><circle cx="${x}" cy="${y}" r="3.1" fill="#b7c0ca" stroke="#313b46" stroke-width="1"/><path d="M${x-1.5} ${y+1.5}L${x+1.5} ${y-1.5}" stroke="#35404a" stroke-width=".9"/></g>`;
-  const finish=(p,w)=>isModule(p)?`<g class="vx-hw-finish" pointer-events="none">
-    <rect x="8" y="25" width="${w-16}" height="76" rx="6" fill="${p.t==='l298'||p.t==='tb6612'?'#176b4b':p.t==='a4988'||p.t==='drv8825'?'#8f2935':p.t==='lm2596'||p.t==='mt3608'?'#185b94':p.t==='relay'?'#1763a4':p.t==='rfid'?'#243d70':'#176447'}" stroke="#8fb8a0" stroke-opacity=".8" stroke-width="1.1"/>
-    <path d="M18 42H35V52H51 M${w-18} 42H${w-35}V52H${w-51} M18 82H35V72H51 M${w-18} 82H${w-35}V72H${w-51}" fill="none" stroke="#d6bd77" stroke-opacity=".38" stroke-width="1.4"/>
+  const finish=(p,w)=>isModule(p)?(()=>{const palette={
+      l298:['#b33b35','#e0a49b'],tb6612:['#245d86','#9abbd5'],
+      a4988:['#a83236','#e2a6a0'],drv8825:['#654a85','#c5b2dc'],
+      lm2596:['#245f9a','#a4c5e3'],mt3608:['#285d91','#a4c5e3'],
+      relay:['#245b91','#a7c5df'],rfid:['#253f78','#a9b9e4'],
+      gps:['#263f68','#a8bad8'],hc05:['#245c92','#a7c9e5'],
+      nrf:['#285b8b','#a5c6df'],lora:['#285b8b','#a5c6df'],
+      mpu6050:['#202a36','#a9bac8'],bmp280:['#202a36','#a9bac8'],
+      bme280:['#202a36','#a9bac8'],sht31:['#202a36','#a9bac8'],
+      vl53:['#202a36','#a9bac8'],tcs:['#202a36','#a9bac8'],
+      apds:['#202a36','#a9bac8'],qmc:['#202a36','#a9bac8'],
+      ina219:['#245b83','#a8c6dc'],hx711:['#245b83','#a8c6dc']
+    };const [board,edge]=palette[p.t]||['#202a36','#8799aa'];return `<g class="vx-hw-finish" pointer-events="none">
+    <rect x="8" y="25" width="${w-16}" height="76" rx="6" fill="${board}" stroke="${edge}" stroke-opacity=".78" stroke-width="1.1"/>
+    <path d="M18 42H35V52H51 M${w-18} 42H${w-35}V52H${w-51} M18 82H35V72H51 M${w-18} 82H${w-35}V72H${w-51}" fill="none" stroke="#d9b977" stroke-opacity=".25" stroke-width="1.15"/>
     ${screw(16,33)}${screw(w-16,33)}${screw(16,93)}${screw(w-16,93)}
-    <path d="M18 96H${w-18}" stroke="#d8e6d0" stroke-opacity=".2" stroke-width="1"/>
-    <text x="${w/2}" y="96" text-anchor="middle" font-size="4.8" letter-spacing=".8" fill="#e6f4df" fill-opacity=".7">${String(p.t).toUpperCase()}</text>
-  </g>`:'';
+    <path d="M18 96H${w-18}" stroke="#d8e6d0" stroke-opacity=".12" stroke-width="1"/>
+    <text x="${w/2}" y="96" text-anchor="middle" font-size="4.8" letter-spacing=".8" fill="#e6edf4" fill-opacity=".72">${String(p.t).toUpperCase()}</text>
+  </g>`})():'';
   drawPart=function(p){
     const d=PT[p.t],k=p.k,ps=pinsOf(p),sl=k==='dht'?['v','v2']:(k==='an'||k==='us')?['v']:[],id=p.id;
     const h=k==='piboard'?220:(k==='disp'?150:(['res','ind','dio','fuse'].includes(k)?100:(p.t==='l298'?154:p.t==='tb6612'?132:(p.t==='a4988'||p.t==='drv8825'?132:p.t==='us'?112:p.t==='relay'?124:(p.t==='lm2596'||p.t==='mt3608'?128:136)))))+sl.length*24;
@@ -77,7 +89,7 @@
         const count=String(spec[3]||'').trim().split(/\s+/).filter(Boolean).length;
         const step=144/Math.max(1,count-1);
         const pads=Array.from({length:count},(_,i)=>`<rect x="${16+i*step-2.5}" y="111" width="5" height="13" rx="1" fill="#d7b66e" stroke="#fff0bd" stroke-width=".6"/>`).join('');
-        const board=key==='l298'||key==='tb6612'?'#176b4b':key==='a4988'||key==='drv8825'?'#8f2935':key==='lm2596'||key==='mt3608'?'#185b94':key==='relay'?'#1763a4':'#176447';
+        const board=({l298:'#b33b35',tb6612:'#245d86',a4988:'#a83236',drv8825:'#654a85',lm2596:'#245f9a',mt3608:'#285d91',relay:'#245b91',rfid:'#253f78',gps:'#263f68',hc05:'#245c92',nrf:'#285b8b',lora:'#285b8b',mpu6050:'#202a36',bmp280:'#202a36',bme280:'#202a36',sht31:'#202a36',vl53:'#202a36',tcs:'#202a36',apds:'#202a36',qmc:'#202a36',ina219:'#245b83',hx711:'#245b83'})[key]||'#202a36';
         art.setAttribute('viewBox','0 0 176 136');
         art.innerHTML=`<rect x="8" y="14" width="160" height="100" rx="7" fill="${board}" stroke="#9bbca7" stroke-width="1.4"/><path d="M18 32H38V44H58M158 32H138V44H118M18 90H38V78H58M158 90H138V78H118" fill="none" stroke="#d8c27f" stroke-opacity=".55" stroke-width="1.8"/><circle cx="17" cy="23" r="4" fill="#aab5bd" stroke="#38434c"/><circle cx="159" cy="23" r="4" fill="#aab5bd" stroke="#38434c"/><circle cx="17" cy="104" r="4" fill="#aab5bd" stroke="#38434c"/><circle cx="159" cy="104" r="4" fill="#aab5bd" stroke="#38434c"/>${window.shape(key,spec[4],null,spec)}${pads}`;
       }else{

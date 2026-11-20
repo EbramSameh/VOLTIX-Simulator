@@ -6,7 +6,7 @@
     tca9548:'dual',max485:'dual'
   };
   const moduleKinds=new Set(['an','dig','i2c','vis','sx','us','dht','relay','neo','sd','reg','pca','a4988','step','disp','seg','dmm','uart','rfid']);
-  const isModule=p=>moduleKinds.has(p.k)||!!sideMap[p.t]||['gps','hc05','nrf','lora','mpu6050','mpu9250','bmp280','bme280','sht31','vl53','tcs','apds','qmc','rtc','ads','dac','hx711','pca','canbus','hc12','uartusb','hc05','nrf','lora','max485','tca9548'].includes(p.t);
+  const isModule=p=>moduleKinds.has(p.k)||!!sideMap[p.t]||['l298','tb6612','gps','hc05','nrf','lora','mpu6050','mpu9250','bmp280','bme280','sht31','vl53','tcs','apds','qmc','rtc','ads','dac','hx711','pca','canbus','hc12','uartusb','hc05','nrf','lora','max485','tca9548'].includes(p.t);
   function geometry(p,i,w,h){
     if(window.VOLTIXPhysicalComponents&&typeof window.pinPos==='function')return window.pinPos(p,i);
     const pins=pinsOf(p),n=pins.length,t=p.t;

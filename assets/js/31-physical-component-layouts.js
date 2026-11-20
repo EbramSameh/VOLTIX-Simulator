@@ -46,7 +46,7 @@
     const t=p.t, pins=pinsOf(p), n=pins.length, layout=side[t]|| (['i2c','vis','sx','an','dig','sd','reg','uart'].includes(p.k)?'left':null);
     const at=(x,y,d)=>[x,y,d];
     if(p.k==='piboard')return [index%2===0?12:288,42+Math.floor(index/2)*7.1,index%2===0?'l':'r'];
-    if(isThrough(p))return at(index===0?16:w-16,57,index===0?'l':'r');
+    if(isThrough(p))return at(index===0?56:120,52,index===0?'l':'r');
     if(t==='led')return at(label==='A'?82:94,104,'d');
     if(t==='rgb')return at([79,85,91,97][index]||88,104,'d');
     if(t==='cap')return at(index===0?79:97,104,'d');
@@ -55,7 +55,7 @@
     if(t==='us')return at([52,76,100,124][index]||88,104,'d');
     if(layout==='left'){
       const y=34+index*(h-68)/Math.max(1,n-1);
-      return at(10,y,'l');
+      return at(-8,y,'l');
     }
     if(layout==='dual'){
       const leftLabels=t==='lm2596'||t==='mt3608'?['IN+','IN-']:t==='a4988'||t==='drv8825'?['VMOT','GND','VDD','EN']:['VM','VCC','GND','AIN1','AIN2','PWMA'];
@@ -63,42 +63,42 @@
       const group=pins.filter(x=>leftLabels.includes(x));
       const right=pins.filter(x=>!leftLabels.includes(x));
       const list=left?group:right,idx=list.indexOf(label);
-      return at(left?10:w-10,30+idx*(h-60)/Math.max(1,list.length-1),left?'l':'r');
+      return at(left?-8:w+8,30+idx*(h-60)/Math.max(1,list.length-1),left?'l':'r');
     }
     if(t==='l298'){
       // L298N module: three supply screw terminals at the top, paired motor
       // outputs on the sides, and six logic/control header pins at the bottom.
       if(['VS','GND','5V'].includes(label)){
         const i=['VS','GND','5V'].indexOf(label);
-        return at(62+i*43,10,'t');
+        return at(62+i*43,-8,'t');
       }
-      if(['OUT1','OUT2'].includes(label))return at(10,label==='OUT1'?58:98,'l');
-      if(['OUT3','OUT4'].includes(label))return at(w-10,label==='OUT3'?58:98,'r');
+      if(['OUT1','OUT2'].includes(label))return at(-8,label==='OUT1'?58:98,'l');
+      if(['OUT3','OUT4'].includes(label))return at(w+8,label==='OUT3'?58:98,'r');
       const controls=['ENA','IN1','IN2','IN3','IN4','ENB'];
-      if(controls.includes(label))return at(35+controls.indexOf(label)*28,h-8,'b');
+      if(controls.includes(label))return at(35+controls.indexOf(label)*28,h+8,'b');
     }
     if(layout==='driver'){
       const motor=['AO1','AO2','BO1','BO2'];
-      if(motor.includes(label))return at(w-10,42+motor.indexOf(label)*22,'r');
+      if(motor.includes(label))return at(w+8,42+motor.indexOf(label)*22,'r');
       const control=pins.filter(x=>!motor.includes(x));
       const idx=control.indexOf(label);
-      return at(10,28+idx*(h-56)/Math.max(1,control.length-1),'l');
+      return at(-8,28+idx*(h-56)/Math.max(1,control.length-1),'l');
     }
     if(layout==='relay'){
       if(['COM','NO','NC'].includes(label)){
         const i=['COM','NO','NC'].indexOf(label);
-        return at(w-10,38+i*24,'r');
+        return at(w+8,38+i*24,'r');
       }
       const i=['VCC','IN','GND'].indexOf(label);
-      return at(10,38+Math.max(0,i)*24,'l');
+      return at(-8,38+Math.max(0,i)*24,'l');
     }
     if(layout==='bottom'||bottomTypes.has(t)||bottomTypes.has(p.k)){
       // Physical through-hole/header row, left-to-right in the order printed.
       const pad=Math.max(20,Math.min(32,w/(n+1)));
-      return at(pad+index*(w-2*pad)/Math.max(1,n-1),h-8,'d');
+      return at(pad+index*(w-2*pad)/Math.max(1,n-1),h+8,'b');
     }
     // Unclassified module: pins run down the left board edge, as on common breakouts.
-    return at(10,30+index*(h-60)/Math.max(1,n-1),'l');
+    return at(-8,30+index*(h-60)/Math.max(1,n-1),'l');
   }
   window.pinPos=function(p,i){
     const [w,h]=dimensions(p);p.w=w;p.h=h;
@@ -209,6 +209,6 @@
     #pl .vx-physical-part .vx-part-art{filter:drop-shadow(0 2px 2px #0009)}
   `;
   document.head.appendChild(style);
-  window.VOLTIXPhysicalComponents={version:'2.1',packages:Object.keys(side),rendered:true,geometry:point};
+  window.VOLTIXPhysicalComponents={version:'2.2',packages:Object.keys(side),rendered:true,geometry:point};
   if(typeof draw==='function')draw();
 })();

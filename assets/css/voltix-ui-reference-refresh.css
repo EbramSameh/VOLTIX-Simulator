@@ -81,3 +81,33 @@ body[data-r=sim]>main>#pal,body[data-r=sim]>main>#rp{background:linear-gradient(
  #pal .gr button svg{width:52px!important;height:40px!important}
  #props.vx-component-inspector{max-height:78%!important}
 }
+
+/* Screenshot-specific repair: anchor the Projects popover to its trigger. */
+#top #vx-cloud-controls{position:relative!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;flex:0 0 auto!important;margin-left:auto!important;overflow:visible!important}
+#top #vx-cloud-controls .vx-project-menu{position:relative!important;display:block!important;flex:0 0 auto!important;z-index:900!important}
+#top #vx-cloud-controls .vx-project-menu>summary{position:relative!important;z-index:901!important}
+#top #vx-cloud-controls .vx-project-menu>.vx-project-popover{
+ position:absolute!important;top:calc(100% + 8px)!important;left:0!important;right:auto!important;
+ width:260px!important;min-width:260px!important;max-width:min(300px,calc(100vw - 24px))!important;
+ max-height:min(72vh,560px)!important;overflow:auto!important;box-sizing:border-box!important;
+ display:flex!important;flex-direction:column!important;gap:6px!important;
+ padding:12px!important;border:1px solid #405a70!important;border-radius:12px!important;
+ background:#142333!important;box-shadow:0 18px 48px #0009!important;
+}
+#top #vx-cloud-controls .vx-project-menu>.vx-project-popover>*{width:100%!important;max-width:100%!important;box-sizing:border-box!important}
+#top #vx-cloud-controls .vx-project-menu>.vx-project-popover button{min-height:38px!important;padding:9px 11px!important}
+#top #vx-cloud-controls .vx-project-menu[open]{z-index:905!important}
+@media(max-width:700px){
+ #top #vx-cloud-controls .vx-project-menu>.vx-project-popover{left:auto!important;right:0!important;width:min(270px,calc(100vw - 20px))!important;min-width:0!important}
+}
+/* No universal green PCB. Keep each package's own board color and natural material. */
+#pl .vx-hardware-part .pb{fill:#202a35!important;stroke:#788b9c!important;stroke-width:1.35!important}
+#pl .vx-hardware-part .vx-hw-finish{opacity:1!important}
+#pl .vx-hardware-part .vx-hw-finish rect:first-child{stroke-width:1.1!important}
+#pl .vx-hardware-part .vx-hw-finish path{stroke-opacity:.22!important}
+#pl .vx-hardware-part .t{fill:#f2f6f9!important}
+#pl .vx-hardware-part .pl{font-size:7px!important;fill:#f7f9fc!important;stroke:#111923!important;stroke-width:2.5px!important;paint-order:stroke}
+#pl .vx-hardware-part .pin{r:5.1px;fill:#d6b878!important;stroke:#fff0c8!important}
+#pl .vx-hardware-part .pin.p5{fill:#f17f72!important;stroke:#ffd2c8!important}
+#pl .vx-hardware-part .pin.p3{fill:#62d8bd!important;stroke:#c9fff1!important}
+#pl .vx-hardware-part .pin.g{fill:#a0acb7!important;stroke:#e9eff4!important}

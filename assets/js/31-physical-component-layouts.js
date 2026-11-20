@@ -38,12 +38,12 @@
     if(p.t==='us')return[176,112];
     if(p.t==='relay')return[174,124];
     if(p.t==='lm2596'||p.t==='mt3608')return[176,128];
-    if(side[p.t]||moduleKinds.has(p.k))return[168,124];
+    if(side[p.t]||moduleKinds.has(p.k))return[Math.max(168,Math.min(260,pinsOf(p).length*18+30)),124];
     if(bottomTypes.has(p.t)||bottomTypes.has(p.k))return[144,112];
     return[148,116];
   }
   function point(p,label,index,w,h){
-    const t=p.t, pins=pinsOf(p), n=pins.length, layout=side[t]|| (['i2c','vis','sx','an','dig','sd','reg','uart'].includes(p.k)?'left':null);
+    const t=p.t, pins=pinsOf(p), n=pins.length, layout=side[t]|| (moduleKinds.has(p.k)?'bottom':null);
     const at=(x,y,d)=>[x,y,d];
     if(p.k==='piboard')return [index%2===0?12:288,42+Math.floor(index/2)*7.1,index%2===0?'l':'r'];
     if(isThrough(p))return at(index===0?56:120,52,index===0?'l':'r');

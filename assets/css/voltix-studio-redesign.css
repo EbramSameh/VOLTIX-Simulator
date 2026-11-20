@@ -163,9 +163,6 @@ body[data-r="sim"] #props.vx-component-inspector{background:#171a1e!important;bo
  #vx-nav-backdrop{position:fixed!important;inset:0!important;z-index:90!important;background:#0009!important}
  body.vx-nav-open #vx-nav-backdrop{display:block!important}
  .vx-mobile-nav-toggle{display:inline-flex!important}
- .vx-home-hero{grid-template-columns:1fr!important}
- .vx-home-copy{min-height:430px!important;padding:38px 26px!important}
- .vx-home-side{min-height:360px!important;padding:34px 26px!important}
  body:not([data-r="sim"]) #p-home>.grid3{grid-template-columns:1fr!important}
  body[data-r="sim"]{grid-template-rows:auto auto minmax(0,1fr) auto!important;height:auto!important}
  body[data-r="sim"] #top{min-height:56px!important;height:auto!important;flex-wrap:wrap!important;padding:8px 12px!important}
@@ -184,7 +181,6 @@ body[data-r="sim"] #props.vx-component-inspector{background:#171a1e!important;bo
  body[data-r="sim"] main>#rp{min-height:500px!important;max-height:none!important;border-top:1px solid #30343a!important}
  body[data-r="sim"] #top .tb{min-width:0!important}
  body[data-r="sim"] .vx-workbar-brand{min-width:100%!important}
- .vx-home-copy h1{font-size:56px!important}
  .vx-home-principles{grid-template-columns:1fr!important}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}

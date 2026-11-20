@@ -7,7 +7,7 @@
  const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.55,metalness:.1},o||{}));
  const bx=(w,h,d,c,x,y,z,o)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(c,o));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;return m};
  const cy=(r,h,c,x,y,z,o,hz)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,24),M(c,o));m.position.set(x,y,z);if(hz)m.rotation.z=Math.PI/2;m.castShadow=true;return m};
- const boardFace=(g,w,h,kind)=>{const c=document.createElement('canvas');c.width=1024;c.height=768;const x=c.getContext('2d');x.clearRect(0,0,1024,768);x.fillStyle='#f4f6f8';x.globalAlpha=.92;x.font='bold 54px Arial';x.fillText(kind==='uno'?'ARDUINO':String(kind).toUpperCase(),70,105);x.font='bold 34px Arial';x.fillText(kind==='uno'?'UNO':'MODULE',72,150);x.globalAlpha=.72;x.font='bold 19px monospace';if(kind==='uno'){['DIGITAL 0-13','POWER','ANALOG IN A0-A5'].forEach((t,i)=>x.fillText(t,70,220+i*42));x.font='bold 62px Arial';x.fillText('∞',470,390);x.font='bold 20px Arial';x.fillText('ATmega328P',420,550)}else{x.fillText('VCC  GND  SDA  SCL',70,220);x.fillText('SENSOR BREAKOUT',70,265)}const tex=new THREE.CanvasTexture(c);tex.anisotropy=8;const m=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:.82,depthWrite:false,side:THREE.DoubleSide});const p=new THREE.Mesh(new THREE.PlaneGeometry(w-.08,h-.08),m);p.rotation.x=-Math.PI/2;p.position.y=.132;g.add(p)};
+ const boardFace=(g,w,h,kind,topY=.132)=>{const c=document.createElement('canvas');c.width=1024;c.height=768;const x=c.getContext('2d');x.clearRect(0,0,1024,768);x.fillStyle='#f4f6f8';x.globalAlpha=.92;x.font='bold 54px Arial';x.fillText(kind==='uno'?'ARDUINO':String(kind).toUpperCase(),70,105);x.font='bold 34px Arial';x.fillText(kind==='uno'?'UNO':'MODULE',72,150);x.globalAlpha=.72;x.font='bold 19px monospace';if(kind==='uno'){['DIGITAL 0-13','POWER','ANALOG IN A0-A5'].forEach((t,i)=>x.fillText(t,70,220+i*42));x.font='bold 62px Arial';x.fillText('∞',470,390);x.font='bold 20px Arial';x.fillText('ATmega328P',420,550)}else{x.fillText('VCC  GND  SDA  SCL',70,220);x.fillText('SENSOR BREAKOUT',70,265)}const tex=new THREE.CanvasTexture(c);tex.anisotropy=8;const m=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:.82,depthWrite:false,side:THREE.DoubleSide});const p=new THREE.Mesh(new THREE.PlaneGeometry(w-.08,h-.08),m);p.rotation.x=-Math.PI/2;p.position.y=topY;g.add(p)};
  const smd=(g,x,z,w=.12,h=.1,c='#242a31')=>{g.add(bx(w,.075,h,c,x,.18,z,{roughness:.52}));g.add(bx(w*.72,.012,h*.65,'#11161d',x,.222,z));g.add(bx(.025,.025,h*.75,'#c5cbd0',x-w*.48,.18,z,{metalness:.7}));g.add(bx(.025,.025,h*.75,'#c5cbd0',x+w*.48,.18,z,{metalness:.7}))};
  const cap3=(g,x,z,c='#d5d9df')=>{g.add(cy(.075,.2,c,x,.2,z,{metalness:.45}));g.add(cy(.077,.025,'#9ca3af',x,.305,z,{metalness:.75}));g.add(bx(.025,.12,.025,'#cbd5e1',x,.18,z+.07,{metalness:.8}))};
  const pinRow=(g,x,z,count,spacing,dir=1)=>{for(let i=0;i<count;i++){const px=x+i*spacing*dir;g.add(bx(.075,.11,.075,'#11151b',px,.16,z));g.add(cy(.024,.15,'#d7b66d',px,.235,z,{metalness:.9,roughness:.22}));g.add(cy(.012,.018,'#fff0b5',px,.31,z,{metalness:.9}))}};
@@ -23,7 +23,38 @@
   else if(k=='servo'){g.add(bx(.7,.35,.34,'#2f5fe0',0,.18,0));const arm=new THREE.Group();arm.add(bx(.55,.05,.1,'#f5f6ff',.2,0,0));arm.position.set(-.12,.4,0);g.add(arm);ud.arm=arm}
   else if(k=='bat'){g.add(bx(.7,.5,.4,'#111827',0,.26,0));g.add(bx(.7,.12,.4,'#f59e0b',0,.56,0))}
   else if(k=='disp'){g.add(bx(1.5,.1,.9,'#1b2166',0,.06,0));g.add(bx(1.2,.03,.62,p.t=='lcd'?'#a8e063':'#02040f',0,.13,-.02,{emissive:p.t=='lcd'?'#3b5a1a':'#06202a',emissiveIntensity:.8}))}
-  else if(window.P3X&&window.P3X(p,g,K,M,bx,cy)){}else{const W=Math.max(1.1,PT[p.t][3].split(' ').length*12/K+.4);g.add(bx(W,.07,.95,MC(p.t),0,.06,.1));g.add(bx(.45,.09,.35,'#111827',0,.13,0));if(k=='hb')g.add(bx(.7,.35,.4,'#374151',0,.25,0))}
+  else if(['us','dht','dig','i2c','relay','sx','a4988'].includes(k)){
+   const W=Math.max(1.1,PT[p.t][3].split(' ').length*12/K+.4),H=.95;
+   const pcb=p.t==='hcsr04'||p.t==='hc-sr04'?'#1b5f9b':p.t==='relay'?'#235b91':p.t==='a4988'?'#a83236':'#202832';
+   g.add(bx(W,.08,H,pcb,0,.04,0,{roughness:.58,metalness:.12}));
+   boardFace(g,W,H,p.t,.082);
+   const pn=String(PT[p.t][3]||'').trim().split(/\\s+/).filter(Boolean).length;
+   pinRow(g,-W*.36,H*.39,Math.max(3,pn),W*.72/Math.max(2,pn-1));
+   smd(g,-W*.24,-H*.23,.12,.09);smd(g,W*.24,-H*.23,.12,.09);
+   if(k==='us'){
+    [-.25,.25].forEach(x=>{g.add(cy(.19,.13,'#aeb6bf',x,.17,-.18,{metalness:.82,roughness:.24}));g.add(cy(.145,.018,'#343a42',x,.245,-.18,{roughness:.3}));g.add(cy(.11,.012,'#11161d',x,.258,-.18,{roughness:.2}))});
+    g.add(bx(.16,.12,.14,'#151a20',0,.13,.22));
+   }else if(k==='dht'){
+    g.add(bx(.48,.38,.42,'#e7e9e8',0,.25,-.12,{roughness:.8}));
+    for(let i=0;i<5;i++)g.add(bx(.32,.018,.025,'#9da4a8',0,.27+i*.055,.105,{roughness:.9}));
+    g.add(bx(.12,.12,.08,'#c7cccf',0,.12,.12));
+   }else if(k==='dig'){
+    const dome=new THREE.Mesh(new THREE.SphereGeometry(.28,28,18,0,Math.PI*2,0,Math.PI*.52),M('#e9edf0',{roughness:.3,transparent:true,opacity:.86}));dome.position.set(0,.29,-.12);g.add(dome);
+    g.add(bx(.34,.18,.32,'#171c22',0,.16,-.12));
+   }else if(k==='relay'){
+    g.add(bx(.55,.38,.48,'#2869a3',0,.27,-.12,{roughness:.42}));
+    g.add(bx(.38,.02,.3,'#d7e2ec',0,.47,-.12,{metalness:.35}));
+   }else if(k==='a4988'){
+    g.add(bx(.62,.25,.48,'#22272e',0,.22,-.1,{metalness:.55}));
+    for(let i=0;i<5;i++)g.add(bx(.06,.34,.07,'#aeb5bd',-.22+i*.11,.48,-.1,{metalness:.78}));
+   }else if(k==='i2c'){
+    g.add(bx(.32,.12,.32,'#171b20',0,.17,-.12));
+    for(let i=-1;i<=1;i++){g.add(bx(.035,.07,.08,'#c4c9ce',i*.09,.12,-.3,{metalness:.8}));g.add(bx(.035,.07,.08,'#c4c9ce',i*.09,.12,.06,{metalness:.8}))}
+   }else{
+    g.add(bx(.32,.16,.3,'#22272e',0,.16,-.12));
+    g.add(cy(.13,.09,'#aeb7c0',.25,.16,.12,{metalness:.7}));
+   }
+  }else if(window.P3X&&window.P3X(p,g,K,M,bx,cy)){}else{const W=Math.max(1.1,PT[p.t][3].split(' ').length*12/K+.4);g.add(bx(W,.07,.95,MC(p.t),0,.06,.1));g.add(bx(.45,.09,.35,'#111827',0,.13,0));if(k=='hb')g.add(bx(.7,.35,.4,'#374151',0,.25,0))}
   const n=((PT[p.t]&&PT[p.t][3])||'').trim().split(/\\s+/).filter(Boolean).length,cx=k=='piboard'?150:88,cy0=k=='piboard'?110:52;for(let i=0;i<n;i++){const q=pinPos(p,i);g.add(bx(.06,.22,.06,'#e8c26a',(q[0]-cx)/K,.11,(q[1]-cy0)/K))}
   g.userData=Object.assign(ud,{p});return g}
  function board3(){

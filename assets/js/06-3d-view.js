@@ -28,7 +28,7 @@
    const pcb=p.t==='hcsr04'||p.t==='hc-sr04'?'#1b5f9b':p.t==='relay'?'#235b91':p.t==='a4988'?'#a83236':'#202832';
    g.add(bx(W,.08,H,pcb,0,.04,0,{roughness:.58,metalness:.12}));
    boardFace(g,W,H,p.t,.082);
-   const pn=String(PT[p.t][3]||'').trim().split(/\\s+/).filter(Boolean).length;
+   const pn=String(PT[p.t][3]||'').trim().split(/\s+/).filter(Boolean).length;
    pinRow(g,-W*.36,H*.39,Math.max(3,pn),W*.72/Math.max(2,pn-1));
    smd(g,-W*.24,-H*.23,.12,.09);smd(g,W*.24,-H*.23,.12,.09);
    if(k==='us'){
@@ -55,7 +55,7 @@
     g.add(cy(.13,.09,'#aeb7c0',.25,.16,.12,{metalness:.7}));
    }
   }else if(window.P3X&&window.P3X(p,g,K,M,bx,cy)){}else{const W=Math.max(1.1,PT[p.t][3].split(' ').length*12/K+.4);g.add(bx(W,.07,.95,MC(p.t),0,.06,.1));g.add(bx(.45,.09,.35,'#111827',0,.13,0));if(k=='hb')g.add(bx(.7,.35,.4,'#374151',0,.25,0))}
-  const n=((PT[p.t]&&PT[p.t][3])||'').trim().split(/\\s+/).filter(Boolean).length,cx=k=='piboard'?150:88,cy0=k=='piboard'?110:52;for(let i=0;i<n;i++){const q=pinPos(p,i);g.add(bx(.06,.22,.06,'#e8c26a',(q[0]-cx)/K,.11,(q[1]-cy0)/K))}
+  const n=((PT[p.t]&&PT[p.t][3])||'').trim().split(/\s+/).filter(Boolean).length,cx=k=='piboard'?150:88,cy0=k=='piboard'?110:52;for(let i=0;i<n;i++){const q=pinPos(p,i);g.add(bx(.06,.22,.06,'#e8c26a',(q[0]-cx)/K,.11,(q[1]-cy0)/K))}
   g.userData=Object.assign(ud,{p});return g}
  function board3(){
  const g=new THREE.Group(),W=S.bw/K,H=S.bh/K,uno=S.bt==='uno'||S.bt==='unor4',col={uno:'#087f86',unor4:'#087f86',mega:'#0a7c86',leo:'#0a7c86',nano:'#1f5fbf',pro:'#b3262f',pico:'#0b7a3d',esp32:'#176b52',cam:'#176b52'}[S.bt]||'#171b26';

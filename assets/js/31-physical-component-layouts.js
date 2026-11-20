@@ -2,7 +2,7 @@
    SVG is an illustrative top view; pin coordinates are tied to the named package,
    not a generic row at the bottom of every component. */
 (()=> {
-  if(!window.shape||!window.PT||!window.S||!window.pinsOf)return;
+  if(typeof shape!=='function'||typeof PT==='undefined'||typeof S==='undefined'||typeof pinsOf!=='function')return;
   const $=s=>document.querySelector(s);
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const side = {
@@ -45,7 +45,7 @@
   function point(p,label,index,w,h){
     const t=p.t, pins=pinsOf(p), n=pins.length, layout=side[t]|| (['i2c','vis','sx','an','dig','sd','reg','uart'].includes(p.k)?'left':null);
     const at=(x,y,d)=>[x,y,d];
-    if(p.k==='piboard')return window.VOLTIXHardwareRenderer?.pinPos?.(p,index)||[index%2===0?12:288,42+Math.floor(index/2)*7.1,index%2===0?'l':'r'];
+    if(p.k==='piboard')return [index%2===0?12:288,42+Math.floor(index/2)*7.1,index%2===0?'l':'r'];
     if(isThrough(p))return at(index===0?16:w-16,57,index===0?'l':'r');
     if(layout==='left'){
       const y=34+index*(h-68)/Math.max(1,n-1);
@@ -134,8 +134,8 @@
     const d=PT[p.t],k=p.k,id=p.id,[w,h]=dimensions(p),sl=k==='dht'?['v','v2']:(k==='an'||k==='us')?['v']:[],labels=pinsOf(p);
     p.w=w;p.h=h;p.key=null;
     const isBoard=p.k==='piboard';
-    const art=isBoard?window.VOLTIXHardwareRenderer?.drawPi?.(p,w,h)||window.shape(p.t,k,id,d):
-      window.shape(p.t,k,id,d,p.st.ohm,k==='led'?window.LC?.[p.st.color||'red']?.[0]:k==='cap'?p.st.ctype:null);
+    const art=isBoard?window.shape(p.t,k,id,d):
+      shape(p.t,k,id,d,p.st.ohm,k==='led'&&typeof LC!=='undefined'?LC[p.st.color||'red']?.[0]:k==='cap'?p.st.ctype:null);
     const pcb=boardArt(p,w,h);
     const title=k==='res'?fmtOhm(p.st.ohm||220):k==='bat'?(p.st.volt||5)+' V supply':d[0];
     const controls=sl.map((s,i)=>`<foreignObject x="12" y="${h-28-(sl.length-1-i)*24}" width="114" height="22"><input type="range" min="0" max="100" value="${Math.round(p.st[s]*100)}" data-p="${id}" data-s="${s}" title="${s==='v2'?'Humidity':k==='dht'?'Temperature':k==='us'?'Distance':'Level'}"/></foreignObject>`).join('');

@@ -69,8 +69,17 @@
       const key=el.matches('[data-add]')?el.dataset.add:el.querySelector('[data-add]')?.dataset.add;
       const spec=key&&PT[key],art=el.querySelector('svg');
       if(!spec||!art)return;
-      art.setAttribute('viewBox','52 20 72 66');
-      art.innerHTML=window.shape(key,spec[4],null,spec);
+      if(isModule({t:key,k:spec[4]})){
+        const count=String(spec[3]||'').trim().split(/\\s+/).filter(Boolean).length;
+        const step=144/Math.max(1,count-1);
+        const pads=Array.from({length:count},(_,i)=>`<rect x="${16+i*step-2.5}" y="111" width="5" height="13" rx="1" fill="#d7b66e" stroke="#fff0bd" stroke-width=".6"/>`).join('');
+        const board=key==='l298'||key==='tb6612'?'#176b4b':key==='a4988'||key==='drv8825'?'#8f2935':key==='lm2596'||key==='mt3608'?'#185b94':key==='relay'?'#1763a4':'#176447';
+        art.setAttribute('viewBox','0 0 176 136');
+        art.innerHTML=`<rect x="8" y="14" width="160" height="100" rx="7" fill="${board}" stroke="#9bbca7" stroke-width="1.4"/><path d="M18 32H38V44H58M158 32H138V44H118M18 90H38V78H58M158 90H138V78H118" fill="none" stroke="#d8c27f" stroke-opacity=".55" stroke-width="1.8"/><circle cx="17" cy="23" r="4" fill="#aab5bd" stroke="#38434c"/><circle cx="159" cy="23" r="4" fill="#aab5bd" stroke="#38434c"/><circle cx="17" cy="104" r="4" fill="#aab5bd" stroke="#38434c"/><circle cx="159" cy="104" r="4" fill="#aab5bd" stroke="#38434c"/>${window.shape(key,spec[4],null,spec)}${pads}`;
+      }else{
+        art.setAttribute('viewBox','52 20 72 66');
+        art.innerHTML=window.shape(key,spec[4],null,spec);
+      }
     });
   }
   window.VOLTIXHardwareRenderer={version:'1.1',pinLayouts:Object.keys(sideMap),rendered:true,refreshLibrary:refreshHardwareLibrary};

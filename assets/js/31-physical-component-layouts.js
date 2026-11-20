@@ -65,12 +65,19 @@
       const list=left?group:right,idx=list.indexOf(label);
       return at(left?10:w-10,30+idx*(h-60)/Math.max(1,list.length-1),left?'l':'r');
     }
-    if(layout==='driver'){
-      if(t==='l298'){
-        const left=['OUT1','OUT2','OUT3','OUT4'],right=['VS','GND','5V','ENA','IN1','IN2','IN3','IN4','ENB'];
-        if(left.includes(label))return at(10,42+left.indexOf(label)*22,'l');
-        if(right.includes(label))return at(w-10,28+right.indexOf(label)*13,'r');
+    if(t==='l298'){
+      // L298N module: three supply screw terminals at the top, paired motor
+      // outputs on the sides, and six logic/control header pins at the bottom.
+      if(['VS','GND','5V'].includes(label)){
+        const i=['VS','GND','5V'].indexOf(label);
+        return at(62+i*43,10,'t');
       }
+      if(['OUT1','OUT2'].includes(label))return at(10,label==='OUT1'?58:98,'l');
+      if(['OUT3','OUT4'].includes(label))return at(w-10,label==='OUT3'?58:98,'r');
+      const controls=['ENA','IN1','IN2','IN3','IN4','ENB'];
+      if(controls.includes(label))return at(35+controls.indexOf(label)*28,h-8,'b');
+    }
+    if(layout==='driver'){
       const motor=['AO1','AO2','BO1','BO2'];
       if(motor.includes(label))return at(w-10,42+motor.indexOf(label)*22,'r');
       const control=pins.filter(x=>!motor.includes(x));
@@ -97,6 +104,17 @@
     const [w,h]=dimensions(p);p.w=w;p.h=h;
     return point(p,pinsOf(p)[i],i,w,h);
   };
+  // Keep wire endpoints attached to the correct physical edge for top/bottom headers.
+  window.dv=function(ref){
+    if(ref[0]==='b'){
+      const q=S.bp.find(x=>x.l===ref.slice(2));
+      return q&&q.d==='u'?[0,-70]:[0,70];
+    }
+    const [id,label]=ref.split(':'),part=S.parts.find(x=>x.id===id);
+    if(!part)return[0,0];
+    const index=pinsOf(part).indexOf(label),q=point(part,label,index,part.w||dimensions(part)[0],part.h||dimensions(part)[1]);
+    return q[2]==='t'?[0,-50]:q[2]==='b'?[0,50]:q[2]==='d'?[0,50]:q[2]==='l'?[-60,0]:[60,0];
+  };
   function pinMarkup(p,w,h){
     const id=p.id,labels=pinsOf(p),t=p.t,k=p.k;
     return labels.map((label,i)=>{
@@ -107,6 +125,10 @@
         const tx=dir==='l'?x+7:x-7,anchor=dir==='l'?'start':'end';
         return `<circle class="${cls}" data-pin="${id}:${text}" cx="${x}" cy="${y}" r="3.5"/><text class="pl vx-pin-label" x="${tx}" y="${y+2.2}" text-anchor="${anchor}" style="font-size:5px">${esc(label.slice(1))}</text>`;
       }
+      if(dir==='t'||dir==='b'){
+        const edge=dir==='t'?8:h-8,ty=dir==='t'?22:h-20;
+        return `<line x1="${x}" y1="${edge}" x2="${x}" y2="${y}" class="vx-pin-lead"/><circle class="${cls}" data-pin="${id}:${text}" cx="${x}" cy="${y}" r="${r}"/><text class="pl vx-pin-label" x="${x}" y="${ty}" text-anchor="middle">${text}</text>`;
+      }
       if(sidePin){
         const tx=dir==='l'?17:w-17,anchor=dir==='l'?'start':'end';
         if(isThrough(p)){
@@ -116,7 +138,7 @@
         const edge=dir==='l'?8:w-8;
         return `<line x1="${x}" y1="${y}" x2="${edge}" y2="${y}" class="vx-pin-lead"/><circle class="${cls}" data-pin="${id}:${text}" cx="${x}" cy="${y}" r="${r}"/><text class="pl vx-pin-label" x="${tx}" y="${y+2.5}" text-anchor="${anchor}">${text}</text>`;
       }
-      const leadTop= t==='led'||t==='rgb'?74:t==='cap'?76:t==='dht11'||t==='dht22'?78:t==='us'?90: h-22;
+      const leadTop=t==='led'||t==='rgb'?74:t==='cap'?76:t==='dht11'||t==='dht22'?78:t==='us'?90:h-22;
       const ty=y-12;
       return `<line x1="${x}" y1="${leadTop}" x2="${x}" y2="${y}" class="vx-pin-lead"/><circle class="${cls}" data-pin="${id}:${text}" cx="${x}" cy="${y}" r="${r}"/><text class="pl vx-pin-label" x="${x}" y="${ty}" text-anchor="middle">${text}</text>`;
     }).join('');
@@ -187,6 +209,6 @@
     #pl .vx-physical-part .vx-part-art{filter:drop-shadow(0 2px 2px #0009)}
   `;
   document.head.appendChild(style);
-  window.VOLTIXPhysicalComponents={version:'2.0',packages:Object.keys(side),rendered:true,geometry:point};
+  window.VOLTIXPhysicalComponents={version:'2.1',packages:Object.keys(side),rendered:true,geometry:point};
   if(typeof draw==='function')draw();
 })();

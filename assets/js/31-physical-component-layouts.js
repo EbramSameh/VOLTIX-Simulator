@@ -21,7 +21,7 @@
     // Power boards expose terminal blocks on opposite sides
     lm2596:'dual',mt3608:'dual',ams1117:'bottom',lm7805:'bottom',
     // Larger driver boards
-    l298:'driver',tb6612:'driver',a4988:'driver',drv8825:'driver',
+    l298:'driver',tb6612:'driver',a4988:'dual',drv8825:'dual',
     relay:'relay',us:'bottom',dht11:'bottom',dht22:'bottom',
     lcd:'left',oled:'left',neo:'left',seg7:'bottom',step28:'bottom'
   };
@@ -47,6 +47,12 @@
     const at=(x,y,d)=>[x,y,d];
     if(p.k==='piboard')return [index%2===0?12:288,42+Math.floor(index/2)*7.1,index%2===0?'l':'r'];
     if(isThrough(p))return at(index===0?16:w-16,57,index===0?'l':'r');
+    if(t==='led')return at(label==='A'?82:94,104,'d');
+    if(t==='rgb')return at([79,85,91,97][index]||88,104,'d');
+    if(t==='cap')return at(index===0?79:97,104,'d');
+    if(t==='buz')return at(index===0?78:98,104,'d');
+    if(t==='dht11'||t==='dht22')return at([72,88,104][index]||88,104,'d');
+    if(t==='us')return at([52,76,100,124][index]||88,104,'d');
     if(layout==='left'){
       const y=34+index*(h-68)/Math.max(1,n-1);
       return at(10,y,'l');
@@ -98,11 +104,17 @@
       const cls='pin'+(/^(VCC|VIN|5V|VM|VMOT|IN\+|OUT\+)$/.test(label)?' p5':label==='3V3'||label==='VDD'?' p3':/^(GND|IN-|OUT-)$/.test(label)?' g':'');
       const text=esc(label),r=p.k==='piboard'?3.5:4.3;
       if(sidePin){
-        const start=dir==='l'?0:w,edge=dir==='l'?8:w-8,tx=dir==='l'?17:w-17,anchor=dir==='l'?'start':'end';
-        return `<line x1="${start}" y1="${y}" x2="${edge}" y2="${y}" class="vx-pin-lead"/><circle class="${cls}" data-pin="${id}:${text}" cx="${x}" cy="${y}" r="${r}"/><text class="pl vx-pin-label" x="${tx}" y="${y+2.5}" text-anchor="${anchor}">${text}</text>`;
+        const tx=dir==='l'?17:w-17,anchor=dir==='l'?'start':'end';
+        if(isThrough(p)){
+          const bx=dir==='l'?56:120;
+          return `<line x1="${x}" y1="${y}" x2="${bx}" y2="${y}" class="vx-pin-lead"/><circle class="${cls}" data-pin="${id}:${text}" cx="${x}" cy="${y}" r="${r}"/><text class="pl vx-pin-label" x="${tx}" y="${y+13}" text-anchor="${anchor}">${text}</text>`;
+        }
+        const edge=dir==='l'?8:w-8;
+        return `<line x1="${x}" y1="${y}" x2="${edge}" y2="${y}" class="vx-pin-lead"/><circle class="${cls}" data-pin="${id}:${text}" cx="${x}" cy="${y}" r="${r}"/><text class="pl vx-pin-label" x="${tx}" y="${y+2.5}" text-anchor="${anchor}">${text}</text>`;
       }
-      const start=h,edge=h-8,tx=x,ty=h-17;
-      return `<line x1="${x}" y1="${start}" x2="${x}" y2="${edge}" class="vx-pin-lead"/><circle class="${cls}" data-pin="${id}:${text}" cx="${x}" cy="${y}" r="${r}"/><text class="pl vx-pin-label" x="${tx}" y="${ty}" text-anchor="middle">${text}</text>`;
+      const leadTop= t==='led'||t==='rgb'?74:t==='cap'?76:t==='dht11'||t==='dht22'?78:t==='us'?90: h-22;
+      const ty=y-12;
+      return `<line x1="${x}" y1="${leadTop}" x2="${x}" y2="${y}" class="vx-pin-lead"/><circle class="${cls}" data-pin="${id}:${text}" cx="${x}" cy="${y}" r="${r}"/><text class="pl vx-pin-label" x="${x}" y="${ty}" text-anchor="middle">${text}</text>`;
     }).join('');
   }
   const screw=(x,y)=>`<g pointer-events="none"><circle cx="${x}" cy="${y}" r="3.4" fill="#b8c2ca" stroke="#43515c" stroke-width="1"/><path d="M${x-1.8} ${y+1.8}L${x+1.8} ${y-1.8}" stroke="#34404a" stroke-width="1.1"/></g>`;

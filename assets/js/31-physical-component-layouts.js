@@ -23,7 +23,7 @@
     // Larger driver boards
     l298:'driver',tb6612:'driver',a4988:'dual',drv8825:'dual',
     relay:'relay',us:'bottom',dht11:'bottom',dht22:'bottom',
-    lcd:'bottom',oled:'bottom',neo:'bottom',seg7:'bottom',step28:'bottom'
+    lcd:'bottom',oled:'bottom',joy:'bottom',neo:'bottom',seg7:'bottom',step28:'bottom'
   };
   const bottomTypes=new Set(['led','rgb','cap','buz','mot','fan','vib','sol','spk','laser','nema','nema17','stepc','bat','dmm']);
   const moduleKinds=new Set(['an','dig','i2c','vis','sx','us','dht','relay','neo','sd','reg','pca','a4988','step','disp','seg','dmm','uart','rfid','hb']);

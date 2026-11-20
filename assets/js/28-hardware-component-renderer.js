@@ -70,7 +70,7 @@
       const spec=key&&PT[key],art=el.querySelector('svg');
       if(!spec||!art)return;
       if(isModule({t:key,k:spec[4]})){
-        const count=String(spec[3]||'').trim().split(/\\s+/).filter(Boolean).length;
+        const count=String(spec[3]||'').trim().split(/\s+/).filter(Boolean).length;
         const step=144/Math.max(1,count-1);
         const pads=Array.from({length:count},(_,i)=>`<rect x="${16+i*step-2.5}" y="111" width="5" height="13" rx="1" fill="#d7b66e" stroke="#fff0bd" stroke-width=".6"/>`).join('');
         const board=key==='l298'||key==='tb6612'?'#176b4b':key==='a4988'||key==='drv8825'?'#8f2935':key==='lm2596'||key==='mt3608'?'#185b94':key==='relay'?'#1763a4':'#176447';

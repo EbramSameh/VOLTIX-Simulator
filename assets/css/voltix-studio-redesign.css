@@ -76,8 +76,7 @@ body:not([data-r="sim"]) .pg .note{background:#15181c!important;border:1px solid
 
 /* Overview — clean single-column home page. */
 body:not([data-r="sim"]) #p-home{
- display:block!important;min-height:calc(100vh - 60px)!important;padding:0!important;
- overflow:visible!important;background:#090a0c!important
+ min-height:0!important;padding:0!important;overflow:visible!important;background:#090a0c!important
 }
 .vx-home-hero{
  max-width:1180px!important;margin:0 auto!important;padding:clamp(64px,9vh,112px) clamp(24px,5vw,72px) 58px!important;
@@ -223,3 +222,11 @@ body[data-r="sim"] #top .tl{display:flex!important}
  body:not([data-r="sim"]) #pages{padding:22px 18px!important}
 }
 @media(prefers-reduced-motion:reduce){#vx-app-sidebar{transition:none}}
+
+/* Page visibility is controlled only by the router's .on state. */
+body:not([data-r="sim"]) #pages>.pg{display:none!important}
+body:not([data-r="sim"]) #pages>.pg.on{display:block!important}
+body:not([data-r="sim"]) #pages{background:#090a0c!important;color:#f4f5f6!important}
+body:not([data-r="sim"]) .pg h1,body:not([data-r="sim"]) .pg h2,body:not([data-r="sim"]) .pg h3,body:not([data-r="sim"]) .pg h4{color:#f4f5f6!important}
+body:not([data-r="sim"]) .pg p,body:not([data-r="sim"]) .pg label,body:not([data-r="sim"]) .pg small{color:#b5bbc2}
+body:not([data-r="sim"]) .pg .card,body:not([data-r="sim"]) .pg article{background:#111316!important;border:1px solid #343940!important;box-shadow:none!important}

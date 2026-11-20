@@ -38,7 +38,7 @@
     if(p.t==='us')return[176,112];
     if(p.t==='relay')return[174,124];
     if(p.t==='lm2596'||p.t==='mt3608')return[176,128];
-    if(side[p.t]||moduleKinds.has(p.k))return[Math.max(160,Math.min(260,pinsOf(p).length*18+30)),124];
+    if(side[p.t]||moduleKinds.has(p.k))return[Math.max(168,Math.min(260,pinsOf(p).length*18+30)),124];
     if(bottomTypes.has(p.t)||bottomTypes.has(p.k))return[144,112];
     return[148,116];
   }

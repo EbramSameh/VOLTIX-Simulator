@@ -16,7 +16,7 @@
     mq135:'left',ph:'left',vsens:'left',uvs:'left',ecg:'left',eeg:'left',emg:'left',
     // Three-pin headers and compact modules
     servo:'left',aicam:'left',pir:'left',ir:'left',flame:'left',touch:'left',
-    hall:'left',vibs:'left',snd:'left',sndl:'left',lux:'left',press:'left',
+    hall:'bottom',ds18:'bottom',irr:'bottom',pot:'bottom',vibs:'left',snd:'left',sndl:'left',lux:'left',press:'left',
     loadc:'left',fsr:'left',flex:'left',tmp36:'bottom',lm35:'bottom',
     // Power boards expose terminal blocks on opposite sides
     lm2596:'dual',mt3608:'dual',ams1117:'bottom',lm7805:'bottom',
@@ -151,9 +151,9 @@
   const screw=(x,y)=>`<g pointer-events="none"><circle cx="${x}" cy="${y}" r="3.4" fill="#b8c2ca" stroke="#43515c" stroke-width="1"/><path d="M${x-1.8} ${y+1.8}L${x+1.8} ${y-1.8}" stroke="#34404a" stroke-width="1.1"/></g>`;
   function boardArt(p,w,h){
     const t=p.t,k=p.k;
-    // These are through-hole or molded packages, not breakout PCBs.
-    const discretePackages=new Set(['dht11','dht22','ds18','hall','irr','tmp36','lm35','lm7805']);
-    if(discretePackages.has(t))return '';
+    // Most module artwork already contains its own PCB. L298N is drawn here
+    // because its terminal blocks and separated control header need a custom layout.
+    if(t!=='l298')return '';
     const green=['l298','tb6612','relay','mpu6050','adxl345','bmp280','ina219','bme280','sht31','rtc','ads','dac','pca','qmc','tcs','apds','vl53','max30','gps','hc05','rfid','nrf','lora','max485','hx711','sdc','neo','aicam','pir','ir','flame','touch','hall','soil','soilc','rain','wlevel','turb','tds','mq135','ph','vsens','uvs','ecg','eeg','emg','snd','sndl','lux','press','vibs','loadc','fsr','flex','lcd','oled','seg7','step28','lm2596','mt3608','ams1117','lm7805','joy','enc','keypad'];
     if(!green.includes(t)&&!moduleKinds.has(k))return '';
     const fill=t==='l298'||t==='tb6612'?'#176b48':t==='a4988'||t==='drv8825'?'#9f2630':t==='lm2596'||t==='mt3608'?'#175aa3':t==='relay'?'#1766b8':'#176344';
@@ -191,7 +191,7 @@
       <text x="166" y="72" text-anchor="middle" font-size="7" fill="#e5e7eb">RAM</text><text x="228" y="72" text-anchor="middle" font-size="7" fill="#e5e7eb">Power</text>
       <rect x="48" y="124" width="80" height="40" rx="4" fill="#1e293b" stroke="#94a3b8"/><text x="88" y="140" text-anchor="middle" font-size="7" fill="#e5e7eb">USB / LAN</text><text x="88" y="151" text-anchor="middle" font-size="7" fill="#e5e7eb">connectors</text>
       <rect x="151" y="124" width="100" height="40" rx="4" fill="#111827" stroke="#67e8f9"/><text x="201" y="140" text-anchor="middle" font-size="7" fill="#a5f3fc">40-pin header</text><text x="201" y="151" text-anchor="middle" font-size="6" fill="#a5f3fc">P1–P40</text>`:
-      shape(p.t,k,id,d,p.st.ohm,k==='led'&&typeof LC!=='undefined'?LC[p.st.color||'red']?.[0]:k==='cap'?p.st.ctype:null);
+      t==='l298'?'':shape(p.t,k,id,d,p.st.ohm,k==='led'&&typeof LC!=='undefined'?LC[p.st.color||'red']?.[0]:k==='cap'?p.st.ctype:null);
     const pcb=boardArt(p,w,h);
     const title=k==='res'?fmtOhm(p.st.ohm||220):k==='bat'?(p.st.volt||5)+' V supply':d[0];
     const controls=sl.map((s,i)=>`<foreignObject x="12" y="${h-28-(sl.length-1-i)*24}" width="114" height="22"><input type="range" min="0" max="100" value="${Math.round(p.st[s]*100)}" data-p="${id}" data-s="${s}" title="${s==='v2'?'Humidity':k==='dht'?'Temperature':k==='us'?'Distance':'Level'}"/></foreignObject>`).join('');
@@ -222,6 +222,6 @@
     #pl .vx-physical-part .vx-part-art{filter:drop-shadow(0 2px 2px #0009)}
   `;
   document.head.appendChild(style);
-  window.VOLTIXPhysicalComponents={version:'2.3',packages:Object.keys(side),rendered:true,geometry:point};
+  window.VOLTIXPhysicalComponents={version:'2.4',packages:Object.keys(side),rendered:true,geometry:point};
   if(typeof draw==='function')draw();
 })();

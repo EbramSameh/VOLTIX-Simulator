@@ -45,6 +45,10 @@
         const tx=dir==='l'?25:w-25,anchor=dir==='l'?'start':'end',lineX=dir==='l'?22:w-22;
         return `<line x1="${lineX}" y1="${y}" x2="${x}" y2="${y}" stroke="#c8a96a" stroke-width="2.2"/><circle class="${cls}" data-pin="${id}:${l}" cx="${x}" cy="${y}" r="4.8"/><text x="${tx}" y="${y+2.4}" text-anchor="${anchor}" class="pl" style="font-size:6.2px">${l}</text>`;
       }
+      if(dir==='t'||dir==='b'){
+        const top=dir==='t',labelY=top?26:h-20,startY=top?34:h-44;
+        return `<line x1="${x}" y1="${startY}" x2="${x}" y2="${y}" stroke="url(#gold)" stroke-width="2.8"/><circle class="${cls}" data-pin="${id}:${l}" cx="${x}" cy="${y}" r="4.8"/><text x="${x}" y="${labelY}" text-anchor="middle" class="pl" style="font-size:6.4px">${l}</text>`;
+      }
       return `<line x1="${x}" y1="91" x2="${x}" y2="${y}" stroke="url(#gold)" stroke-width="2.8"/><circle class="${cls}" data-pin="${id}:${l}" cx="${x}" cy="${y}" r="4.8"/><text x="${x}" y="126" text-anchor="middle" class="pl" style="font-size:6.4px">${l}</text>`;
     }).join('');
     return `<g id="g-${id}" class="${S.sel===id?'sel':''} vx-hardware-part" transform="translate(${p.x},${p.y})"><rect class="pb" data-drag="${id}" width="${w}" height="${h}" rx="10"/><text x="12" y="20" class="t">${k==='res'?fmtOhm(p.st.ohm||220):k==='bat'?(p.st.volt||5)+' V supply':d[0]}</text>${ic}${pinMarkup}<text id="s-${id}" x="88" y="136" text-anchor="middle" class="ps"></text>${sl.map((s,i)=>`<foreignObject x="10" y="${h-28-(sl.length-1-i)*24}" width="114" height="22"><input type="range" min="0" max="100" value="${Math.round(p.st[s]*100)}" data-p="${id}" data-s="${s}" title="${s==='v2'?'Humidity':k==='dht'?'Temperature':k==='us'?'Distance':'Level'}"></foreignObject>`).join('')}</g>`;

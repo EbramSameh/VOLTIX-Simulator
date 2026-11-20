@@ -181,3 +181,64 @@ button,a,summary,input,select{accent-color:#e87952}
  border-radius:7px!important;color:#c4c7cb!important;font-size:10px!important;transition:.16s!important}
 #v3d .vx-3d-cameras button:hover,#v3d .vx-3d-cameras button:focus-visible{background:#302722!important;border-color:#765040!important;color:#f3a187!important}
 @media(max-width:620px){#pal .gr{grid-template-columns:repeat(2,minmax(0,1fr))!important}#pal .gr button{min-height:100px!important}#pal .vx-part-thumb{height:54px!important}}
+
+
+/* VOLTIX complete layout correction — 2026 */
+:root{--studio-bg:#0d141b;--studio-surface:#131e27;--studio-raised:#1b2a34;--studio-border:#293d49;--studio-border-hi:#3a5360;--studio-text:#edf4f5;--studio-muted:#9aabb5;--studio-faint:#71838e;--studio-accent:#42d6c3;--studio-accent-soft:#153a39;--vx-bg:var(--studio-bg);--vx-panel:var(--studio-surface);--vx-panel-2:var(--studio-raised);--vx-border:var(--studio-border);--vx-border-strong:var(--studio-border-hi);--vx-text:var(--studio-text);--vx-muted:var(--studio-muted);--vx-faint:var(--studio-faint);--vx-accent:var(--studio-accent);--vx-accent-hover:#75e6d7}
+html,body,#pages,.pg{background:#0d141b!important;color:#edf4f5!important}
+#top{height:70px!important;min-height:70px!important;padding:0 24px!important;gap:24px!important;background:#101a22!important;border-bottom:1px solid #293d49!important;box-shadow:none!important}
+#top .tb{min-width:190px!important}#top .tb b{color:#42d6c3!important}#top .tl{gap:6px!important}
+#top .tl>button,#top .tl>details>summary{border-radius:9px!important;color:#aebdc5!important}
+#top .tl>button.vx-primary-link,#top .tl>button.on,#top .tl>button.vx-nav-current{background:#173331!important;border:1px solid #28645d!important;color:#8ceadd!important;box-shadow:none!important}
+#top .tl>button:hover,#top .tl>details>summary:hover{background:#1a2c35!important;color:#fff!important}
+#top .vx-project-menu>summary,.vx-live-counter{background:#15232c!important;border-color:#304653!important}
+#top .vx-live-dot{background:#42d6c3!important}
+.vx-workbar{background:#111c25!important;border-color:#293d49!important;padding:0 20px!important;gap:14px!important}
+.vx-workbar select,.vx-workbar button,.vx-tools-menu>summary{background:#1a2a34!important;border-color:#304653!important;color:#dce8ec!important;border-radius:9px!important}
+.vx-workbar button:hover{background:#203943!important;border-color:#42a99f!important}
+.vx-workbar .run,.vx-workbar button.run{background:#42d6c3!important;border-color:#42d6c3!important;color:#071817!important;box-shadow:none!important}
+.vx-tools-popover,.vx-nav-popover,.vx-project-popover{background:#14232d!important;border-color:#304653!important}
+.vx-tools-label{color:#42d6c3!important}
+body[data-r=sim]>main{display:grid!important;grid-template-columns:244px minmax(0,1fr) 340px!important;gap:0!important;background:#0d141b!important;min-height:0!important}
+body[data-r=sim]>main>#pal{background:#111c25!important;border-right:1px solid #293d49!important;padding:16px 13px!important}
+#pal #q{height:42px!important;background:#0c151c!important;border-color:#304653!important;color:#edf4f5!important}
+#pal h4{color:#91a8b2!important;border-color:#293d49!important}
+#pal .gr button{background:#172630!important;border-color:#2a404c!important;color:#e6eff1!important;border-radius:10px!important}
+#pal .gr button:hover{background:#1d343d!important;border-color:#42a99f!important}
+#pal .vx-part-thumb{background:#101a22!important;border-color:#2a404c!important}
+#pal .vx-part-name{color:#dce8ec!important}#pal .vx-part-add{color:#42d6c3!important}
+#cvw{background-color:#0d141b!important;background-image:radial-gradient(#263d49 1px,transparent 1px)!important;background-size:24px 24px!important}
+#cv{background:transparent!important}
+#cvw #empty{background:#111d26!important;border:1px solid #304653!important;border-radius:14px!important;color:#edf4f5!important}
+#cvw #empty span{color:#9aabb5!important}#cvw #empty button{background:#42d6c3!important;color:#071817!important;border:0!important}
+#wtb{background:#14232d!important;border:1px solid #304653!important;border-radius:12px!important;box-shadow:0 10px 30px #0006!important}
+#wtb button{background:#1d303a!important;border-color:#354d59!important;color:#dce8ec!important}
+#wtb button:hover,#wtb button[data-on="1"]{border-color:#42d6c3!important;color:#75e6d7!important}
+body[data-r=sim]>main>#rp{background:#111c25!important;border-left:1px solid #293d49!important;padding:13px!important}
+#rp .tabs{background:#0c151c!important;border-color:#2b414d!important}
+#rp .tabs button{color:#9aabb5!important}#rp .tabs button.on{background:#173331!important;border-color:#28645d!important;color:#8ceadd!important;box-shadow:none!important}
+#ed{background:#0c151c!important;border-color:#2b414d!important}#code,#ser,#gwl,#gw{background:#0c151c!important;color:#dce8ec!important}
+#code{font-family:"JetBrains Mono",monospace!important;font-size:12px!important;line-height:1.75!important}
+#rp input:not([type=checkbox]):not([type=range]),#rp select{background:#0c151c!important;border-color:#304653!important;color:#edf4f5!important}
+#rp button{background:#1b2d37!important;border:1px solid #304653!important;color:#dce8ec!important}#rp button:hover{border-color:#42a99f!important}
+#sb{background:#101a22!important;border-color:#293d49!important;color:#8fa2ac!important}
+#p-home{box-sizing:border-box!important;min-height:calc(100vh - 70px)!important;padding:clamp(32px,5vw,76px) clamp(22px,6vw,84px)!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(300px,1fr)!important;grid-template-rows:auto auto!important;align-content:center!important;gap:28px 5vw!important;background:#0d141b!important;color:#edf4f5!important;overflow:hidden!important}
+#p-home:before{content:"";grid-column:2;grid-row:1;align-self:stretch;min-height:340px;border:1px solid #294650;border-radius:22px;background:radial-gradient(circle at 50% 50%,#42d6c3 0 2px,transparent 3px),linear-gradient(90deg,transparent 49.8%,#285d5c 50%,transparent 50.2%),linear-gradient(0deg,transparent 49.8%,#285d5c 50%,transparent 50.2%),radial-gradient(ellipse at 50% 45%,#1c4648,#152c35 48%,#101b25 78%);background-size:34px 34px,100% 100%,100% 100%,100% 100%;box-shadow:inset 0 0 70px #061014,0 24px 65px #0004}
+#p-home:after{content:"VOLTIX  /  CIRCUIT WORKSPACE\\A\\A  ┌───────────────┐       ┌────────────┐\\A  │  ARDUINO UNO  │───────│  SENSOR    │\\A  │  D13  GND  5V │       │  SIGNAL    │\\A  └───────────────┘       └────────────┘\\A          │                     │\\A          └───────┬─────────────┘\\A                  │\\A           [ LIVE SIMULATION ]";white-space:pre;grid-column:2;grid-row:1;align-self:center;justify-self:center;z-index:1;padding:20px;color:#75e6d7;font:600 clamp(10px,1.1vw,14px)/2 "JetBrains Mono",monospace;text-shadow:0 0 18px #42d6c355;pointer-events:none}
+#p-home h1{grid-column:1;grid-row:1;align-self:start;margin:0 0 18px!important;color:#f0f6f6!important;font-size:clamp(48px,6.7vw,92px)!important;line-height:.94!important;letter-spacing:-.065em!important}
+#p-home>p:first-of-type{grid-column:1;grid-row:1;align-self:start;margin:180px 0 78px!important;max-width:540px!important;color:#a9bac2!important;font-size:15px!important;line-height:1.85!important}
+#p-home .cta{grid-column:1;grid-row:1;align-self:end;margin:0!important;display:flex!important;gap:10px!important;flex-wrap:wrap!important}
+#p-home .cta button,#p-home article button{min-height:44px!important;padding:0 18px!important;border-radius:9px!important;background:#42d6c3!important;border:1px solid #42d6c3!important;color:#071817!important;font-weight:750!important}
+#p-home .cta button:not(.run){background:#192832!important;border-color:#354b58!important;color:#e7f0f2!important}
+#p-home .grid3{grid-column:1/-1!important;grid-row:2!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+#p-home .grid3 article{padding:20px!important;background:#141f28!important;border:1px solid #2a3d49!important;border-radius:14px!important}
+#p-home .grid3 article h3{color:#eaf3f4!important}#p-home .grid3 article p{color:#9eafb8!important;font-size:12px!important;line-height:1.7!important}
+#p-home>p:not(:first-of-type){grid-column:1/-1!important;max-width:850px!important;color:#9eafb8!important}
+#p-home .note{padding:14px 16px!important;background:#131f28!important;border:1px solid #2a3d49!important;border-radius:10px!important}
+#v3d{background:radial-gradient(ellipse at 50% 35%,#1a3038,#0d141b 72%)!important}
+#v3d .hint,#v3d .vx-3d-cameras{background:#14232c!important;border-color:#304653!important;color:#e2eff0!important}
+:focus-visible{outline:2px solid #42d6c3!important;outline-offset:2px!important}
+button,a,summary,input,select{accent-color:#42d6c3}
+@media(max-width:1100px){body[data-r=sim]>main{grid-template-columns:215px minmax(0,1fr) 300px!important}#p-home{column-gap:28px!important;padding:40px 30px!important}}
+@media(max-width:850px){#top{height:auto!important;min-height:64px!important;flex-wrap:wrap!important;padding:10px 14px!important;gap:8px!important}#top .tl{order:3;width:100%!important;overflow-x:auto!important;min-height:38px!important}.vx-workbar{height:auto!important;min-height:58px!important;flex-wrap:wrap!important;padding:9px 12px!important}body[data-r=sim]{grid-template-rows:auto auto minmax(0,1fr) auto!important}body[data-r=sim]>main{grid-template-columns:190px minmax(0,1fr)!important}body[data-r=sim]>main>#rp{grid-column:1/-1!important;max-height:38vh!important;border-left:0!important;border-top:1px solid #293d49!important}#p-home{grid-template-columns:1fr!important;grid-template-rows:auto auto auto!important;min-height:auto!important}#p-home:before{grid-column:1;grid-row:2;min-height:250px}#p-home:after{grid-column:1;grid-row:2}#p-home h1{grid-column:1;grid-row:1!important}#p-home>p:first-of-type{grid-column:1;grid-row:1!important;margin:150px 0 72px!important}#p-home .cta{grid-column:1;grid-row:1!important}#p-home .grid3{grid-row:3!important;grid-template-columns:1fr!important}}
+@media(max-width:620px){body[data-r=sim]>main{grid-template-columns:1fr!important}body[data-r=sim]>main>#pal{max-height:30vh!important;border-right:0!important;border-bottom:1px solid #293d49!important}body[data-r=sim]>main>#rp{max-height:42vh!important}.vx-workbar-brand .logo{display:none!important}#p-home{padding:28px 20px!important;row-gap:18px!important}#p-home h1{font-size:54px!important}#p-home>p:first-of-type{font-size:13px!important}#p-home:before{min-height:210px}}

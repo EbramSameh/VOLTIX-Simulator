@@ -7,23 +7,23 @@
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const side = {
     // Breakout boards with a single edge connector
-    mpu6050:'left',adxl345:'left',bmp280:'left',ina219:'left',max30:'left',
-    bme280:'left',sht31:'left',rtc:'left',ads:'left',dac:'left',pca:'left',
-    qmc:'left',tcs:'left',apds:'left',vl53:'left',mpu9250:'left',
-    gps:'left',hc05:'left',rfid:'left',nrf:'left',lora:'left',max485:'left',
-    sdc:'left',hx711:'left',npk:'left',irr:'left',enc:'left',keypad:'left',
-    soil:'left',soilc:'left',rain:'left',wlevel:'left',turb:'left',tds:'left',
-    mq135:'left',ph:'left',vsens:'left',uvs:'left',ecg:'left',eeg:'left',emg:'left',
+    mpu6050:'bottom',adxl345:'bottom',bmp280:'bottom',ina219:'bottom',max30:'bottom',
+    bme280:'bottom',sht31:'bottom',rtc:'bottom',ads:'bottom',dac:'bottom',pca:'bottom',
+    qmc:'bottom',tcs:'bottom',apds:'bottom',vl53:'bottom',mpu9250:'bottom',
+    gps:'bottom',hc05:'bottom',rfid:'bottom',nrf:'bottom',lora:'bottom',max485:'bottom',
+    sdc:'bottom',hx711:'bottom',npk:'bottom',irr:'bottom',enc:'bottom',keypad:'bottom',
+    soil:'bottom',soilc:'bottom',rain:'bottom',wlevel:'bottom',turb:'bottom',tds:'bottom',
+    mq135:'bottom',ph:'bottom',vsens:'bottom',uvs:'bottom',ecg:'bottom',eeg:'bottom',emg:'bottom',
     // Three-pin headers and compact modules
-    servo:'left',aicam:'left',pir:'left',ir:'left',flame:'left',touch:'left',
-    hall:'bottom',ds18:'bottom',irr:'bottom',pot:'bottom',vibs:'left',snd:'left',sndl:'left',lux:'left',press:'left',
-    loadc:'left',fsr:'left',flex:'left',tmp36:'bottom',lm35:'bottom',
+    servo:'bottom',aicam:'bottom',pir:'bottom',ir:'bottom',flame:'bottom',touch:'bottom',
+    hall:'bottom',ds18:'bottom',irr:'bottom',pot:'bottom',vibs:'bottom',snd:'bottom',sndl:'bottom',lux:'bottom',press:'bottom',
+    loadc:'bottom',fsr:'bottom',flex:'bottom',tmp36:'bottom',lm35:'bottom',
     // Power boards expose terminal blocks on opposite sides
     lm2596:'dual',mt3608:'dual',ams1117:'bottom',lm7805:'bottom',
     // Larger driver boards
     l298:'driver',tb6612:'driver',a4988:'dual',drv8825:'dual',
     relay:'relay',us:'bottom',dht11:'bottom',dht22:'bottom',
-    lcd:'left',oled:'left',neo:'left',seg7:'bottom',step28:'bottom'
+    lcd:'bottom',oled:'bottom',neo:'bottom',seg7:'bottom',step28:'bottom'
   };
   const bottomTypes=new Set(['led','rgb','cap','buz','mot','fan','vib','sol','spk','laser','nema','nema17','stepc','bat','dmm']);
   const moduleKinds=new Set(['an','dig','i2c','vis','sx','us','dht','relay','neo','sd','reg','pca','a4988','step','disp','seg','dmm','uart','rfid','hb']);

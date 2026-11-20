@@ -47,7 +47,7 @@
     const n=Array.isArray(d[3])?d[3].length:String(d[3]||'').split(/[ ,|]+/).filter(Boolean).length;
     meta.innerHTML='<span><b>'+esc(status)+'</b><small>SIMULATION STATUS</small></span><span><b>'+n+'</b><small>PIN COUNT</small></span><span><b>'+esc(d[1]||'General')+'</b><small>PART FAMILY</small></span>';
     const labels=Array.isArray(d[3])?d[3]:String(d[3]||'').split(/[ ,|]+/).filter(Boolean);
-    pins.innerHTML='<div class="vx-inspector-section-title">PINOUT</div><div class="vx-inspector-pin-list">'+labels.map(x=>'<span>'+esc(x)+'</span>').join('')+'</div>';
+    pins.innerHTML='<div class="vx-inspector-section-title">PINOUT · CONNECTOR ORDER</div><div class="vx-inspector-pin-list">'+labels.map((x,i)=>'<span><b>'+String(i+1).padStart(2,'0')+'</b>'+esc(x)+'</span>').join('')+'</div>';
   }
   const observer=new MutationObserver(render);
   observer.observe(pc,{childList:true,subtree:true});

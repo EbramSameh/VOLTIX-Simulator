@@ -51,8 +51,13 @@
     if(t==='rgb')return at([79,85,91,97][index]||88,104,'d');
     if(t==='cap')return at(index===0?79:97,104,'d');
     if(t==='buz')return at(index===0?78:98,104,'d');
-    if(t==='dht11'||t==='dht22')return at([72,88,104][index]||88,104,'d');
-    if(t==='us')return at([52,76,100,124][index]||88,104,'d');
+    if(t==='dht11'||t==='dht22')return at([64,80,96,112][index]||88,h+8,'b');
+    if(t==='us')return at([52,76,100,124][index]||88,h+8,'b');
+    if(t==='seg7'){
+      const left=['A','B','C','D','E'],right=['F','G','DP','COM'];
+      const group=left.includes(label)?left:right,idx=group.indexOf(label);
+      return at(left.includes(label)?-8:w+8,32+idx*(h-64)/Math.max(1,group.length-1),left.includes(label)?'l':'r');
+    }
     if(layout==='left'){
       const y=34+index*(h-68)/Math.max(1,n-1);
       return at(-8,y,'l');
@@ -146,12 +151,20 @@
   const screw=(x,y)=>`<g pointer-events="none"><circle cx="${x}" cy="${y}" r="3.4" fill="#b8c2ca" stroke="#43515c" stroke-width="1"/><path d="M${x-1.8} ${y+1.8}L${x+1.8} ${y-1.8}" stroke="#34404a" stroke-width="1.1"/></g>`;
   function boardArt(p,w,h){
     const t=p.t,k=p.k;
+    // These are through-hole or molded packages, not breakout PCBs.
+    const discretePackages=new Set(['dht11','dht22','ds18','hall','irr','tmp36','lm35','lm7805']);
+    if(discretePackages.has(t))return '';
     const green=['l298','tb6612','relay','mpu6050','adxl345','bmp280','ina219','bme280','sht31','rtc','ads','dac','pca','qmc','tcs','apds','vl53','max30','gps','hc05','rfid','nrf','lora','max485','hx711','sdc','neo','aicam','pir','ir','flame','touch','hall','soil','soilc','rain','wlevel','turb','tds','mq135','ph','vsens','uvs','ecg','eeg','emg','snd','sndl','lux','press','vibs','loadc','fsr','flex','lcd','oled','seg7','step28','lm2596','mt3608','ams1117','lm7805','joy','enc','keypad'];
     if(!green.includes(t)&&!moduleKinds.has(k))return '';
     const fill=t==='l298'||t==='tb6612'?'#176b48':t==='a4988'||t==='drv8825'?'#9f2630':t==='lm2596'||t==='mt3608'?'#175aa3':t==='relay'?'#1766b8':'#176344';
     const corners=[[12,12],[w-12,12],[12,h-12],[w-12,h-12]].map(([x,y])=>screw(x,y)).join('');
     let extra='';
-    if(t==='l298')extra=`<rect x="52" y="22" width="94" height="78" rx="3" fill="#252b32" stroke="#87939b" stroke-width="2"/><path d="M60 28H138M60 36H138M60 44H138M60 52H138M60 60H138M60 68H138M60 76H138" stroke="#68747e" stroke-width="3"/><rect x="65" y="104" width="78" height="12" rx="2" fill="#101820" stroke="#9aa6af"/><text x="104" y="112" text-anchor="middle" font-size="6" fill="#dce6e9">L298N</text>`;
+    if(t==='l298')extra=`<rect x="52" y="22" width="94" height="78" rx="3" fill="#252b32" stroke="#87939b" stroke-width="2"/><path d="M60 28H138M60 36H138M60 44H138M60 52H138M60 60H138M60 68H138M60 76H138" stroke="#68747e" stroke-width="3"/><rect x="65" y="104" width="78" height="12" rx="2" fill="#101820" stroke="#9aa6af"/><text x="104" y="112" text-anchor="middle" font-size="6" fill="#dce6e9">L298N</text>`+
+      // Blue screw-terminal housings: supply at the top, motor outputs on both sides.
+      [48,91,134].map(x=>`<rect x="${x}" y="14" width="28" height="20" rx="2" fill="#2467b8" stroke="#8eb7e5"/><circle cx="${x+14}" cy="20" r="4" fill="#b9c4cf" stroke="#586575"/><path d="M${x+14} 20v5" stroke="#4b5563" stroke-width="1.5"/>`).join('')+
+      [48,88].map(y=>`<rect x="4" y="${y}" width="23" height="20" rx="2" fill="#2467b8" stroke="#8eb7e5"/><circle cx="15" cy="${y+6}" r="4" fill="#b9c4cf" stroke="#586575"/>`).join('')+
+      [48,88].map(y=>`<rect x="183" y="${y}" width="23" height="20" rx="2" fill="#2467b8" stroke="#8eb7e5"/><circle cx="194" cy="${y+6}" r="4" fill="#b9c4cf" stroke="#586575"/>`).join('')+
+      Array.from({length:6},(_,i)=>`<rect x="${28+i*28}" y="137" width="8" height="7" rx="1" fill="#d5b46a" stroke="#725b2e"/>`).join('');
     else if(t==='a4988'||t==='drv8825')extra=`<rect x="55" y="35" width="58" height="48" rx="3" fill="#242a32" stroke="#c5cbd1"/><circle cx="124" cy="52" r="7" fill="#c3cbd1" stroke="#6b7280"/><path d="M72 42H96M72 49H96M72 56H96M72 63H96" stroke="#7c8791" stroke-width="2"/>`;
     else if(t==='lm2596'||t==='mt3608')extra=`<rect x="54" y="32" width="44" height="40" rx="4" fill="#1d242b" stroke="#89939a"/><circle cx="118" cy="54" r="15" fill="#252b32" stroke="#9ca3af" stroke-width="3"/><circle cx="118" cy="54" r="6" fill="#aeb8c2"/><rect x="68" y="82" width="32" height="9" rx="2" fill="#d1a64a"/>`;
     else if(t==='relay')extra=`<rect x="54" y="28" width="66" height="54" rx="4" fill="#1e293b" stroke="#93a4b3"/><rect x="60" y="34" width="54" height="40" rx="3" fill="#263746"/><text x="87" y="56" text-anchor="middle" font-size="8" fill="#e8f0f5">RELAY</text>`;
@@ -209,6 +222,6 @@
     #pl .vx-physical-part .vx-part-art{filter:drop-shadow(0 2px 2px #0009)}
   `;
   document.head.appendChild(style);
-  window.VOLTIXPhysicalComponents={version:'2.2',packages:Object.keys(side),rendered:true,geometry:point};
+  window.VOLTIXPhysicalComponents={version:'2.3',packages:Object.keys(side),rendered:true,geometry:point};
   if(typeof draw==='function')draw();
 })();

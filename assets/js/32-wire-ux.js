@@ -16,7 +16,7 @@
       const layer=$('#wl');if(!layer)return;
       layer.querySelectorAll('.wire-hit').forEach(e=>e.remove());
       layer.querySelectorAll('path.wire').forEach((path,index)=>{
-        const wire=window.S?.wires?.[index];
+        const wire=typeof S!=='undefined'?S.wires[index]:null;
         if(!wire)return;
         path.setAttribute('role','button');
         path.setAttribute('tabindex','0');
@@ -42,10 +42,10 @@
       if(!path||(event.key!=='Enter'&&event.key!==' '))return;
       event.preventDefault();
       const index=Number(path.getAttribute('data-w'));
-      if(!Number.isInteger(index)||!window.S?.wires?.[index])return;
-      window.S.wires.splice(index,1);
+      if(!Number.isInteger(index)||typeof S==='undefined'||!S.wires[index])return;
+      S.wires.splice(index,1);
       if(typeof window.drawWires==='function')window.drawWires();
-      if(typeof window.save==='function')window.save();
+      if(typeof save==='function')save();
       const toast=$('#toast');
       if(toast){toast.textContent='Wire removed';toast.className='show'}
     });

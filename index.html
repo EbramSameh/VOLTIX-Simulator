@@ -20,7 +20,14 @@
 <link rel="stylesheet" href="assets/css/voltix-calm-ui.css?v=20261109-hardware-faults">
 <link rel="stylesheet" href="assets/css/voltix-professional.css?v=20261109-professional-workspace">
 <link rel="stylesheet" href="assets/css/voltix-navigation-ux.css?v=20261110-navigation-ux">
-<link rel="stylesheet" href="assets/css/voltix-finish-polish.css?v=20261110-final-ui"><link rel="stylesheet" href="assets/css/voltix-menu-polish.css?v=20261110-builder-menus"><link rel="stylesheet" href="assets/css/voltix-component-inspector.css?v=20261110-inspector"></head><body data-r="home">
+<link rel="stylesheet" href="assets/css/voltix-finish-polish.css?v=20261110-final-ui"><link rel="stylesheet" href="assets/css/voltix-menu-polish.css?v=20261110-builder-menus"><link rel="stylesheet" href="assets/css/voltix-component-inspector.css?v=20261110-inspector"><link rel="stylesheet" href="assets/css/voltix-hardware-library.css?v=20261110-real-hardware">
+<link rel="stylesheet" href="assets/css/voltix-builder-sensor-ux.css?v=20261110-builder-lab">
+<link rel="stylesheet" href="assets/css/voltix-ui-refresh.css?v=20261120-ui-refresh">
+<link rel="stylesheet" href="assets/css/voltix-wire-ux.css?v=20261120-wire-ux">
+<link rel="stylesheet" href="assets/css/voltix-complete-workspace.css?v=20261120-complete">
+<link rel="stylesheet" href="assets/css/voltix-ui-reference-refresh.css?v=20261120-monochrome-v4">
+<link rel="stylesheet" href="assets/css/voltix-studio-redesign.css?v=20261120-studio-v3">
+</head><body data-r="home">
 <nav id="top" aria-label="Main navigation">
   <a class="tb" href="#" data-go="home" aria-label="VOLTIX Simulator home">
     <img src="assets/voltix-brand.svg?v=20261109-teal-mark" alt="" width="34" height="34">
@@ -134,6 +141,15 @@
 <footer id="sb"><span id="sb1">Stopped</span><span id="sb2">t = 0.00 s</span><span id="sb3">Solver: idle</span><span id="sb4"></span><span id="sb5"></span><span style="margin-left:auto">Made by Ebram Sameh · S’28 Red Sea STEM</span></footer>
 <div id="pages">
 <section class="pg on" id="p-home"><h1>VOLTIX<br>SIMULATOR</h1><p>Build circuits, write Arduino-style code and prepare Raspberry Pi vision projects in one lab. Everything on these pages runs in your browser.</p><div class="cta"><button class="run" data-go="sim">Open the simulator</button><button data-go="ai">Open AI Lab</button></div>
+<div class="vx-home-visual" aria-hidden="true">
+  <div class="vx-visual-top"><span>VOLTIX / ENGINEERING CONSOLE</span><span class="vx-visual-live">SYSTEM READY</span></div>
+  <div class="vx-board-scene">
+    <div class="vx-board-card"><div class="vx-board-chip"></div><strong>VOLTIX LAB</strong><small>MCU · GPIO · I/O</small></div>
+    <div class="vx-signal-line"></div>
+    <div class="vx-sensor-card"><span class="vx-sensor-icon">↗</span><strong>SENSOR NODE</strong><small>DATA / 3.3V</small></div>
+  </div>
+  <div class="vx-visual-bottom"><span>LIVE CIRCUIT DESIGN</span><span>01 — 04 / WORKSPACE</span></div>
+</div>
 <div class="grid3"><article><h3>Circuit simulator</h3><p>Nodal analysis solves resistors, LEDs, diodes, capacitors, inductors and fuses. Parts fail when they pass their ratings.</p><button data-go="sim">Open</button></article><article><h3>Components</h3><p>Browse every part, its pins, and how much of it is really simulated.</p><button data-go="parts">Browse</button></article><article><h3>Raspberry Pi and AI Lab</h3><p>Pick a Pi, try in-browser vision on your webcam, and copy the exact commands to run a model on a real Pi.</p><button data-go="pi">Raspberry Pi</button> <button data-go="ai">AI Lab</button></article></div>
 <p>VOLTIX SIMULATOR is an online circuit simulator for Arduino, ESP32 and Raspberry Pi projects. Place resistors, LEDs, capacitors, inductors, motors, motor drivers and dozens of sensors, bend wires like in Wokwi or Tinkercad, write code with colour and autocomplete, and look at your circuit in 3D.</p><p class="note">Honest scope: the simulator is a teaching model, the browser vision demo is simple pixel analysis, and nothing here runs on a Raspberry Pi until you run the generated commands on one.</p><div class="sigslot" style="margin-top:26px"></div></section>
 <section class="pg" id="p-parts"><h1>Components</h1><p>Every part in the simulator. Full means the circuit engine solves it, Partial means a simplified model, Visual means it only draws.</p><input id="pq" placeholder="Search components"><div class="chips" id="pchips"></div><div class="cards" id="pcards"></div></section>
@@ -1093,6 +1109,6 @@ layout();S.bt='uno';$('#bd').value='uno';S.parts=[];S.wires=[];S.n=0;S.sel=null;
 })();
 </script>
 <script src="assets/js/26-navigation-ux.js?v=20261110-navigation-ux"></script>
-<script src="assets/js/27-menu-behavior.js?v=20261110-builder-menus"></script><link rel="stylesheet" href="assets/css/voltix-hardware-library.css?v=20261110-real-hardware"><script src="assets/js/28-hardware-component-renderer.js?v=20261120-natural-pcb-v2"></script><link rel="stylesheet" href="assets/css/voltix-builder-sensor-ux.css?v=20261110-builder-lab"><script src="assets/js/29-builder-and-sensor-lab.js?v=20261110-builder-lab"></script><script src="assets/js/30-component-inspector.js?v=20261110-inspector"></script><script src="assets/js/31-physical-component-layouts.js?v=20261120-physical-components-v4"></script><link rel="stylesheet" href="assets/css/voltix-ui-refresh.css?v=20261120-ui-refresh"><link rel="stylesheet" href="assets/css/voltix-wire-ux.css?v=20261120-wire-ux"><link rel="stylesheet" href="assets/css/voltix-complete-workspace.css?v=20261120-complete"><link rel="stylesheet" href="assets/css/voltix-ui-reference-refresh.css?v=20261120-monochrome-v4">
-<link rel="stylesheet" href="assets/css/voltix-studio-redesign.css?v=20261120-studio-v2"><script src="assets/js/32-wire-ux.js?v=20261120-wire-ux"></script><script src="assets/js/33-component-atlas.js?v=20261120-atlas"></script>
+<script src="assets/js/27-menu-behavior.js?v=20261110-builder-menus"></script><script src="assets/js/28-hardware-component-renderer.js?v=20261120-natural-pcb-v2"></script><script src="assets/js/29-builder-and-sensor-lab.js?v=20261110-builder-lab"></script><script src="assets/js/30-component-inspector.js?v=20261110-inspector"></script><script src="assets/js/31-physical-component-layouts.js?v=20261120-physical-components-v4"></script>
+<script src="assets/js/32-wire-ux.js?v=20261120-wire-ux"></script><script src="assets/js/33-component-atlas.js?v=20261120-atlas"></script>
 <script src="assets/js/34-3d-navigation-polish.js?v=20261120-3d-nav"></script></body></html>

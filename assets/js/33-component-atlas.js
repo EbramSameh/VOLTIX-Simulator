@@ -33,7 +33,7 @@
   if(!p||!p.t||!p.k)return html;
   const w=p.w||148,h=p.h||116,marker='<rect class="pb"',at=html.indexOf(marker);
   if(at<0)return html;
-  const titleAt=html.indexOf('class="t vx-part-title"',at);
+  const titleAt=html.indexOf('class="t"',at);
   if(titleAt<0)return html;
   const titleEnd=html.indexOf("</text>",titleAt);
   if(titleEnd<0)return html;

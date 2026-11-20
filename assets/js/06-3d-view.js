@@ -2,7 +2,7 @@
 
 /* ===== MODULE 8: real 3D view (Three.js) ===== */
 (()=>{let sc,cm,rn,grp,tg,az=.6,el=.85,dist=13,raf=0,sig='',fc=0,drag=null;const K=60;
- const css=document.createElement('style');css.textContent='#v3d{position:absolute;inset:0;z-index:7;background:#0a0a0b}#v3d canvas{position:absolute;inset:0;width:100%;height:100%}#v3d .hint{position:absolute;left:14px;top:14px;padding:9px 12px;border:1px solid #414348;border-radius:8px;background:#111214f2;font-size:12px;color:#f4f4f5;z-index:1;box-shadow:0 8px 24px #0008}';document.head.appendChild(css);
+ const css=document.createElement('style');css.textContent='#v3d{position:absolute;inset:0;z-index:7;background:#0a0a0b}#v3d canvas{position:absolute;inset:0;width:100%;height:100%}#v3d .hint{position:absolute;left:14px;top:14px;padding:9px 12px;border:1px solid #414348;border-radius:8px;background:#111214f2;font-size:12px;color:#f4f4f5;z-index:1;box-shadow:0 8px 24px #0008}#v3d .hint:after{content:" • REAL-TIME CIRCUIT MODEL";color:#ff7043;font-weight:700;margin-left:8px}';document.head.appendChild(css);
  const box=document.createElement('div');box.id='v3d';box.hidden=true;box.innerHTML='<div class="hint">Drag to orbit, scroll to zoom, right-drag to pan. Parts and wires are live.</div>';$('#cvw').appendChild(box);
  const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.55,metalness:.1},o||{}));
  const bx=(w,h,d,c,x,y,z,o)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),M(c,o));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;return m};
@@ -29,15 +29,15 @@
  function board3(){
  const g=new THREE.Group(),W=S.bw/K,H=S.bh/K,uno=S.bt==='uno'||S.bt==='unor4',col={uno:'#087f86',unor4:'#087f86',mega:'#0a7c86',leo:'#0a7c86',nano:'#1f5fbf',pro:'#b3262f',pico:'#0b7a3d',esp32:'#176b52',cam:'#176b52'}[S.bt]||'#171b26';
  g.position.set((S.bx+S.bw/2)/K,0,(S.by+S.bh/2)/K);
- g.add(bx(W,.13,H,col,0,.065,0,{roughness:.48,metalness:.08}));
+ g.add(bx(W,.13,H,col,0,.065,0,{roughness:.48,metalness:.08}));boardFace(g,W,H,uno?'uno':S.bt);
  const chip=(x,z,w,h,label)=>{g.add(bx(w,.17,h,'#20242b',x,.19,z,{roughness:.6}));g.add(bx(w*.72,.035,h*.7,'#11151b',x,.29,z,{roughness:.35}));for(let q=-2;q<=2;q++){g.add(bx(.035,.09,.045,'#c8ccd0',x+q*w*.15,.13,z-h*.52));g.add(bx(.035,.09,.045,'#c8ccd0',x+q*w*.15,.13,z+h*.52))}return label};
  const pad=(x,z)=>g.add(cy(.07,.018,'#0c1720',x,.14,z,{roughness:.8}));
  const header=(x,z,n,dx)=>{for(let q=0;q<n;q++){const px=x+q*dx;g.add(bx(.075,.12,.075,'#111318',px,.16,z));g.add(cy(.022,.14,'#d6b86b',px,.22,z,{metalness:.85}))}};
  if(uno){
   // USB-B connector, barrel jack, voltage regulator and USB interface.
   g.add(bx(.43,.28,.58,'#b9c0c9',-W*.42,.19,-H*.23,{metalness:.82,roughness:.28}));
-  g.add(bx(.30,.12,.34,'#252a32',-W*.42,.37,-H*.23,{metalness:.25}));
-  g.add(bx(.36,.27,.38,'#171b22',-W*.43,.18,H*.17,{roughness:.5}));
+  g.add(bx(.30,.12,.34,'#252a32',-W*.42,.37,-H*.23,{metalness:.25}));g.add(bx(.24,.075,.012,'#090c10',-W*.42,.37,-H*.405,{roughness:.25}));g.add(bx(.17,.035,.014,'#8d969f',-W*.42,.385,-H*.414,{metalness:.85}));
+  g.add(bx(.36,.27,.38,'#171b22',-W*.43,.18,H*.17,{roughness:.5}));g.add(cy(.105,.19,'#090b0e',-W*.43,.26,H*.17,{roughness:.25},1));g.add(cy(.075,.025,'#4b535d',-W*.43,.26,H*.17,{metalness:.7},1));
   g.add(bx(.27,.14,.3,'#222830',-W*.31,.16,H*.31));
   chip(-W*.19,-H*.23,.45,.36,'USB interface');
   chip(W*.12,H*.06,.76,.42,'ATmega328P');
@@ -50,13 +50,12 @@
   // Reset switch and status LEDs.
   g.add(bx(.18,.12,.16,'#d8dce1',-W*.2,.16,H*.31,{metalness:.55}));
   ['#39d98a','#ffcb4d','#e7eaf0'].forEach((c,n)=>g.add(cy(.035,.025,c,W*(.22+n*.075),.16,-H*.28,{emissive:c,emissiveIntensity:.18})));
-  header(-W*.35,-H*.43,8,W*.095);header(-W*.35,H*.43,8,W*.095);
+  pinRow(g,-W*.36,-H*.43,14,W*.055);pinRow(g,-W*.34,H*.43,8,W*.052);pinRow(g,W*.12,H*.43,6,W*.052);cap3(g,-W*.03,-H*.29);cap3(g,W*.34,H*.18);smd(g,W*.31,-H*.28,.12,.09);smd(g,W*.39,-H*.28,.12,.09);smd(g,-W*.27,H*.27,.12,.08);smd(g,-W*.13,H*.27,.1,.08);
  }else{
   chip(-W*.08,-H*.1,Math.min(.75,W*.3),Math.min(.42,H*.2),'main controller');
   g.add(bx(W*.24,.16,H*.42,'#20252b',W*.28,.17,-H*.02,{metalness:.45}));
-  header(-W*.43,-H*.42,Math.max(4,Math.floor(W*2)),W*.86/Math.max(3,Math.floor(W*2)-1));
-  header(-W*.43,H*.42,Math.max(4,Math.floor(W*2)),W*.86/Math.max(3,Math.floor(W*2)-1));
-  if(/esp32|cam|nodemcu|s2|s3|c3/.test(S.bt)){g.add(bx(W*.26,.06,H*.12,'#c9ced6',W*.27,.2,-H*.28,{metalness:.7}));g.add(bx(W*.08,.035,H*.22,'#c4ccd5',W*.39,.17,-H*.28,{metalness:.75}))}
+  pinRow(g,-W*.43,-H*.42,Math.max(4,Math.floor(W*2)),W*.86/Math.max(3,Math.floor(W*2)-1));pinRow(g,-W*.43,H*.42,Math.max(4,Math.floor(W*2)),W*.86/Math.max(3,Math.floor(W*2)-1));smd(g,-W*.28,-H*.18);smd(g,W*.25,H*.18);cap3(g,W*.32,-H*.18);
+  if(/esp32|cam|nodemcu|s2|s3|c3/.test(S.bt)){g.add(bx(W*.26,.06,H*.12,'#c9ced6',W*.27,.2,-H*.28,{metalness:.7}));g.add(bx(W*.08,.035,H*.22,'#c4ccd5',W*.39,.17,-H*.28,{metalness:.75}));g.add(bx(W*.22,.025,H*.09,'#9ca3af',W*.27,.245,-H*.28,{metalness:.8}));smd(g,-W*.28,H*.22,.12,.08);smd(g,-W*.18,H*.22,.1,.08)}
  }
  ['u','d'].forEach(d=>{const r=S.bp.filter(q=>q.d==d);if(r.length)g.add(bx((r[r.length-1].x-r[0].x+14)/K,.11,.2,'#101318',((r[0].x+r[r.length-1].x)/2-S.bw/2)/K,.16,(r[0].y-S.bh/2)/K))});
  S.bp.forEach(q=>g.add(bx(.065,.2,.065,'#e5c77a',(q.x-S.bw/2)/K,.23,(q.y-S.bh/2)/K,{metalness:.85})));

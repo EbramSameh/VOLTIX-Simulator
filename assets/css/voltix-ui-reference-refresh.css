@@ -1,0 +1,83 @@
+/* VOLTIX UI refresh v2 — visual language informed by circuit-editor usability patterns.
+   Original CSS; preserves simulator DOM, logic and component geometry. */
+:root{
+ --vx-bg:#0a111b;--vx-panel:#101d2b;--vx-panel-2:#17283a;--vx-panel-3:#20374b;
+ --vx-border:#2c4358;--vx-border-strong:#45647e;--vx-text:#f0f5fa;--vx-muted:#aabac8;
+ --vx-faint:#7f94a7;--vx-accent:#56d9cb;--vx-accent-hover:#83eee2;
+ --vx-amber:#f0bd70;--vx-blue:#77b9f2;--vx-purple:#b5a1f5;
+}
+html,body{background:var(--vx-bg)!important;color:var(--vx-text)!important}
+#top,body[data-r=sim]>#top{background:linear-gradient(180deg,#101d2b,#0c1723)!important;border-bottom:1px solid #30475c!important}
+#top .tb b{color:#79e6da!important}
+#top .tl>button.on{background:linear-gradient(135deg,#174b50,#173d4c)!important;border-color:#367e80!important;color:#e2fffa!important}
+.vx-workbar{background:linear-gradient(180deg,#152637,#101d2b)!important;border-color:#30475c!important}
+.vx-workbar button,.vx-workbar select{border-color:#385269!important;background:#172a3c!important;color:#dce8f0!important}
+.vx-workbar .run{background:linear-gradient(135deg,#70e2d2,#45c5bd)!important;color:#082522!important;border:0!important;box-shadow:0 4px 14px #35b9ad35!important}
+body[data-r=sim]>main{background:#09131e!important}
+body[data-r=sim]>main>#pal,body[data-r=sim]>main>#rp{background:linear-gradient(180deg,#122131,#0f1b28)!important;border-color:#30475c!important}
+#pal #q{background:#091521!important;border:1px solid #3b566c!important;color:#edf5fb!important}
+#pal #q:focus{border-color:var(--vx-accent)!important;box-shadow:0 0 0 3px #56d9cb20!important}
+#pal h4{color:#92aabd!important;font-size:9px!important;letter-spacing:.15em!important;text-transform:uppercase!important}
+#pal .gr{gap:8px!important}
+#pal .gr button{
+ min-height:88px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+ gap:7px!important;padding:8px 6px!important;border:1px solid #2e465b!important;border-radius:10px!important;
+ background:linear-gradient(150deg,#1b3043,#122233)!important;color:#e0eaf1!important;
+ box-shadow:inset 0 1px #ffffff09,0 4px 10px #0002!important;font-size:10px!important;
+}
+#pal .gr button svg{width:62px!important;height:48px!important;background:linear-gradient(145deg,#0c1824,#14283a)!important;border:1px solid #294256!important;border-radius:7px!important;padding:3px!important}
+#pal .gr button:hover{transform:translateY(-2px)!important;border-color:#55d9cb!important;background:linear-gradient(145deg,#234356,#173448)!important;box-shadow:0 8px 20px #0004,0 0 0 1px #56d9cb22!important}
+#pal .gr button:active{transform:translateY(0)!important}
+#pal .gr button:focus-visible{outline:2px solid var(--vx-accent)!important;outline-offset:2px!important}
+#cvw{background-color:#091521!important;background-image:radial-gradient(#6e8da51c .8px,transparent .8px)!important;background-size:20px 20px!important}
+#cv{filter:drop-shadow(0 1px 0 #ffffff05)}
+#rp .tabs{background:#091521!important;border-color:#30475c!important}
+#rp .tabs button{color:#a9bbca!important}
+#rp .tabs button.on{background:#17454c!important;border-color:#377b7b!important;color:#e2fffa!important}
+#ed,#code,#ser,#gwl{background:#08131e!important;border-color:#30475c!important;color:#e3edf4!important}
+#props.vx-component-inspector{background:linear-gradient(160deg,#1a3043f7,#0c1927f7)!important;border:1px solid #45657b!important;box-shadow:0 20px 55px #0009,inset 0 1px #ffffff0b!important}
+.vx-inspector-head{border-bottom:1px solid #304b60!important}
+.vx-inspector-kicker{color:#7fe2d7!important;letter-spacing:.16em!important}
+.vx-inspector-hero{background:linear-gradient(145deg,#172d40,#102132)!important;border:1px solid #35536a!important;border-radius:11px!important}
+.vx-inspector-art{background:linear-gradient(145deg,#0b1723,#14283a)!important;border:1px solid #2f4b60!important;border-radius:9px!important}
+.vx-inspector-title strong{color:#f2f7fa!important}
+.vx-inspector-title small{color:#9eb4c5!important}
+.vx-inspector-meta>span{background:#102234!important;border:1px solid #304c62!important;border-radius:8px!important}
+.vx-inspector-meta b{color:#eaf5fa!important}
+.vx-inspector-meta small{color:#8fa8ba!important}
+.vx-inspector-section-title{color:#90aabd!important;letter-spacing:.13em!important}
+.vx-inspector-pin-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+.vx-inspector-pin-list span{background:linear-gradient(135deg,#1a3447,#13283a)!important;border:1px solid #35566c!important;border-radius:7px!important;color:#e8f2f7!important}
+.vx-inspector-pin-list span b{min-width:23px!important;height:21px!important;display:grid!important;place-items:center!important;border-radius:5px!important;background:#174b50!important;color:#a6fff1!important;font:700 9px 'JetBrains Mono',monospace!important}
+#vx-sensor-panel.vx-inspector-sensor-panel{background:linear-gradient(150deg,#11283a,#0b1927)!important;border-color:#3a5c70!important}
+#vx-sensor-panel label{color:#b8cad6!important}
+#vx-sensor-panel input[type=range]{accent-color:#63ded1!important}
+#vx-sensor-panel input[type=number],#vx-sensor-panel select{background:#0b1927!important;border:1px solid #38566b!important;color:#edf5fa!important;border-radius:7px!important}
+#vx-sensor-panel .vx-sensor-value{color:#82e9dd!important}
+#vx-sensor-panel button{background:#1b3548!important;border-color:#42637a!important;color:#e6f2f7!important}
+#vx-sensor-panel .vx-sensor-note{background:#15343b!important;border-color:#2c6466!important;color:#bcece5!important}
+#vx-builder-dock{background:#112334ed!important;border-color:#3a566c!important;box-shadow:0 12px 30px #0006!important}
+#vx-builder-dock button{background:#1a3042!important;border-color:#3a566c!important;color:#d9e7ef!important}
+#vx-builder-dock button:hover{background:#21465a!important;border-color:#5b9a9a!important;color:#fff!important}
+/* Component bodies: retain each component's own package artwork; make pads and silkscreen legible. */
+#pl .vx-physical-part .pb,#pl .vx-hardware-part .pb{fill:#172838!important;stroke:#7791a5!important;stroke-width:1.45!important}
+#pl .vx-physical-part:hover .pb,#pl .vx-hardware-part:hover .pb{stroke:#68e4d8!important;stroke-width:1.9!important}
+#pl .vx-physical-part.sel .pb,#pl .vx-hardware-part.sel .pb{stroke:#7ceadd!important;stroke-width:2.2!important;filter:drop-shadow(0 0 6px #56d9cb44)}
+#pl .vx-physical-part .vx-part-title,#pl .vx-hardware-part .t{font:700 9px Inter,system-ui,sans-serif!important;fill:#f1f7fa!important;paint-order:stroke;stroke:#0a1520;stroke-width:2.5px}
+#pl .vx-physical-part .vx-pin-label,#pl .vx-hardware-part .pl{font:700 7px 'JetBrains Mono',monospace!important;fill:#fff!important;stroke:#08131e!important;stroke-width:2.8px!important;paint-order:stroke;stroke-linejoin:round}
+#pl .vx-physical-part .pin,#pl .vx-hardware-part .pin{r:5.2px;fill:#e7bd73!important;stroke:#fff0c8!important;stroke-width:1.5!important;filter:drop-shadow(0 1px 2px #0009)}
+#pl .vx-physical-part .pin.p5,#pl .vx-hardware-part .pin.p5{fill:#f17b70!important;stroke:#ffd2c8!important}
+#pl .vx-physical-part .pin.p3,#pl .vx-hardware-part .pin.p3{fill:#58d7bd!important;stroke:#c4fff0!important}
+#pl .vx-physical-part .pin.g,#pl .vx-hardware-part .pin.g{fill:#9aa9b6!important;stroke:#e0e8ef!important}
+#pl .vx-physical-part .vx-pin-lead{stroke:#e5c27e!important;stroke-width:2.8!important}
+#pl .vx-hardware-part .vx-hw-finish{opacity:1!important}
+#pl .vx-physical-part .vx-part-art,#pl .vx-hardware-part .vx-hardware-art{filter:drop-shadow(0 3px 3px #000b)}
+#wtb button{background:#14283a!important;border-color:#3a566c!important;color:#d8e7ef!important}
+#wtb button:hover{background:#1c3b4f!important;border-color:#5e9a9a!important}
+#wl .wire{filter:drop-shadow(0 1px 2px #0009)}
+@media(max-width:700px){
+ #pal .gr{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ #pal .gr button{min-height:78px!important}
+ #pal .gr button svg{width:52px!important;height:40px!important}
+ #props.vx-component-inspector{max-height:78%!important}
+}

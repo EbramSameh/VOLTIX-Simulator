@@ -142,29 +142,23 @@
 <div id="pages">
 <section class="pg on" id="p-home">
   <div class="vx-home-hero">
-    <div class="vx-home-copy">
-      <div class="vx-home-eyebrow">YOUR BROWSER-BASED ENGINEERING WORKSPACE</div>
-      <h1>VOLTIX<br>SIMULATOR</h1>
-      <p>Build circuits, write Arduino-style code and prepare Raspberry Pi vision projects in one lab. Everything on these pages runs in your browser.</p>
-      <div class="cta"><button class="run" data-go="sim">Open the simulator</button><button data-go="ai">Open AI Lab</button></div>
+    <div class="vx-home-eyebrow">YOUR BROWSER-BASED ENGINEERING WORKSPACE</div>
+    <h1>VOLTIX <span>SIMULATOR</span></h1>
+    <p>Design circuits, write Arduino-style code and explore embedded systems in one focused engineering workspace.</p>
+    <div class="vx-home-actions">
+      <button class="vx-home-primary" data-go="sim">Open the simulator</button>
+      <button class="vx-home-secondary" data-go="ai">Explore AI Lab</button>
     </div>
-    <div class="vx-home-side">
-      <div class="vx-home-side-top"><span>VOLTIX / ENGINEERING STUDIO</span><span>EST. 2026</span></div>
-      <div class="vx-home-mark">V/</div>
-      <h2>IDEAS INTO<br>WORKING CIRCUITS.</h2>
-      <p>A focused workspace for designing, testing and understanding embedded systems — from the first component to the final simulation.</p>
-      <div class="vx-home-principles"><span>01 / DESIGN</span><span>02 / SIMULATE</span><span>03 / INSPECT</span></div>
-      <div class="vx-home-side-bottom"><span>BUILT FOR CREATORS</span><span>VOLTIX.STUDIO</span></div>
-    </div>
+    <div class="vx-home-meta"><span>ARDUINO</span><i></i><span>ESP32</span><i></i><span>RASPBERRY PI</span><i></i><span>3D CIRCUITS</span></div>
   </div>
+  <div class="vx-home-section-head"><span>EXPLORE THE WORKSPACE</span><span>01 — 03</span></div>
   <div class="grid3">
-    <article><h3>Circuit simulator</h3><p>Nodal analysis solves resistors, LEDs, diodes, capacitors, inductors and fuses. Parts fail when they pass their ratings.</p><button data-go="sim">Open</button></article>
-    <article><h3>Components</h3><p>Browse every part, its pins, and how much of it is really simulated.</p><button data-go="parts">Browse</button></article>
-    <article><h3>Raspberry Pi and AI Lab</h3><p>Pick a Pi, try in-browser vision on your webcam, and copy the exact commands to run a model on a real Pi.</p><button data-go="pi">Raspberry Pi</button> <button data-go="ai">AI Lab</button></article>
+    <article><div class="vx-home-card-index">01</div><h3>Circuit simulator</h3><p>Build circuits, connect components, write code and test your designs in the browser.</p><button data-go="sim">Open simulator <span>↗</span></button></article>
+    <article><div class="vx-home-card-index">02</div><h3>Component library</h3><p>Explore electronic components, pin layouts, specifications and simulation support.</p><button data-go="parts">Browse components <span>↗</span></button></article>
+    <article><div class="vx-home-card-index">03</div><h3>AI Lab & Raspberry Pi</h3><p>Explore computer vision workflows and Raspberry Pi project tools.</p><button data-go="ai">Explore AI Lab <span>↗</span></button></article>
   </div>
-  <p>VOLTIX SIMULATOR is an online circuit simulator for Arduino, ESP32 and Raspberry Pi projects. Place resistors, LEDs, capacitors, inductors, motors, motor drivers and dozens of sensors, bend wires like in Wokwi or Tinkercad, write code with colour and autocomplete, and look at your circuit in 3D.</p>
-  <p class="note">Honest scope: the simulator is a teaching model, the browser vision demo is simple pixel analysis, and nothing here runs on a Raspberry Pi until you run the generated commands on one.</p>
-  <div class="sigslot" style="margin-top:26px"></div>
+  <div class="vx-home-footerline"><span>ONE WORKSPACE. FROM IDEA TO SIMULATION.</span><span>VOLTIX ENGINEERING STUDIO</span></div>
+  <div class="sigslot" style="margin-top:20px"></div>
 </section>
 <section class="pg" id="p-parts"><h1>Components</h1><p>Every part in the simulator. Full means the circuit engine solves it, Partial means a simplified model, Visual means it only draws.</p><input id="pq" placeholder="Search components"><div class="chips" id="pchips"></div><div class="cards" id="pcards"></div></section>
 <section class="pg" id="p-pi"><h1>Raspberry Pi</h1><p>Board facts for the Pi family. Check the official documentation for exact specifications: raspberrypi.com/documentation.</p><div class="two"><div><h2>Board</h2><select id="pisel"></select><div id="piinfo"></div></div><div><h2>GPIO header</h2><div id="pipins" class="pins"></div></div></div><h2>All boards</h2><div style="overflow:auto"><table id="pitab"></table></div><h2>Cameras</h2><div style="overflow:auto"><table id="camtab"></table></div></section>

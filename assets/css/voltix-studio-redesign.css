@@ -74,43 +74,47 @@ body:not([data-r="sim"]) .pg button{border-radius:6px!important}
 body:not([data-r="sim"]) .pg input,body:not([data-r="sim"]) .pg select,body:not([data-r="sim"]) .pg textarea{background:#0c0e11!important;border:1px solid #42474e!important;color:#f4f5f6!important;border-radius:6px!important}
 body:not([data-r="sim"]) .pg .note{background:#15181c!important;border:1px solid #42474e!important;border-left:2px solid #f4f5f6!important;border-radius:7px!important;color:#c4c9cf!important;padding:14px 16px!important}
 
-/* Overview — split monochrome editorial composition inspired by the supplied reference. */
+/* Overview — clean single-column home page. */
 body:not([data-r="sim"]) #p-home{
- display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:0!important;
- min-height:calc(100vh - 60px)!important;padding:0!important;overflow:visible!important;background:#090a0c!important
+ display:block!important;min-height:calc(100vh - 60px)!important;padding:0!important;
+ overflow:visible!important;background:#090a0c!important
 }
-.vx-home-hero{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(360px,.92fr)!important;min-height:560px!important}
-.vx-home-copy{display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;
- padding:clamp(38px,5vw,86px)!important;background:#090a0c!important;color:#f4f5f6!important}
-.vx-home-eyebrow{margin:0 0 25px!important;color:#b6bbc2!important;font:650 10px/1.5 "JetBrains Mono",monospace!important;letter-spacing:.16em!important;text-transform:uppercase!important}
-.vx-home-copy h1{margin:0 0 22px!important;color:#f4f5f6!important;font:800 clamp(54px,7vw,100px)/.88 "Space Grotesk",Inter,sans-serif!important;letter-spacing:-.075em!important}
-.vx-home-copy>p{max-width:540px!important;margin:0!important;color:#b5bbc2!important;font-size:14px!important;line-height:1.9!important}
-.vx-home-copy .cta{display:flex!important;flex-wrap:wrap!important;gap:10px!important;margin:28px 0 0!important}
-.vx-home-copy .cta button{min-height:43px!important;padding:0 18px!important;background:#f3f4f5!important;border:1px solid #f3f4f5!important;border-radius:6px!important;color:#090a0c!important;font-weight:750!important}
-.vx-home-copy .cta button:not(.run){background:transparent!important;border-color:#555b63!important;color:#f3f4f5!important}
-.vx-home-copy .cta button:hover{transform:translateY(-1px)!important;background:#d9dcdf!important;color:#090a0c!important}
-.vx-home-side{position:relative!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;
- min-height:560px!important;padding:clamp(36px,5vw,76px)!important;background:#eceeef!important;color:#090a0c!important;overflow:hidden!important}
-.vx-home-side:before{content:"";position:absolute;inset:22px;border:1px solid #c7cbd0!important;pointer-events:none}
-.vx-home-side-top,.vx-home-side-bottom{position:relative!important;z-index:1;width:100%!important;display:flex!important;justify-content:space-between!important;gap:12px!important;
- color:#555b63!important;font:650 9px/1.5 "JetBrains Mono",monospace!important;letter-spacing:.1em!important;text-transform:uppercase!important}
-.vx-home-mark{position:relative!important;z-index:1;width:54px!important;height:54px!important;display:grid!important;place-items:center!important;
- margin:50px 0 28px!important;background:#090a0c!important;color:#fff!important;border:1px solid #090a0c!important;border-radius:8px!important;
- font:800 22px "Space Grotesk",sans-serif!important;box-shadow:5px 5px 0 #aeb3b9!important}
-.vx-home-side h2{position:relative!important;z-index:1;max-width:520px!important;margin:0!important;color:#090a0c!important;
- font:800 clamp(34px,4.3vw,62px)/.98 "Space Grotesk",Inter,sans-serif!important;letter-spacing:-.065em!important}
-.vx-home-side>p{position:relative!important;z-index:1;max-width:470px!important;margin:20px 0 30px!important;color:#4b5158!important;font-size:13px!important;line-height:1.8!important}
-.vx-home-principles{position:relative!important;z-index:1;width:100%!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;margin-top:auto!important}
-.vx-home-principles span{padding:11px 8px!important;border-top:1px solid #aeb3b9!important;color:#25292e!important;font:650 9px "JetBrains Mono",monospace!important;letter-spacing:.06em!important}
-body:not([data-r="sim"]) #p-home>.grid3{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;margin:0!important;padding:22px clamp(20px,3vw,42px) 0!important}
-body:not([data-r="sim"]) #p-home>.grid3 article{min-height:165px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;padding:18px!important;background:#141619!important;border:1px solid #343940!important;border-radius:8px!important}
-body:not([data-r="sim"]) #p-home>.grid3 article h3{margin:0 0 8px!important;font-size:14px!important}
-body:not([data-r="sim"]) #p-home>.grid3 article p{font-size:11px!important;line-height:1.7!important}
-body:not([data-r="sim"]) #p-home>.grid3 article button{margin-top:auto!important;padding:8px 12px!important;background:#f1f2f3!important;border:1px solid #f1f2f3!important;color:#090a0c!important;font-weight:700!important}
-body:not([data-r="sim"]) #p-home>.grid3 article button:hover{background:#d7dade!important}
-body:not([data-r="sim"]) #p-home>p:not(.note){max-width:950px!important;margin:20px clamp(20px,3vw,42px)!important;color:#969da5!important;font-size:11px!important}
-body:not([data-r="sim"]) #p-home>.note{margin:8px clamp(20px,3vw,42px) 30px!important;max-width:950px!important}
-
+.vx-home-hero{
+ max-width:1180px!important;margin:0 auto!important;padding:clamp(64px,9vh,112px) clamp(24px,5vw,72px) 58px!important;
+ display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+ border-bottom:1px solid #30343a!important;background:#090a0c!important;color:#f4f5f6!important
+}
+.vx-home-eyebrow{margin:0 0 24px!important;color:#aeb4bb!important;font:650 10px/1.5 "JetBrains Mono",monospace!important;letter-spacing:.17em!important;text-transform:uppercase!important}
+.vx-home-hero h1{margin:0!important;color:#f4f5f6!important;font:800 clamp(54px,8vw,108px)/.94 "Space Grotesk",Inter,sans-serif!important;letter-spacing:-.075em!important}
+.vx-home-hero h1 span{color:#9299a1!important}
+.vx-home-hero>p{max-width:650px!important;margin:23px 0 0!important;color:#b5bbc2!important;font-size:15px!important;line-height:1.85!important}
+.vx-home-actions{display:flex!important;flex-wrap:wrap!important;gap:10px!important;margin:30px 0 0!important}
+.vx-home-actions button{min-height:44px!important;padding:0 19px!important;border:1px solid #f1f2f3!important;border-radius:6px!important;background:#f1f2f3!important;color:#090a0c!important;font-size:12px!important;font-weight:750!important}
+.vx-home-actions button.vx-home-secondary{background:transparent!important;border-color:#555b63!important;color:#f1f2f3!important}
+.vx-home-actions button:hover{transform:translateY(-1px)!important;background:#d9dcdf!important;border-color:#d9dcdf!important;color:#090a0c!important}
+.vx-home-meta{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:12px!important;margin-top:45px!important;color:#858c94!important;font:650 9px/1.5 "JetBrains Mono",monospace!important;letter-spacing:.1em!important}
+.vx-home-meta i{width:3px!important;height:3px!important;border-radius:50%!important;background:#858c94!important}
+.vx-home-section-head{max-width:1180px!important;margin:0 auto!important;padding:27px clamp(24px,5vw,72px) 13px!important;display:flex!important;justify-content:space-between!important;gap:16px!important;color:#aeb4bb!important;font:650 9px/1.5 "JetBrains Mono",monospace!important;letter-spacing:.13em!important}
+body:not([data-r="sim"]) #p-home>.grid3{max-width:1180px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;margin:0 auto!important;padding:0 clamp(24px,5vw,72px)!important}
+body:not([data-r="sim"]) #p-home>.grid3 article{min-height:190px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;padding:20px!important;background:#111316!important;border:1px solid #343940!important;border-radius:7px!important;box-shadow:none!important}
+.vx-home-card-index{margin-bottom:23px!important;color:#858c94!important;font:650 10px "JetBrains Mono",monospace!important;letter-spacing:.08em!important}
+body:not([data-r="sim"]) #p-home>.grid3 article h3{margin:0 0 9px!important;color:#f4f5f6!important;font-size:15px!important;letter-spacing:-.02em!important}
+body:not([data-r="sim"]) #p-home>.grid3 article p{margin:0 0 20px!important;color:#aeb4bb!important;font-size:11px!important;line-height:1.75!important}
+body:not([data-r="sim"]) #p-home>.grid3 article button{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;margin-top:auto!important;padding:8px 0!important;background:transparent!important;border:0!important;color:#f1f2f3!important;font-size:10px!important;font-weight:700!important}
+body:not([data-r="sim"]) #p-home>.grid3 article button span{color:#858c94!important;font-size:14px!important}
+body:not([data-r="sim"]) #p-home>.grid3 article button:hover{color:#aeb4bb!important;background:transparent!important}
+.vx-home-footerline{max-width:1036px!important;margin:32px auto 0!important;padding:17px 0!important;display:flex!important;justify-content:space-between!important;gap:14px!important;border-top:1px solid #30343a!important;color:#858c94!important;font:650 8px/1.5 "JetBrains Mono",monospace!important;letter-spacing:.1em!important}
+@media(max-width:850px){
+ .vx-home-hero{padding-top:62px!important;padding-bottom:42px!important}
+ body:not([data-r="sim"]) #p-home>.grid3{grid-template-columns:1fr!important}
+ .vx-home-footerline{margin-inline:24px!important}
+}
+@media(max-width:620px){
+ .vx-home-hero h1{font-size:clamp(46px,12vw,68px)!important;letter-spacing:-.07em!important}
+ .vx-home-hero>p{font-size:13px!important}
+ .vx-home-meta{gap:8px!important;margin-top:32px!important}
+ .vx-home-footerline{flex-direction:column!important;margin-top:24px!important}
+}
 /* Simulator — preserve the established three-zone editor; make its surfaces monochrome. */
 body[data-r="sim"]{grid-template-rows:60px 58px minmax(0,1fr) 25px!important;min-height:100vh!important;background:#090a0c!important}
 body[data-r="sim"] #top{height:60px!important;min-height:60px!important;padding:0 18px!important}

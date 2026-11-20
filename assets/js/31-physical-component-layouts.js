@@ -103,6 +103,10 @@
       const [x,y,dir]=point(p,label,i,w,h),sidePin=dir==='l'||dir==='r';
       const cls='pin'+(/^(VCC|VIN|5V|VM|VMOT|IN\+|OUT\+)$/.test(label)?' p5':label==='3V3'||label==='VDD'?' p3':/^(GND|IN-|OUT-)$/.test(label)?' g':'');
       const text=esc(label),r=p.k==='piboard'?3.5:4.3;
+      if(p.k==='piboard'){
+        const tx=dir==='l'?x+7:x-7,anchor=dir==='l'?'start':'end';
+        return `<circle class="${cls}" data-pin="${id}:${text}" cx="${x}" cy="${y}" r="3.5"/><text class="pl vx-pin-label" x="${tx}" y="${y+2.2}" text-anchor="${anchor}" style="font-size:5px">${esc(label.slice(1))}</text>`;
+      }
       if(sidePin){
         const tx=dir==='l'?17:w-17,anchor=dir==='l'?'start':'end';
         if(isThrough(p)){
@@ -146,7 +150,12 @@
     const d=PT[p.t],k=p.k,id=p.id,[w,h]=dimensions(p),sl=k==='dht'?['v','v2']:(k==='an'||k==='us')?['v']:[],labels=pinsOf(p);
     p.w=w;p.h=h;p.key=null;
     const isBoard=p.k==='piboard';
-    const art=isBoard?window.shape(p.t,k,id,d):
+    const art=isBoard?`<rect x="25" y="28" width="250" height="165" rx="10" fill="#14532d" stroke="#4ade80" stroke-width="2"/>
+      <rect x="46" y="48" width="70" height="54" rx="5" fill="#0f172a" stroke="#94a3b8"/><text x="81" y="70" text-anchor="middle" font-size="8" fill="#cbd5e1">Broadcom</text><text x="81" y="83" text-anchor="middle" font-size="8" fill="#cbd5e1">SoC</text>
+      <rect x="140" y="48" width="52" height="42" rx="4" fill="#111827" stroke="#94a3b8"/><rect x="201" y="48" width="54" height="42" rx="4" fill="#111827" stroke="#94a3b8"/>
+      <text x="166" y="72" text-anchor="middle" font-size="7" fill="#e5e7eb">RAM</text><text x="228" y="72" text-anchor="middle" font-size="7" fill="#e5e7eb">Power</text>
+      <rect x="48" y="124" width="80" height="40" rx="4" fill="#1e293b" stroke="#94a3b8"/><text x="88" y="140" text-anchor="middle" font-size="7" fill="#e5e7eb">USB / LAN</text><text x="88" y="151" text-anchor="middle" font-size="7" fill="#e5e7eb">connectors</text>
+      <rect x="151" y="124" width="100" height="40" rx="4" fill="#111827" stroke="#67e8f9"/><text x="201" y="140" text-anchor="middle" font-size="7" fill="#a5f3fc">40-pin header</text><text x="201" y="151" text-anchor="middle" font-size="6" fill="#a5f3fc">P1–P40</text>`:
       shape(p.t,k,id,d,p.st.ohm,k==='led'&&typeof LC!=='undefined'?LC[p.st.color||'red']?.[0]:k==='cap'?p.st.ctype:null);
     const pcb=boardArt(p,w,h);
     const title=k==='res'?fmtOhm(p.st.ohm||220):k==='bat'?(p.st.volt||5)+' V supply':d[0];

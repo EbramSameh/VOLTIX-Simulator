@@ -8,6 +8,7 @@
   const moduleKinds=new Set(['an','dig','i2c','vis','sx','us','dht','relay','neo','sd','reg','pca','a4988','step','disp','seg','dmm','uart','rfid']);
   const isModule=p=>moduleKinds.has(p.k)||!!sideMap[p.t]||['gps','hc05','nrf','lora','mpu6050','mpu9250','bmp280','bme280','sht31','vl53','tcs','apds','qmc','rtc','ads','dac','hx711','pca','canbus','hc12','uartusb','hc05','nrf','lora','max485','tca9548'].includes(p.t);
   function geometry(p,i,w,h){
+    if(window.VOLTIXPhysicalComponents&&typeof window.pinPos==='function')return window.pinPos(p,i);
     const pins=pinsOf(p),n=pins.length,t=p.t;
     if(t==='piboard')return oldPinPos(p,i);
     if(['res','ind','dio','fuse'].includes(p.k))return[i?120:56,52,i?'r':'l'];
@@ -23,18 +24,19 @@
   pinPos=function(p,i){return geometry(p,i,p.w||Math.max(132,pinsOf(p).length*12+24),p.h||136)};
   const screw=(x,y)=>`<g pointer-events="none"><circle cx="${x}" cy="${y}" r="3.1" fill="#b7c0ca" stroke="#313b46" stroke-width="1"/><path d="M${x-1.5} ${y+1.5}L${x+1.5} ${y-1.5}" stroke="#35404a" stroke-width=".9"/></g>`;
   const finish=(p,w)=>isModule(p)?`<g class="vx-hw-finish" pointer-events="none">
-    <rect x="57" y="24" width="62" height="58" rx="5" fill="none" stroke="#d6e2cf" stroke-opacity=".23" stroke-width="1"/>
-    ${screw(62,29)}${screw(114,29)}${screw(62,77)}${screw(114,77)}
-    <path d="M66 84H110" stroke="#d8e6d0" stroke-opacity=".22" stroke-width="1"/>
-    <text x="88" y="92" text-anchor="middle" font-size="4.8" letter-spacing=".8" fill="#e6f4df" fill-opacity=".55">${String(p.t).toUpperCase()}</text>
+    <rect x="8" y="25" width="${w-16}" height="76" rx="6" fill="${p.t==='l298'||p.t==='tb6612'?'#176b4b':p.t==='a4988'||p.t==='drv8825'?'#8f2935':p.t==='lm2596'||p.t==='mt3608'?'#185b94':p.t==='relay'?'#1763a4':p.t==='rfid'?'#243d70':'#176447'}" stroke="#8fb8a0" stroke-opacity=".8" stroke-width="1.1"/>
+    <path d="M18 42H35V52H51 M${w-18} 42H${w-35}V52H${w-51} M18 82H35V72H51 M${w-18} 82H${w-35}V72H${w-51}" fill="none" stroke="#d6bd77" stroke-opacity=".38" stroke-width="1.4"/>
+    ${screw(16,33)}${screw(w-16,33)}${screw(16,93)}${screw(w-16,93)}
+    <path d="M18 96H${w-18}" stroke="#d8e6d0" stroke-opacity=".2" stroke-width="1"/>
+    <text x="${w/2}" y="96" text-anchor="middle" font-size="4.8" letter-spacing=".8" fill="#e6f4df" fill-opacity=".7">${String(p.t).toUpperCase()}</text>
   </g>`:'';
   drawPart=function(p){
     const d=PT[p.t],k=p.k,ps=pinsOf(p),sl=k==='dht'?['v','v2']:(k==='an'||k==='us')?['v']:[],id=p.id;
     const h=k==='piboard'?220:(k==='disp'?150:136)+sl.length*24;
-    const w=k==='piboard'?300:(k==='disp'?214:Math.max(132,ps.length*12+24));
+    const w=k==='piboard'?300:(k==='disp'?214:(['i2c','vis','sx','dig','an','relay','us','dht','servo','reg','hb','sd','step'].includes(k)?Math.max(160,ps.length*18+30):Math.max(132,ps.length*12+24)));
     p.h=h;p.w=w;p.key=null;
     const piArt=`<rect x="25" y="28" width="250" height="165" rx="10" fill="#14532d" stroke="#4ade80" stroke-width="2"/><rect x="46" y="48" width="70" height="54" rx="5" fill="#0f172a" stroke="#94a3b8"/><text x="81" y="70" text-anchor="middle" font-size="8" fill="#cbd5e1">Broadcom</text><text x="81" y="83" text-anchor="middle" font-size="8" fill="#cbd5e1">SoC</text><rect x="140" y="48" width="52" height="42" rx="4" fill="#111827" stroke="#94a3b8"/><rect x="201" y="48" width="54" height="42" rx="4" fill="#111827" stroke="#94a3b8"/><text x="166" y="72" text-anchor="middle" font-size="7" fill="#e5e7eb">RAM</text><text x="228" y="72" text-anchor="middle" font-size="7" fill="#e5e7eb">Power</text><rect x="48" y="124" width="80" height="40" rx="4" fill="#1e293b" stroke="#94a3b8"/><text x="88" y="140" text-anchor="middle" font-size="7" fill="#e5e7eb">USB / LAN</text><text x="88" y="151" text-anchor="middle" font-size="7" fill="#e5e7eb">connectors</text><rect x="151" y="124" width="100" height="40" rx="4" fill="#111827" stroke="#67e8f9"/><text x="201" y="140" text-anchor="middle" font-size="7" fill="#a5f3fc">40-pin header</text><text x="201" y="151" text-anchor="middle" font-size="6" fill="#a5f3fc">P1–P40</text>`;
-    const ic=k==='piboard'?piArt:k==='disp'?dispSvg(p,id,w,h):`<g class="sh3d vx-hardware-art" pointer-events="none">${shape(p.t,k,id,d,p.st.ohm,k==='led'?LC[p.st.color||'red'][0]:k==='cap'?p.st.ctype:null)}</g>`+finish(p,w)+(['btn','sw','dig'].includes(k)?`<rect data-ico="${id}" x="56" y="26" width="68" height="52" rx="8" fill="transparent" style="cursor:pointer"/>`:'');
+    const ic=k==='piboard'?piArt:k==='disp'?dispSvg(p,id,w,h):finish(p,w)+`<g class="sh3d vx-hardware-art" pointer-events="none">${shape(p.t,k,id,d,p.st.ohm,k==='led'?LC[p.st.color||'red'][0]:k==='cap'?p.st.ctype:null)}</g>`+(['btn','sw','dig'].includes(k)?`<rect data-ico="${id}" x="56" y="26" width="68" height="52" rx="8" fill="transparent" style="cursor:pointer"/>`:'');
     const pinMarkup=ps.map((l,i)=>{
       const q=geometry(p,i,w,h),x=q[0],y=q[1],dir=q[2],isSide=dir==='l'||dir==='r';
       if(k==='piboard')return `<circle class="pin" data-pin="${id}:${l}" cx="${x}" cy="${y}" r="3.8"/><text x="${x+(dir==='l'?8:-8)}" y="${y+2.5}" text-anchor="${dir==='l'?'start':'end'}" class="pl" style="font-size:5.5px">${l.slice(1)}</text>`;

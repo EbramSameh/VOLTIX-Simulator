@@ -35,7 +35,8 @@ body[data-r="sim"]>main>#pal{background:#101922!important;border-right:1px solid
 #vx-sensor-panel select{width:100%!important;background:#111f2a!important;border:1px solid #3a5362!important;border-radius:7px!important;padding:7px!important}
 #vx-sensor-panel .vx-sensor-note{background:#142b34!important;border:1px solid #294c56!important;color:#a9dcd6!important;font-size:10px!important}
 #vx-sensor-panel .vx-sensor-value{color:#75e2d2!important}
-#pl .vx-physical-part .pb,#pl .vx-hardware-part .pb{fill:#164d3c!important;stroke:#9dbba9!important;stroke-width:1.35!important}
+#pl .vx-physical-part .pb{fill:#172838!important;stroke:#8aa0b3!important;stroke-width:1.35!important}
+#pl .vx-hardware-part .pb{fill:#202a35!important;stroke:#788b9c!important;stroke-width:1.35!important}
 #pl .vx-physical-part .vx-atlas-details,#pl .vx-hardware-part .vx-atlas-details{opacity:.95}
 #pl .vx-physical-part .vx-pin-label,#pl .vx-hardware-part .pl{font-size:7.2px!important;fill:#fff!important;stroke:#101a20!important;stroke-width:2.4px!important;paint-order:stroke}
 #pl .vx-physical-part .pin,#pl .vx-hardware-part .pin{r:5.1px;stroke-width:1.8!important}

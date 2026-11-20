@@ -21,6 +21,11 @@
         path.setAttribute('role','button');
         path.setAttribute('tabindex','0');
         path.setAttribute('aria-label','Remove wire connecting '+wire.a+' to '+wire.b);
+        const kinds=typeof kc==='function'?[kc(wire.a),kc(wire.b)]:[];
+        const fault=path.getAttribute('stroke')==='#ff3b6b';
+        const palette=['#43c6d9','#8298f5','#59c995','#c49af2','#e4a85e','#e58fa9'];
+        const semantic=kinds.includes('p5')||kinds.includes('pv')?'#f06b5d':kinds.includes('p3')?'#e6b65f':kinds.includes('g')?'#91a0ad':palette[index%palette.length];
+        if(!fault)path.setAttribute('stroke',semantic);
         let title=path.querySelector('title');
         if(!title){title=document.createElementNS('http://www.w3.org/2000/svg','title');path.prepend(title)}
         title.textContent='Click to remove this wire';

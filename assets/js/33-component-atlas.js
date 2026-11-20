@@ -33,9 +33,11 @@
   if(!p||!p.t||!p.k)return html;
   const w=p.w||148,h=p.h||116,marker='<rect class="pb"',at=html.indexOf(marker);
   if(at<0)return html;
-  const end=html.indexOf("/>",at);
-  if(end<0)return html;
-  const pos=end+2;
+  const titleAt=html.indexOf('class="t vx-part-title"',at);
+  if(titleAt<0)return html;
+  const titleEnd=html.indexOf("</text>",titleAt);
+  if(titleEnd<0)return html;
+  const pos=titleEnd+7;
   return html.slice(0,pos)+boardDetails(p,w,h)+html.slice(pos);
  };
  window.VOLTIXComponentAtlas={version:"1.0",style:"detailed-pcb"};
@@ -45,4 +47,5 @@
   if(label)label.after(panel);else inspector.append(panel);
   panel.classList.add("vx-inspector-sensor-panel");
  }
+ if(typeof draw==="function")draw();
 })();

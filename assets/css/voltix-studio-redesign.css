@@ -146,3 +146,38 @@ button,a,summary,input,select{accent-color:#e87952}
  #p-home{background:#101113!important;padding:32px 22px!important}
  #p-home h1{font-size:54px!important}
 }
+
+
+/* Component library refinement */
+#pal{padding:18px 14px 24px!important}
+#pal h4{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin:22px 3px 11px!important;padding:0 2px 9px!important}
+#pal h4 small{font-size:8px!important;letter-spacing:.12em!important;color:#747a81!important;font-weight:650!important}
+#pal .gr{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+#pal .gr button{min-height:112px!important;position:relative!important;overflow:hidden!important;justify-content:flex-start!important;padding:9px 8px 10px!important;gap:8px!important;
+ background:linear-gradient(145deg,#25282d 0%,#1c1e22 70%)!important;border:1px solid #383d44!important;border-radius:11px!important;
+ box-shadow:0 3px 10px #0002!important;color:#e9e9e7!important}
+#pal .gr button:before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,transparent,#e87952,transparent);opacity:0;transition:opacity .18s}
+#pal .gr button:hover{transform:translateY(-2px)!important;background:linear-gradient(145deg,#2b2d31,#202226)!important;border-color:#765040!important;box-shadow:0 8px 18px #0004!important}
+#pal .gr button:hover:before{opacity:1}
+#pal .vx-part-thumb{width:100%!important;height:63px!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ background:radial-gradient(ellipse at 50% 40%,#34383e 0%,#22252a 58%,#1b1d21 100%)!important;
+ border:1px solid #3a3e45!important;border-radius:8px!important;overflow:hidden!important}
+#pal .vx-part-thumb svg{width:84px!important;height:58px!important;max-width:100%!important;background:transparent!important;border:0!important;border-radius:0!important;
+ filter:drop-shadow(0 5px 4px #0008)!important;transition:transform .18s ease!important}
+#pal .gr button:hover .vx-part-thumb svg{transform:translateY(-2px) scale(1.06)!important}
+#pal .vx-part-name{width:100%!important;display:block!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+ text-align:left!important;font-size:10px!important;font-weight:650!important;letter-spacing:.005em!important;color:#e7e8e6!important}
+#pal .vx-part-add{position:absolute!important;right:8px!important;bottom:7px!important;color:#e87952!important;font-size:13px!important;opacity:0!important;transform:translateY(2px)!important;transition:.16s!important}
+#pal .gr button:hover .vx-part-add{opacity:1!important;transform:translateY(0)!important}
+#pal .gr button[hidden]{display:none!important}
+#v3d{background:radial-gradient(ellipse at 48% 35%,#24272b 0%,#17191c 58%,#111315 100%)!important}
+#v3d .hint{display:flex!important;align-items:center!important;gap:8px!important;background:#1b1d21eF!important;border:1px solid #41454b!important;
+ color:#d8dadc!important;border-radius:9px!important;font-size:11px!important;box-shadow:0 8px 25px #0005!important}
+#v3d .hint:before{content:"";width:7px;height:7px;border-radius:50%;background:#e87952;box-shadow:0 0 0 4px #e8795220}
+#v3d .hint:after{content:"";display:none!important}
+#v3d .vx-3d-cameras{top:14px!important;right:14px!important;padding:5px!important;gap:4px!important;background:#1a1c20d9!important;
+ border:1px solid #41454b!important;border-radius:10px!important;backdrop-filter:blur(12px)!important}
+#v3d .vx-3d-cameras button{min-height:32px!important;padding:0 11px!important;background:transparent!important;border:1px solid transparent!important;
+ border-radius:7px!important;color:#c4c7cb!important;font-size:10px!important;transition:.16s!important}
+#v3d .vx-3d-cameras button:hover,#v3d .vx-3d-cameras button:focus-visible{background:#302722!important;border-color:#765040!important;color:#f3a187!important}
+@media(max-width:620px){#pal .gr{grid-template-columns:repeat(2,minmax(0,1fr))!important}#pal .gr button{min-height:100px!important}#pal .vx-part-thumb{height:54px!important}}
